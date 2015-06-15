@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>CpsDbHelper</id>
+    <version>1.0.0.0</version>
+    <title>Chain-styled Sql DB Helper</title>
+    <authors>Jishun Duan</authors>
+    <owners>Jishun Duan</owners>
+    <licenseUrl>https://github.com/djsxp/cpsdbhelper/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/djsxp/cpsdbhelper</projectUrl>
+    <iconUrl></iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A db helper designed to allow code to be chained and simplified, sql call/parameter managing can be much easier with the help of it and it's auto mapping ability</description>
+    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <copyright>Copyright Jishun Duan, 2011-2015</copyright>
+    <tags>ADO.NET, DBHelper</tags>
+  </metadata>
+</package>
