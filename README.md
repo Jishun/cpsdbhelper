@@ -1,8 +1,24 @@
 # cpsdbhelper
     A db helper designed to allow code to be chained and simplified, sql call/parameter managing can be much easier with the help of it and it's auto mapping ability
+## Get Started
+	Search for "CpsDbHelper" in Nuget Package manager:)
+	
+## Code generating
+	New feature working in progress, A tool to auto generate c# data models and data access classes base on a Dacpac package (output of a SqldbProject in visual studio)
+	###Current stage:
+	- a code generator class constructed as a class library
+	- Basic logic constructed, able to cover to most common scenario, which is generating model classes based on table, working on views and functions 
+	- a msbuild task dll constructed, with following task added to the dbproject file, the build process of the db project will generate corresponding class 
+		<UsingTask AssemblyFile="(Path to CpsDbHelper.CodeGerator.BuildTask.dll)\CpsDbHelper.CodeGerator.BuildTask.dll" TaskName="CpsDbHelper.CodeGerator.BuildTask.CpsDbHelperBuildTask" />
+		  <Target Name="AfterBuild">
+			<CpsDbHelperBuildTask OutputModelPath="../MiddleTierService/Models/" Namespace="YourNamespace.Service" FileExtPrefix="Generated"/>
+		  </Target>
+    ###Next steps:
+	- Working on making the build task into nuget package
+	- Going to be working on stored procedures to dataAccess methods 
+	- Going to support basic queries (e.g. select * from ModelTable where Id = @id, in which id is by unique constant or as a primary key ) base on the db's index definition in data access class
 
-
-Example Usages:
+## Example Usages:
 
 	with the following example models:
 		public class Address
