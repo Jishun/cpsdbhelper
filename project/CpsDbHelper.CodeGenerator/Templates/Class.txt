@@ -1,0 +1,11 @@
+﻿using System;
+
+namespace {{Namespace}}
+{
+    public partial class {{Name}}
+    {
+        {{Properties[Collection]}}
+        public {{Type[CSharpType]}} {{Name[SqlShortName]}} { get; set; }
+        {{Properties[CollectionEnd]}}
+    }
+}
