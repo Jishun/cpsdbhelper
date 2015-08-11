@@ -14,7 +14,7 @@ namespace CpsDbHelperCodeGeneratorTest
         [TestMethod]
         public void TestExtractDacpack()
         {
-            const string path = @"D:\Dev\USTaxServices\project\Monchilla\Database\Monchilla.Database\bin\Debug\Monchilla.Database.dacpac";
+            const string path = @"../../../CpsDbHelper.TestDatabase/bin/Debug/CpsDbHelper.TestDatabase.dacpac";
             DacpacExtractor.ParseDacpac(path, "namespaces_example");
         }
     }

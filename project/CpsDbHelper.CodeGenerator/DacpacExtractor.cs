@@ -36,30 +36,7 @@ namespace CpsDbHelper.CodeGenerator
                             x.Name = x.Name.LocalName;
                             x.ReplaceAttributes((from xattrib in x.Attributes().Where(xa => !xa.IsNamespaceDeclaration) select new XAttribute(xattrib.Name.LocalName, xattrib.Value)));
                         }
-                        var template = "CpsDbHelper.CodeGenerator.Templates.Class.txt".GetResourceTextFromExecutingAssembly();
-                        var entities = new Dictionary<string, Entity>();
-                        var elements = xml.Root.XPathSelectElements("/DataSchemaModel/Model/Element[@Type='SqlTable']");
-                        foreach (var e in elements)
-                        {
-                            var entity = new Entity {TableName = e.GetAttributeString("Name")};
-                            foreach (var pe in e.XPathSelectElements("Relationship[@Name='Columns']/Entry/Element[@Type='SqlSimpleColumn']"))
-                            {
-                                var nullableNode = pe.XPathSelectElement("Property[@Name='IsNullable']");
-                                var p = new EntityProperty()
-                                {
-                                    Nullable = nullableNode == null || nullableNode.GetAttributeBool("Value"),
-                                    Name = pe.GetAttributeString("Name"),
-                                    Type = pe.XPathSelectElement("Relationship[@Name='TypeSpecifier']/Entry/Element[@Type='SqlTypeSpecifier']/Relationship[@Name='Type']/Entry/References").GetAttributeString("Name"),
-                                };
-                                entity.Properties.Add(p);
-                            }
-                            entities.Add(entity.TableName, entity);
-                        }
-                        elements = xml.Root.XPathSelectElements("/DataSchemaModel/Model/Element[@Type='SqlView']");
-                        foreach (var e in elements)
-                        {
-                            
-                        }
+                        var entities = Entity.GetEntities(xml.Root).ToList();
                         var config = TemplatorConfig.DefaultInstance;
                         var parser = new TemplatorParser(config);
                         foreach (var templatorKeyword in SqlToCsharpHelper.GetCustomizedTemplatorKeyword())
@@ -70,21 +47,46 @@ namespace CpsDbHelper.CodeGenerator
                         {
                             Directory.CreateDirectory(outPath);
                         }
-                        foreach (var entity in entities.Values)
+                        var template = GetTemplate(Entity.Template);
+                        foreach (var entity in entities)
                         {
                             var fileName = extensionPrefix.IsNullOrWhiteSpace() ? entity.Name + ".cs" : "{0}.{1}.cs".FormatInvariantCulture(entity.Name, extensionPrefix);
                             var json = JsonConvert.SerializeObject(entity);
                             var input = json.ParseJsonDict();
                             input.Add("Namespace", targetNamespace);
                             var file = parser.ParseText(template, input);
+                            parser.StartOver();
                             using (var sw = new StreamWriter(Path.Combine(outPath, fileName)))
                             {
                                 sw.Write(file);
                             }
                         }
+                        var methods = Method.GetMethods(xml.Root, entities).ToList();
+                        template = GetTemplate(Method.Template);
+                        var name = extensionPrefix.IsNullOrWhiteSpace() ? "DataAccess.cs" : "DataAccess.{0}.cs".FormatInvariantCulture(extensionPrefix);
+                        using (var sw = new StreamWriter(Path.Combine(outPath, name)))
+                        {
+                            var json = JsonConvert.SerializeObject(new 
+                            {
+                                NonQueryMethods = methods.Where(m => m.IdentityColumns.IsNullOrEmpty()),
+                                ScalarMethods = methods.Where(m => !m.IdentityColumns.IsNullOrEmpty()) ,
+                                UniqueMethods = methods.Where(m => m.Unique),
+                                MultipleMethods = methods.Where(m => !m.Unique) 
+                            });
+                            var input = json.ParseJsonDict();
+                            input.Add("Namespace", targetNamespace);
+                            var file = parser.ParseText(template, input);
+                            parser.StartOver();
+                            sw.Write(file);
+                        }
                     }
                 }
             }
+        }
+
+        private static string GetTemplate(string name)
+        {
+            return ("CpsDbHelper.CodeGenerator.Templates." + name).GetResourceTextFromExecutingAssembly();
         }
     }
 }

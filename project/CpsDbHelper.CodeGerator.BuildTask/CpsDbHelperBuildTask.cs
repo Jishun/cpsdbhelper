@@ -11,7 +11,9 @@ namespace CpsDbHelper.CodeGerator.BuildTask
         [Required]
         public string OutputModelPath { get; set; }
         [Required]
-        public string Namespace { get; set; }
+        public string ModelNamespace { get; set; }
+
+        public string DalNamespace { get; set; }
 
         public string FileExtPrefix { get; set; }
 
@@ -23,7 +25,7 @@ namespace CpsDbHelper.CodeGerator.BuildTask
             var fileName = proj.GetPropertyValue("SqlTargetFile");
             var dir = proj.GetPropertyValue("TargetDir");
             var dacpac = Path.Combine(dir, fileName);
-            DacpacExtractor.ParseDacpac(dacpac, Namespace, OutputModelPath, FileExtPrefix);
+            DacpacExtractor.ParseDacpac(dacpac, ModelNamespace, OutputModelPath, FileExtPrefix);
             
             return true;
         }

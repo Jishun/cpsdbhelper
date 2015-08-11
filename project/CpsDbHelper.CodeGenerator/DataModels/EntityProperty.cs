@@ -11,5 +11,6 @@ namespace CpsDbHelper.CodeGenerator
         public string Type;
         public string Name;
         public bool Nullable;
+        public bool Identity;
     }
 }
