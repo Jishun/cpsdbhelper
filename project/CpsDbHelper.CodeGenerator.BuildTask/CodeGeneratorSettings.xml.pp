@@ -1,0 +1,18 @@
+﻿<DacpacExtractor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <!--For format/options example of the latest version, please take a look at https://github.com/djsxp/cpsdbhelper/blob/master/project/CpsDbHelper.CodeGerator.BuildTask/CodeGeneratorSettings.xml.pp -->
+    <ModelNamespace>$rootnamespace$</ModelNamespace>
+    <DbProjectPath>DbProjectPath</DbProjectPath>
+    <DalNamespace>$rootnamespace$.DataAccess</DalNamespace>
+    <ModelOutPath>./Models</ModelOutPath>
+    <DalOutPath>./Models</DalOutPath>
+    <DataAccessClassName>DataAccess</DataAccessClassName>
+    <FileNameExtensionPrefix>Generated</FileNameExtensionPrefix>
+    <PluralMappings>
+        <EntityName>Example</EntityName>
+        <PluralForm>Examples</PluralForm><!--can be removed by default generator appends 's'-->
+    </PluralMappings>
+    <PluralMappings>
+        <EntityName>Tax</EntityName>
+        <PluralForm>Taxes</PluralForm><!--to map non 's' plural forms to get method name mroe pretty-->
+    </PluralMappings>
+</DacpacExtractor>

@@ -161,10 +161,22 @@ namespace CpsDbHelper.Extensions
         {
             return helper.AddInParam(parameterName, SqlDbType.VarChar, value == null ? 0 : value.Length, (object)value);
         }
+        public static T AddNcharInParam<T>(this DbHelper<T> helper, string parameterName, string value) where T : DbHelper<T>
+        {
+            return helper.AddInParam(parameterName, SqlDbType.NChar, value == null ? 0 : value.Length, (object)value);
+        }
+        public static T AddCharInParam<T>(this DbHelper<T> helper, string parameterName, string value) where T : DbHelper<T>
+        {
+            return helper.AddInParam(parameterName, SqlDbType.Char, value == null ? 0 : value.Length, (object)value);
+        }
 
         public static T AddNvarcharInParam<T>(this DbHelper<T> helper, string parameterName, string value)  where T : DbHelper<T>
         {
             return helper.AddInParam(parameterName, SqlDbType.NVarChar, value == null ? 0 : value.Length, (object)value);
+        }
+        public static T AddNtextInParam<T>(this DbHelper<T> helper, string parameterName, string value) where T : DbHelper<T>
+        {
+            return helper.AddInParam(parameterName, SqlDbType.NText, value == null ? 0 : value.Length, (object)value);
         }
 
         public static T AddXmlInParam<T>(this DbHelper<T> helper, string parameterName, XElement value)  where T : DbHelper<T>
@@ -177,14 +189,29 @@ namespace CpsDbHelper.Extensions
             return helper.AddInParam(parameterName, SqlDbType.Bit, value);
         }
 
+        public static T AddDateTime2InParam<T>(this DbHelper<T> helper, string parameterName, DateTime? value) where T : DbHelper<T>
+        {
+            return helper.AddInParam(parameterName, SqlDbType.DateTime2, value);
+        }
+
         public static T AddDateTimeInParam<T>(this DbHelper<T> helper, string parameterName, DateTime? value)  where T : DbHelper<T>
         {
             return helper.AddInParam(parameterName, SqlDbType.DateTime, value);
         }
 
+        public static T AddDateInParam<T>(this DbHelper<T> helper, string parameterName, DateTime? value) where T : DbHelper<T>
+        {
+            return helper.AddInParam(parameterName, SqlDbType.Date, value);
+        }
+
         public static T AddDecimalInParam<T>(this DbHelper<T> helper, string parameterName, decimal? value)  where T : DbHelper<T>
         {
             return helper.AddInParam(parameterName, SqlDbType.Decimal, value);
+        }
+
+        public static T AddMoneyInParam<T>(this DbHelper<T> helper, string parameterName, decimal? value) where T : DbHelper<T>
+        {
+            return helper.AddInParam(parameterName, SqlDbType.Money, value);
         }
 
         public static T AddFloatInParam<T>(this DbHelper<T> helper, string parameterName, float? value)  where T : DbHelper<T>
@@ -197,7 +224,7 @@ namespace CpsDbHelper.Extensions
             return helper.AddInParam(parameterName, SqlDbType.SmallInt, value);
         }
 
-        public static T AddTinyIntInParam<T>(this DbHelper<T> helper, string parameterName, char? value)  where T : DbHelper<T>
+        public static T AddTinyIntInParam<T>(this DbHelper<T> helper, string parameterName, byte? value)  where T : DbHelper<T>
         {
             return helper.AddInParam(parameterName, SqlDbType.TinyInt, value);
         }

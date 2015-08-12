@@ -1,0 +1,6 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask AssemblyFile="CpsDbHelper.CodeGenerator.BuildTask.dll" TaskName="CpsDbHelper.CodeGenerator.BuildTask.CpsDbHelperBuildTask" />
+  <Target Name="BeforeBuild">
+      <CpsDbHelperBuildTask ProjectPath="$(ProjectPath)"/>
+    </Target>
+</Project>

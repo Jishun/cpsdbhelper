@@ -7,11 +7,11 @@ using CpsDbHelper.Utils;
 
 namespace {{Namespace}}
 {
-    public partial class DataAccess
+    public partial class {{DataAccessClassName}} : I{{DataAccessClassName}}
     {
         private DbHelperFactory _db;
 
-        public DataAccess(string connectionString)
+        public {{DataAccessClassName}}(string connectionString)
         {
             _db = new DbHelperFactory(connectionString);
         }
@@ -26,11 +26,11 @@ namespace {{Namespace}}
             _db.EndConnection(commit);
         }
         {{MultipleMethods[Collection]}}
-        public IList<{{TableName[SqlShortName]}}> Get{{TableName[SqlShortName]}}sBy{{Params[Collection, Join(And)]}}{{First[SqlShortName]}}{{Params[CollectionEnd]}}({{Params[Collection, Join(, )]}}{{Second[CSharpType]}} {{First[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}})
+        public IList<{{TableName[SqlShortName]}}> Get{{TableName[SqlShortName,Plural]}}By{{Params[Collection, Join(And)]}}{{First[SqlShortName]}}{{Params[CollectionEnd]}}({{Params[Collection, Join(, )]}}{{Second[CSharpType]}} {{First[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}})
         {
             const string query = "SELECT * FROM {{TableName}} WHERE {{Params[Collection, Join( AND )]}}[{{First[SqlShortName]}}] = @{{First[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}}";
             var ret = _db.BeginReader(query){{Params[Collection]}}
-                         .Add{{Second[SqlShortName,FirstUpper]}}InParam("{{First[SqlShortName]}}", {{First[SqlShortName, FirstLower]}}){{Params[CollectionEnd]}}
+                         .Add{{Second[DbHelperSqlType,FirstUpper]}}InParam("{{First[SqlShortName]}}", {{First[SqlShortName, FirstLower]}}){{Params[CollectionEnd]}}
                          .AutoMapResult<{{TableName[SqlShortName]}}>() 
                          .ExecuteSqlString()
                          .GetResult<IList<{{TableName[SqlShortName]}}>>(); 
@@ -42,7 +42,7 @@ namespace {{Namespace}}
         {
             const string query = "SELECT * FROM {{TableName}} WHERE {{Params[Collection, Join( AND )]}}[{{First[SqlShortName]}}] = @{{First[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}}";
             var ret = _db.BeginReader(query){{Params[Collection]}}
-                         .Add{{Second[SqlShortName,FirstUpper]}}InParam("{{First[SqlShortName]}}", {{First[SqlShortName, FirstLower]}}){{Params[CollectionEnd]}}
+                         .Add{{Second[DbHelperSqlType,FirstUpper]}}InParam("{{First[SqlShortName]}}", {{First[SqlShortName, FirstLower]}}){{Params[CollectionEnd]}}
                          .AutoMapResult<{{TableName[SqlShortName]}}>() 
                          .ExecuteSqlString()
                          .GetResult<IList<{{TableName[SqlShortName]}}>>(); 
@@ -52,18 +52,19 @@ namespace {{Namespace}}
         {{NonQueryMethods[Collection]}}
         public void Save{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{First[SqlShortName]}}{{Params[CollectionEnd]}}({{TableName[SqlShortName]}} {{TableName[SqlShortName, FirstLower]}})
         {
-            const string query = "IF NOT EXISTS(SELECT 1 FROM {{TableName}} WHERE {{Params[Collection, Join( AND )]}}[{{First[SqlShortName]}}] = @{{First[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}}) UPDATE {{TableName}} SET {{Columns[Collection, Join(, )]}}[{{Name[SqlShortName]}}] = @{{Name[SqlShortName, FirstLower]}}{{Columns[CollectionEnd]}}  WHERE {{Params[Collection, Join( AND )]}}[{{First[SqlShortName]}}] = @{{First[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}} ELSE INSERT INTO {{TableName}} ({{Columns[Collection, Join(, )]}}[{{Name[SqlShortName]}}]{{Columns[CollectionEnd]}}) VALUES({{Columns[Collection, Join(, )]}}@{{Name[SqlShortName, FirstLower]}}{{Columns[CollectionEnd]}})";
-            var ret = _db.BeginNonQuery(query)
-                         .AutoMapParam<NonQueryHelper, {{TableName[SqlShortName]}}>({{TableName[SqlShortName, FirstLower]}}) 
+            const string query = "IF EXISTS(SELECT 1 FROM {{TableName}} WHERE {{Params[Collection, Join( AND )]}}[{{First[SqlShortName]}}] = @{{First[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}}) UPDATE {{TableName}} SET {{Columns[Collection, Join(, )]}}[{{Name[SqlShortName]}}] = @{{Name[SqlShortName, FirstLower]}}{{Columns[CollectionEnd]}}  WHERE {{Params[Collection, Join( AND )]}}[{{First[SqlShortName]}}] = @{{First[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}} ELSE INSERT INTO {{TableName}} ({{Columns[Collection, Join(, )]}}[{{Name[SqlShortName]}}]{{Columns[CollectionEnd]}}) VALUES({{Columns[Collection, Join(, )]}}@{{Name[SqlShortName, FirstLower]}}{{Columns[CollectionEnd]}})";
+            var ret = _db.BeginNonQuery(query){{Columns[Collection]}} 
+                         .Add{{Type[DbHelperSqlType,FirstUpper]}}InParam("{{Name[SqlShortName]}}", {{TableName[SqlShortName, FirstLower, Inherited(1)]}}.{{Name[SqlShortName]}}){{Columns[CollectionEnd]}}
                          .ExecuteSqlString(); 
         }
         {{NonQueryMethods[CollectionEnd]}}
         {{ScalarMethods[Collection]}}
         public {{IdentityColumns[Collection]}}{{Type[CSharpType]}}?{{IdentityColumns[CollectionEnd]}} Save{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{First[SqlShortName]}}{{Params[CollectionEnd]}}({{TableName[SqlShortName]}} {{TableName[SqlShortName, FirstLower]}})
         {
-            const string query = "IF NOT EXISTS(SELECT 1 FROM {{TableName}} WHERE {{Params[Collection, Join( AND )]}}[{{First[SqlShortName]}}] = @{{First[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}}) UPDATE {{TableName}} SET {{Columns[Collection, Join(, )]}}[{{Name[SqlShortName]}}] = @{{Name[SqlShortName, FirstLower]}}{{Columns[CollectionEnd]}}  WHERE {{Params[Collection, Join( AND )]}}[{{First[SqlShortName]}}] = @{{First[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}} ELSE BEGIN INSERT INTO {{TableName}} ({{Columns[Collection, Join(, )]}}[{{Name[SqlShortName]}}]{{Columns[CollectionEnd]}}) VALUES({{Columns[Collection, Join(, )]}}@{{Name[SqlShortName, FirstLower]}}{{Columns[CollectionEnd]}}) SELECT SCOPE_IDENTITY() END";
-            var ret = _db.BeginScalar<{{IdentityColumns[Collection]}}{{Type[CSharpType]}}?{{IdentityColumns[CollectionEnd]}}>(query)
-                         .AutoMapParam<ScalarHelper<{{IdentityColumns[Collection]}}{{Type[CSharpType]}}?{{IdentityColumns[CollectionEnd]}}>, {{TableName[SqlShortName]}}>({{TableName[SqlShortName, FirstLower]}}) 
+            const string query = "IF EXISTS(SELECT 1 FROM {{TableName}} WHERE {{Params[Collection, Join( AND )]}}[{{First[SqlShortName]}}] = @{{First[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}}) UPDATE {{TableName}} SET {{Columns[Collection, Join(, )]}}[{{Name[SqlShortName]}}] = @{{Name[SqlShortName, FirstLower]}}{{Columns[CollectionEnd]}}  WHERE {{Params[Collection, Join( AND )]}}[{{First[SqlShortName]}}] = @{{First[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}} ELSE BEGIN INSERT INTO {{TableName}} ({{Columns[Collection, Join(, )]}}[{{Name[SqlShortName]}}]{{Columns[CollectionEnd]}}) VALUES({{Columns[Collection, Join(, )]}}@{{Name[SqlShortName, FirstLower]}}{{Columns[CollectionEnd]}}) SELECT SCOPE_IDENTITY() END";
+            var ret = _db.BeginScalar<{{IdentityColumns[Collection]}}{{Type[CSharpType]}}?{{IdentityColumns[CollectionEnd]}}>(query){{IdentityColumns[Collection]}} 
+                         .Add{{Type[DbHelperSqlType,FirstUpper]}}InParam("{{Name[SqlShortName]}}", {{TableName[SqlShortName, FirstLower, Inherited(1)]}}.{{Name[SqlShortName]}}){{IdentityColumns[CollectionEnd]}}{{Columns[Collection]}} 
+                         .Add{{Type[DbHelperSqlType,FirstUpper]}}InParam("{{Name[SqlShortName]}}", {{TableName[SqlShortName, FirstLower, Inherited(1)]}}.{{Name[SqlShortName]}}){{Columns[CollectionEnd]}}
                          .ExecuteSqlString()
                          .GetResult(); 
             return ret;

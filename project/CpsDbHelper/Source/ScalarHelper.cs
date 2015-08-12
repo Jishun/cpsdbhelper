@@ -19,7 +19,7 @@ namespace CpsDbHelper
         protected override void BeginExecute(SqlCommand cmd)
         {
             var ret = cmd.ExecuteScalar();
-            _result = ret == DBNull.Value ? default(T) : (T)ret;
+            _result = ret == DBNull.Value ? default(T) : (T)(dynamic)ret;
         }
 
         /// <summary>

@@ -14,11 +14,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CpsDbHelperCodeGeneratorTes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CpsDbHelper.CodeGenerator", "CpsDbHelper.CodeGenerator\CpsDbHelper.CodeGenerator.csproj", "{19789A1C-B557-46D7-875A-287A27ABCD00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CpsDbHelper.CodeGerator.BuildTask", "CpsDbHelper.CodeGerator.BuildTask\CpsDbHelper.CodeGerator.BuildTask.csproj", "{58B64504-435A-4723-8068-6A736F448201}"
-EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "CpsDbHelper.TestDatabase", "CpsDbHelper.TestDatabase\CpsDbHelper.TestDatabase.sqlproj", "{597476EE-32DB-49BC-AC7E-4D2C29FA1177}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Templator", "..\..\Templator\project\Templator\Templator.csproj", "{000DB9F3-9744-43B8-9467-AF79437132E6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CpsDbHelper.CodeGenerator.BuildTask", "CpsDbHelper.CodeGenerator.BuildTask\CpsDbHelper.CodeGenerator.BuildTask.csproj", "{58B64504-435A-4723-8068-6A736F448201}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CpsDbHelperCodeGeneratorTest2", "CpsDbHelperCodeGeneratorTest\CpsDbHelperCodeGeneratorTest2.csproj", "{F8E194DB-699E-4661-8962-0C755BD5E9AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,19 +38,18 @@ Global
 		{19789A1C-B557-46D7-875A-287A27ABCD00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19789A1C-B557-46D7-875A-287A27ABCD00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19789A1C-B557-46D7-875A-287A27ABCD00}.Release|Any CPU.Build.0 = Release|Any CPU
-		{58B64504-435A-4723-8068-6A736F448201}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{58B64504-435A-4723-8068-6A736F448201}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{58B64504-435A-4723-8068-6A736F448201}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{58B64504-435A-4723-8068-6A736F448201}.Release|Any CPU.Build.0 = Release|Any CPU
 		{597476EE-32DB-49BC-AC7E-4D2C29FA1177}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{597476EE-32DB-49BC-AC7E-4D2C29FA1177}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{597476EE-32DB-49BC-AC7E-4D2C29FA1177}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{597476EE-32DB-49BC-AC7E-4D2C29FA1177}.Release|Any CPU.Build.0 = Release|Any CPU
 		{597476EE-32DB-49BC-AC7E-4D2C29FA1177}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{000DB9F3-9744-43B8-9467-AF79437132E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{000DB9F3-9744-43B8-9467-AF79437132E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{000DB9F3-9744-43B8-9467-AF79437132E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{000DB9F3-9744-43B8-9467-AF79437132E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58B64504-435A-4723-8068-6A736F448201}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58B64504-435A-4723-8068-6A736F448201}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58B64504-435A-4723-8068-6A736F448201}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58B64504-435A-4723-8068-6A736F448201}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8E194DB-699E-4661-8962-0C755BD5E9AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8E194DB-699E-4661-8962-0C755BD5E9AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8E194DB-699E-4661-8962-0C755BD5E9AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

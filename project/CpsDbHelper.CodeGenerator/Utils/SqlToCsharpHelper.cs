@@ -20,6 +20,8 @@ namespace CpsDbHelper.CodeGenerator
             {"decimal", "decimal"},
             {"numeric", "decimal"},
             {"datetime", "DateTime"},
+            {"datetime2", "DateTime"},
+            {"date", "DateTime"},
             {"int", "int"},
             {"nchar", "string"},
             {"char", "string"},
@@ -28,6 +30,17 @@ namespace CpsDbHelper.CodeGenerator
             {"text", "string"},
             {"timestamp", "byte[]"},
             {"uniqueidentifier", "Guid"},
+        };
+
+        private static readonly IDictionary<string, string> SqlToDbHelperMap = new Dictionary<string, string>()
+        {
+            {"tinyint", "TinyInt"},
+            {"uniqueidentifier", "Guid"},
+            {"nvarchar", "Nvarchar"},
+            {"timestamp", "Binary"},
+            {"smallint", "SmallInt"},
+            {"datetime", "DateTime"},
+            {"datetime2", "DateTime2"},
         };
 
         public static string ToCsharpType(string sqlTypeName)
@@ -44,8 +57,21 @@ namespace CpsDbHelper.CodeGenerator
             return null;
         }
 
-        public static IEnumerable<TemplatorKeyword> GetCustomizedTemplatorKeyword()
+        public static IEnumerable<TemplatorKeyword> GetCustomizedTemplatorKeyword(DacpacExtractor.PluralMapping[] pluralMappings)
         {
+            yield return new TemplatorKeyword("Plural")
+            {
+                ManipulateOutput = true,
+                OnGetValue = (holder, parser, value) =>
+                {
+                    var map = pluralMappings.EmptyIfNull().FirstOrDefault(m => m.EntityName == (string) value);
+                    if (map != null)
+                    {
+                        return map.PluralForm;
+                    }
+                    return value + "s";
+                }
+            };
             yield return new TemplatorKeyword("CSharpType")
             {
                 ManipulateOutput = true,
@@ -55,6 +81,15 @@ namespace CpsDbHelper.CodeGenerator
             {
                 ManipulateOutput = true,
                 OnGetValue = (holder, parser, value) => GetSqlObjectShortName((string)value)
+            };
+            yield return new TemplatorKeyword("DbHelperSqlType")
+            {
+                ManipulateOutput = true,
+                OnGetValue = (holder, parser, value) =>
+                {
+                    var shortname = GetSqlObjectShortName((string) value);
+                    return SqlToDbHelperMap.GetOrDefault(shortname.ToLower(), shortname);
+                }
             };
             yield return new TemplatorKeyword("FirstLower")
             {

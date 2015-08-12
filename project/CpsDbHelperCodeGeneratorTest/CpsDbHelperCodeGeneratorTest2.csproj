@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{46096B29-F2FC-417A-9DB4-5B4C6F497A3A}</ProjectGuid>
+    <ProjectGuid>{F8E194DB-699E-4661-8962-0C755BD5E9AF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CpsDbHelperCodeGeneratorTest</RootNamespace>
@@ -42,7 +42,6 @@
       <HintPath>..\packages\DotNetUtils.1.0.0.3\lib\net45\DotNetUtils.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
@@ -61,11 +60,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="DacpacExtractorTest.cs" />
-    <Compile Include="Models\DataAccess.Generated.cs" />
-    <Compile Include="Models\IDataAccess.Generated.cs" />
-    <Compile Include="Models\Table1.Generated.cs" />
-    <Compile Include="Models\Table2.Generated.cs" />
+    <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -119,4 +114,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <UsingTask AssemblyFile="..\CpsDbHelper.CodeGenerator.BuildTask\bin\Debug\CpsDbHelper.CodeGenerator.BuildTask.dll" TaskName="CpsDbHelper.CodeGenerator.BuildTask.CpsDbHelperBuildTask" />
+  <Target Name="AfterBuild">
+    <CpsDbHelperBuildTask ProjectPath="$(ProjectPath)" />
+  </Target>
 </Project>

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 using System.Xml.XPath;
 using System.Xml.Xsl;
 using DotNetUtils;
@@ -15,9 +16,27 @@ using Templator;
 
 namespace CpsDbHelper.CodeGenerator
 {
-    public static class DacpacExtractor
+    public class DacpacExtractor
     {
-        public static void ParseDacpac(string dacpacFileName, string targetNamespace, string outPath = "./Models", string extensionPrefix = "Generated")
+        public class PluralMapping
+        {
+            public string EntityName { get; set; }
+            public string PluralForm { get; set; }
+        }
+
+        public string DbProjectPath { get; set; }
+
+        public string ModelNamespace { get; set; }
+        public string DalNamespace { get; set; }
+        public string ModelOutPath { get; set; }
+        public string DalOutPath { get; set; }
+        public string DataAccessClassName { get; set; }
+        public string FileNameExtensionPrefix { get; set; }
+
+        [XmlElement("PluralMappings")]
+        public PluralMapping[] PluralMappings { get; set; }
+
+        public void ParseDacpac(string dacpacFileName)
         {
             using (var stream = File.OpenRead(dacpacFileName))
             {
@@ -39,45 +58,58 @@ namespace CpsDbHelper.CodeGenerator
                         var entities = Entity.GetEntities(xml.Root).ToList();
                         var config = TemplatorConfig.DefaultInstance;
                         var parser = new TemplatorParser(config);
-                        foreach (var templatorKeyword in SqlToCsharpHelper.GetCustomizedTemplatorKeyword())
+                        foreach (var templatorKeyword in SqlToCsharpHelper.GetCustomizedTemplatorKeyword(PluralMappings))
                         {
-                            config.Keywords.Add(templatorKeyword.Name, templatorKeyword);
+                            config.Keywords.AddOrOverwrite(templatorKeyword.Name, templatorKeyword);
                         }
-                        if (!Directory.Exists(outPath))
+                        if (!Directory.Exists(ModelOutPath))
                         {
-                            Directory.CreateDirectory(outPath);
+                            Directory.CreateDirectory(ModelOutPath);
+                        }
+                        if (!Directory.Exists(DalOutPath))
+                        {
+                            Directory.CreateDirectory(DalOutPath);
                         }
                         var template = GetTemplate(Entity.Template);
                         foreach (var entity in entities)
                         {
-                            var fileName = extensionPrefix.IsNullOrWhiteSpace() ? entity.Name + ".cs" : "{0}.{1}.cs".FormatInvariantCulture(entity.Name, extensionPrefix);
+                            var fileName = FileNameExtensionPrefix.IsNullOrWhiteSpace() ? entity.Name + ".cs" : "{0}.{1}.cs".FormatInvariantCulture(entity.Name, FileNameExtensionPrefix);
                             var json = JsonConvert.SerializeObject(entity);
                             var input = json.ParseJsonDict();
-                            input.Add("Namespace", targetNamespace);
+                            input.Add("Namespace", ModelNamespace);
                             var file = parser.ParseText(template, input);
                             parser.StartOver();
-                            using (var sw = new StreamWriter(Path.Combine(outPath, fileName)))
+                            using (var sw = new StreamWriter(Path.Combine(ModelOutPath, fileName)))
                             {
                                 sw.Write(file);
                             }
                         }
                         var methods = Method.GetMethods(xml.Root, entities).ToList();
                         template = GetTemplate(Method.Template);
-                        var name = extensionPrefix.IsNullOrWhiteSpace() ? "DataAccess.cs" : "DataAccess.{0}.cs".FormatInvariantCulture(extensionPrefix);
-                        using (var sw = new StreamWriter(Path.Combine(outPath, name)))
+                        var iTemplate = GetTemplate(Method.InterfaceTemplate);
+                        var name = FileNameExtensionPrefix.IsNullOrWhiteSpace() ? "DataAccess.cs" : "DataAccess.{0}.cs".FormatInvariantCulture(FileNameExtensionPrefix);
+                        using (var sw = new StreamWriter(Path.Combine(DalOutPath, name)))
                         {
-                            var json = JsonConvert.SerializeObject(new 
+                            using (var isw = new StreamWriter(Path.Combine(DalOutPath, "I" + name)))
                             {
-                                NonQueryMethods = methods.Where(m => m.IdentityColumns.IsNullOrEmpty()),
-                                ScalarMethods = methods.Where(m => !m.IdentityColumns.IsNullOrEmpty()) ,
-                                UniqueMethods = methods.Where(m => m.Unique),
-                                MultipleMethods = methods.Where(m => !m.Unique) 
-                            });
-                            var input = json.ParseJsonDict();
-                            input.Add("Namespace", targetNamespace);
-                            var file = parser.ParseText(template, input);
-                            parser.StartOver();
-                            sw.Write(file);
+                                var json = JsonConvert.SerializeObject(new
+                                {
+                                    NonQueryMethods = methods.Where(m => m.IdentityColumns.IsNullOrEmpty() && m.Unique),
+                                    ScalarMethods = methods.Where(m => !m.IdentityColumns.IsNullOrEmpty()),
+                                    UniqueMethods = methods.Where(m => m.Unique),
+                                    MultipleMethods = methods.Where(m => !m.Unique)
+                                });
+                                var input = json.ParseJsonDict();
+                                input.Add("DataAccessClassName", DataAccessClassName);
+                                input.Add("DalNamespace", DalNamespace);
+                                input.Add("Namespace", ModelNamespace);
+                                var file = parser.ParseText(template, input);
+                                parser.StartOver();
+                                sw.Write(file);
+                                file = parser.ParseText(iTemplate, input);
+                                parser.StartOver();
+                                isw.Write(file);
+                            }
                         }
                     }
                 }

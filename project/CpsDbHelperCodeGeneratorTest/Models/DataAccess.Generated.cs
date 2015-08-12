@@ -75,26 +75,21 @@ namespace CpsDbHelper.TestDataModel
         
         public void SaveTable1ById(Table1 table1)
         {
-            const string query = "IF NOT EXISTS(SELECT 1 FROM [dbo].[Table1] WHERE [Id] = @id) UPDATE [dbo].[Table1] SET [Id] = @id, [Name] = @name  WHERE [Id] = @id ELSE INSERT INTO [dbo].[Table1] ([Id], [Name]) VALUES(@id, @name)";
-            var ret = _db.BeginNonQuery(query)
-                         .AutoMapParam<NonQueryHelper, Table1>(table1) 
-                         .ExecuteSqlString(); 
-        }
-        
-        public void SaveTable1ByName(Table1 table1)
-        {
-            const string query = "IF NOT EXISTS(SELECT 1 FROM [dbo].[Table1] WHERE [Name] = @name) UPDATE [dbo].[Table1] SET [Id] = @id, [Name] = @name  WHERE [Name] = @name ELSE INSERT INTO [dbo].[Table1] ([Id], [Name]) VALUES(@id, @name)";
-            var ret = _db.BeginNonQuery(query)
-                         .AutoMapParam<NonQueryHelper, Table1>(table1) 
+            const string query = "IF EXISTS(SELECT 1 FROM [dbo].[Table1] WHERE [Id] = @id) UPDATE [dbo].[Table1] SET [Id] = @id, [Name] = @name  WHERE [Id] = @id ELSE INSERT INTO [dbo].[Table1] ([Id], [Name]) VALUES(@id, @name)";
+            var ret = _db.BeginNonQuery(query) 
+                         .AddIntInParam("Id", table1.Id) 
+                         .AddVarcharInParam("Name", table1.Name)
                          .ExecuteSqlString(); 
         }
         
         
         public int? SaveTable2ById(Table2 table2)
         {
-            const string query = "IF NOT EXISTS(SELECT 1 FROM [dbo].[Table2] WHERE [Id] = @id) UPDATE [dbo].[Table2] SET [Name] = @name, [Descript] = @descript  WHERE [Id] = @id ELSE BEGIN INSERT INTO [dbo].[Table2] ([Name], [Descript]) VALUES(@name, @descript) SELECT SCOPE_IDENTITY() END";
-            var ret = _db.BeginScalar<int?>(query)
-                         .AutoMapParam<ScalarHelper<int?>, Table2>(table2) 
+            const string query = "IF EXISTS(SELECT 1 FROM [dbo].[Table2] WHERE [Id] = @id) UPDATE [dbo].[Table2] SET [Name] = @name, [Descript] = @descript  WHERE [Id] = @id ELSE BEGIN INSERT INTO [dbo].[Table2] ([Name], [Descript]) VALUES(@name, @descript) SELECT SCOPE_IDENTITY() END";
+            var ret = _db.BeginScalar<int?>(query) 
+                         .AddIntInParam("Id", table2.Id) 
+                         .AddNvarcharInParam("Name", table2.Name) 
+                         .AddIntInParam("Descript", table2.Descript)
                          .ExecuteSqlString()
                          .GetResult(); 
             return ret;
@@ -102,9 +97,11 @@ namespace CpsDbHelper.TestDataModel
         
         public int? SaveTable2ByNameAndDescript(Table2 table2)
         {
-            const string query = "IF NOT EXISTS(SELECT 1 FROM [dbo].[Table2] WHERE [Name] = @name AND [Descript] = @descript) UPDATE [dbo].[Table2] SET [Name] = @name, [Descript] = @descript  WHERE [Name] = @name AND [Descript] = @descript ELSE BEGIN INSERT INTO [dbo].[Table2] ([Name], [Descript]) VALUES(@name, @descript) SELECT SCOPE_IDENTITY() END";
-            var ret = _db.BeginScalar<int?>(query)
-                         .AutoMapParam<ScalarHelper<int?>, Table2>(table2) 
+            const string query = "IF EXISTS(SELECT 1 FROM [dbo].[Table2] WHERE [Name] = @name AND [Descript] = @descript) UPDATE [dbo].[Table2] SET [Name] = @name, [Descript] = @descript  WHERE [Name] = @name AND [Descript] = @descript ELSE BEGIN INSERT INTO [dbo].[Table2] ([Name], [Descript]) VALUES(@name, @descript) SELECT SCOPE_IDENTITY() END";
+            var ret = _db.BeginScalar<int?>(query) 
+                         .AddIntInParam("Id", table2.Id) 
+                         .AddNvarcharInParam("Name", table2.Name) 
+                         .AddIntInParam("Descript", table2.Descript)
                          .ExecuteSqlString()
                          .GetResult(); 
             return ret;

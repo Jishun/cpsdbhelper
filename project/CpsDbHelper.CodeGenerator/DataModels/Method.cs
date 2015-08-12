@@ -12,6 +12,7 @@ namespace CpsDbHelper.CodeGenerator
     public class Method
     {
         public const string Template = "DataAccess.txt";
+        public const string InterfaceTemplate = "IDataAccess.txt";
         public string TableName;
         public IList<Pair<string, string>> Params;
         public IList<EntityProperty> Columns;
@@ -65,7 +66,7 @@ namespace CpsDbHelper.CodeGenerator
             var e = entities.FirstOrDefault(en => en.TableName == method.TableName);
             if (e != null)
             {
-                method.Columns = e.Properties.Where(p => !p.Identity).ToList();
+                method.Columns = e.Properties.Where(p => !p.Identity).ToList(); //&& method.Params.All(pa => pa.First != p.Name)
                 method.IdentityColumns = e.Properties.Where(p => p.Identity).ToList();
                 foreach (var param in method.Params)
                 {

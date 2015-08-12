@@ -1,0 +1,17 @@
+﻿<DacpacExtractor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <ModelNamespace>CpsDbHelper.TestDataModel</ModelNamespace>
+    <DbProjectPath>../CpsDbHelper.TestDatabase\CpsDbHelper.TestDatabase.sqlproj</DbProjectPath>
+    <DalNamespace>CpsDbHelper.TestDataModel.DataAccess</DalNamespace>
+    <ModelOutPath>./Models</ModelOutPath>
+    <DalOutPath>./Models</DalOutPath>
+    <DataAccessClassName>CpsDbHelperDataAccess</DataAccessClassName>
+    <FileNameExtensionPrefix>Generated</FileNameExtensionPrefix>
+    <PluralMappings>
+        <EntityName>Table</EntityName>
+        <PluralForm>Table1es</PluralForm>
+    </PluralMappings>
+    <PluralMappings>
+        <EntityName>Table2</EntityName>
+        <PluralForm>Table2es</PluralForm>
+    </PluralMappings>
+</DacpacExtractor>

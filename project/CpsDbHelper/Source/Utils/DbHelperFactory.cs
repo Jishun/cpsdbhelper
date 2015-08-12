@@ -56,6 +56,7 @@ namespace CpsDbHelper.Utils
         public void Connect(bool beginTran = false, IsolationLevel transactionLevel = IsolationLevel.ReadCommitted)
         {
             _dbConnection = new SqlConnection(_connectionString);
+            _dbConnection.Open();
             if (beginTran)
             {
                 BeginTransaction(transactionLevel);

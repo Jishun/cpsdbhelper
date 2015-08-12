@@ -1,0 +1,27 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using CpsDbHelper;
+using CpsDbHelper.Extensions;
+using CpsDbHelper.Utils;
+
+namespace {{Namespace}}
+{
+    public partial interface I{{DataAccessClassName}}
+    {
+        void BeginTransaction();
+        void EndTransaction(bool commit = true);
+        {{MultipleMethods[Collection]}}
+        IList<{{TableName[SqlShortName]}}> Get{{TableName[SqlShortName,Plural]}}By{{Params[Collection, Join(And)]}}{{First[SqlShortName]}}{{Params[CollectionEnd]}}({{Params[Collection, Join(, )]}}{{Second[CSharpType]}} {{First[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}});
+        {{MultipleMethods[CollectionEnd]}}
+        {{UniqueMethods[Collection]}}
+        {{TableName[SqlShortName]}} Get{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{First[SqlShortName]}}{{Params[CollectionEnd]}}({{Params[Collection, Join(, )]}}{{Second[CSharpType]}} {{First[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}});
+        {{UniqueMethods[CollectionEnd]}}
+        {{NonQueryMethods[Collection]}}
+        void Save{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{First[SqlShortName]}}{{Params[CollectionEnd]}}({{TableName[SqlShortName]}} {{TableName[SqlShortName, FirstLower]}});
+        {{NonQueryMethods[CollectionEnd]}}
+        {{ScalarMethods[Collection]}}
+        {{IdentityColumns[Collection]}}{{Type[CSharpType]}}?{{IdentityColumns[CollectionEnd]}} Save{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{First[SqlShortName]}}{{Params[CollectionEnd]}}({{TableName[SqlShortName]}} {{TableName[SqlShortName, FirstLower]}});
+        {{ScalarMethods[CollectionEnd]}}
+    }
+}

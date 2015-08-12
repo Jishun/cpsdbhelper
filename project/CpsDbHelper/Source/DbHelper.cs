@@ -10,6 +10,7 @@ namespace CpsDbHelper
     public abstract class DbHelper<T> where T : DbHelper<T>
     {
         protected readonly string Text;
+        protected readonly bool ExternalConnection;
         protected CommandType CommandType = CommandType.StoredProcedure;
         protected SqlParameter ReturnValue;
         private readonly string _connectionString;
@@ -35,6 +36,7 @@ namespace CpsDbHelper
             Text = text;
             Connection = connection;
             Transaction = transaction;
+            ExternalConnection = true;
         }
 
         protected abstract void BeginExecute(SqlCommand cmd);
@@ -70,7 +72,7 @@ namespace CpsDbHelper
             {
                 Connect();
                 InternalExecute();
-                if (end)
+                if (end && !ExternalConnection)
                     End();
 
                 return (T)this;
@@ -125,6 +127,7 @@ namespace CpsDbHelper
                 cmd.CommandText = Text;
                 cmd.CommandType = CommandType;
                 cmd.Parameters.AddRange(Parameters.Values.ToArray());
+                cmd.Transaction = Transaction;
                 if (_timeOut.HasValue)
                 {
                     cmd.CommandTimeout = _timeOut.Value;
@@ -209,10 +212,12 @@ namespace CpsDbHelper
                     Transaction.Commit();
                 }
                 Transaction.Dispose();
+                Transaction = null;
             }
             if (Connection != null)
             {
                 Connection.Dispose();
+                Connection = null;
             }
             return (T)this;
         }

@@ -73,6 +73,7 @@
     <Compile Include="Models\DataAccess.Generated.cs" />
     <Compile Include="Models\Table1.Generated.cs" />
     <Compile Include="Models\Table2.Generated.cs" />
+    <Compile Include="Models\IDataAccess.Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CpsDbHelper\CpsDbHelper.csproj">
@@ -87,8 +88,8 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
   </ItemGroup>
-  <UsingTask AssemblyFile="..\CpsDbHelper.CodeGerator.BuildTask\bin\Debug\CpsDbHelper.CodeGerator.BuildTask.dll" TaskName="CpsDbHelper.CodeGerator.BuildTask.CpsDbHelperBuildTask" />
+  <UsingTask AssemblyFile="..\CpsDbHelper.CodeGenerator.BuildTask\bin\Debug\CpsDbHelper.CodeGenerator.BuildTask.dll" TaskName="CpsDbHelper.CodeGenerator.BuildTask.CpsDbHelperBuildTask" />
   <Target Name="AfterBuild">
-    <CpsDbHelperBuildTask OutputModelPath="./Models" ModelNamespace="Payroll.TaxOps.Service" FileExtPrefix="Generated" />
+    <CpsDbHelperBuildTask />
   </Target>
 </Project>
