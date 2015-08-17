@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CpsDbHelper.CodeGenerator;
 using CpsDbHelper.TestDataModel;
 using CpsDbHelper.Utils;
 using DotNetUtils;
+using Microsoft.SqlServer.Dac;
+using Microsoft.SqlServer.Management.Smo;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CpsDbHelperCodeGeneratorTest
@@ -15,6 +21,22 @@ namespace CpsDbHelperCodeGeneratorTest
     [TestClass]
     public class DacpacExtractorTest
     {
+        public const string OriginalDbName = "TestDatabase";
+        public string DbName
+        {
+            get
+            {
+                return  OriginalDbName + Thread.CurrentThread.ManagedThreadId + ".mdf";
+            }
+        }
+        public string DbLogName
+        {
+            get
+            {
+                return OriginalDbName + Thread.CurrentThread.ManagedThreadId + "_log.ldf";
+            }
+        }
+
         [TestMethod]
         public void TestExtractDacpack()
         {
@@ -35,9 +57,50 @@ namespace CpsDbHelperCodeGeneratorTest
         [TestMethod]
         public void TestGeneratedCode()
         {
-            const string localConnectionString = "Data Source=.;Integrated Security=True;Pooling=False;Initial Catalog=CpsDbHelper.TestDatabase";
-            var da = new CpsDbHelperDataAccess(localConnectionString);
+            var localConnectionString = @"Data Source=(localdb)\v11.0; AttachDBFilename='|DataDirectory|\{0}'; Integrated Security=True".FormatInvariantCulture(DbName);
+            //var localConnectionString = @"Data Source=(localdb)\v11.0; AttachDBFilename='|DataDirectory|\TestDataBase.mdf'; Integrated Security=True";
+
+            var connection = new SqlConnection(localConnectionString);
+            try
+            {
+                connection.Open();
+
+                var dacServices = new DacServices(@"Data Source=(localdb)\v11.0;Integrated Security=True");
+                dacServices.Message += (sender, args) => Debug.WriteLineIf(Debugger.IsAttached, args.Message);
+                dacServices.ProgressChanged +=
+                    (sender, args) =>
+                        Debug.WriteLineIf(Debugger.IsAttached,
+                            String.Format("[{0}] {1} - {2}", args.OperationId, args.Status, args.Message));
+
+#if DEBUG
+                var dacPackageFile =
+                    Path.GetFullPath(Path.Combine(Environment.CurrentDirectory,
+                        @"..\..\..\CpsDbHelper.TestDatabase\bin\Debug\CpsDbHelper.TestDatabase.dacpac"));
+#else
+                var dacPackageFile = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\CpsDbHelper.TestDatabase\bin\Release\CpsDbHelper.TestDatabase.dacpac"));
+#endif
+
+                var package = DacPackage.Load(dacPackageFile);
+                CancellationToken? cancellationToken = new CancellationToken();
+
+                dacServices.Deploy(package, connection.Database, true, null, cancellationToken);
+                connection.Close();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally
+            {
+                if (connection.State == ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+            }
+
+
             var db = new DbHelperFactory(localConnectionString);
+            var da = new CpsDbHelperDataAccess(localConnectionString);
             db.BeginNonQuery("Truncate table dbo.table1")
                 .ExecuteSqlString();
             db.BeginNonQuery("Truncate table dbo.table2").ExecuteSqlString();
@@ -76,6 +139,65 @@ namespace CpsDbHelperCodeGeneratorTest
             id = da.SaveTable2ById(t2);
             t2load = da.GetTable2ByNameAndDescript(t2.Name, t2.Descript);
             Assert.AreEqual(t2load.Id, id.Value);
+        }
+
+        [TestCleanup]
+        [TestInitialize]
+        public void RemoveAllDb()
+        {
+            var sysdbs = new[] { "model", "master", "msdb", "tempdb" };
+
+            var server = new Server(@"(localdb)\v11.0");
+            var names = (from object db in server.Databases let name = db.ToString().TrimStart('[').TrimEnd(']') 
+                         where !sysdbs.Contains(name) select name).ToList();
+            foreach (var name in names)
+            {
+                var database = server.Databases[name];
+                if (database != null)
+                {
+                    try
+                    {
+                        server.KillAllProcesses(name);
+                    }
+                    catch (Exception)
+                    {
+                        
+                    }
+                    try
+                    {
+                        database.DatabaseOptions.UserAccess = DatabaseUserAccess.Single;
+                    }
+                    catch (Exception)
+                    {
+                        
+                    }
+                    try
+                    {
+                        database.Alter(TerminationClause.RollbackTransactionsImmediately);
+                    }
+                    catch (Exception)
+                    {
+                        
+                    }
+                    try
+                    {
+                        server.DetachDatabase(name, true);
+                    }
+                    catch (Exception)
+                    {
+                        
+                    }
+                }
+            }
+            if (File.Exists(DbName))
+            {
+                File.Delete(DbName);
+            }
+            if (File.Exists(DbLogName))
+            {
+                File.Delete(DbLogName);
+            }
+            File.Copy(OriginalDbName + ".mdf", DbName);
         }
     }
 }

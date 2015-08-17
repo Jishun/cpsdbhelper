@@ -32,6 +32,22 @@ namespace CpsDbHelper.CodeGenerator
             {"uniqueidentifier", "Guid"},
         };
 
+        private static readonly IDictionary<string, string> SqlToCSharpNullableTypeMap = new Dictionary<string, string>()
+        {
+            {"bigint", "long?"},
+            {"bit", "bool?"},
+            {"float", "decimal?"},
+            {"tinyint", "byte?"},
+            {"smallint", "short?"},
+            {"decimal", "decimal?"},
+            {"numeric", "decimal?"},
+            {"datetime", "DateTime?"},
+            {"datetime2", "DateTime?"},
+            {"date", "DateTime?"},
+            {"int", "int?"},
+            {"uniqueidentifier", "Guid?"},
+        };
+
         private static readonly IDictionary<string, string> SqlToDbHelperMap = new Dictionary<string, string>()
         {
             {"tinyint", "TinyInt"},
@@ -43,9 +59,10 @@ namespace CpsDbHelper.CodeGenerator
             {"datetime2", "DateTime2"},
         };
 
-        public static string ToCsharpType(string sqlTypeName)
+        public static string ToCsharpType(string sqlTypeName, bool nullable)
         {
-            return SqlToCSharpTypeMap.GetOrDefault(GetSqlObjectShortName(sqlTypeName).ToLower());
+            var name = GetSqlObjectShortName(sqlTypeName).ToLower();
+            return (nullable ? SqlToCSharpNullableTypeMap.GetOrDefault(name) : null) ?? SqlToCSharpTypeMap.GetOrDefault(name);
         }
 
         public static string GetSqlObjectShortName(string fullName)
@@ -56,15 +73,33 @@ namespace CpsDbHelper.CodeGenerator
             }
             return null;
         }
+        public static void GetType(IList<Entity> entities, Method method)
+        {
+            var e = entities.FirstOrDefault(en => en.TableName == method.TableName);
+            if (e != null)
+            {
+                method.Columns = e.Properties.Where(p => !p.Identity).ToList(); //&& method.Params.All(pa => pa.First != p.Name)
+                method.IdentityColumns = e.Properties.Where(p => p.Identity).ToList();
+                foreach (var param in method.Params)
+                {
+                    var p = e.Properties.FirstOrDefault(pr => pr.Name == param.First);
+                    if (p != null)
+                    {
+                        param.Second = p.Type;
+                        param.Third = p.Nullable;
+                    }
+                }
+            }
+        }
 
-        public static IEnumerable<TemplatorKeyword> GetCustomizedTemplatorKeyword(DacpacExtractor.PluralMapping[] pluralMappings)
+        public static IEnumerable<TemplatorKeyword> GetCustomizedTemplatorKeyword(DacpacExtractor extractor)
         {
             yield return new TemplatorKeyword("Plural")
             {
                 ManipulateOutput = true,
                 OnGetValue = (holder, parser, value) =>
                 {
-                    var map = pluralMappings.EmptyIfNull().FirstOrDefault(m => m.EntityName == (string) value);
+                    var map = extractor.PluralMappings.EmptyIfNull().FirstOrDefault(m => m.EntityName == (string)value);
                     if (map != null)
                     {
                         return map.PluralForm;
@@ -72,15 +107,47 @@ namespace CpsDbHelper.CodeGenerator
                     return value + "s";
                 }
             };
+            yield return new TemplatorKeyword("CSharpEnumCast")
+            {
+                OnGetValue = (holder, parser, value) =>
+                {
+                    var nullable = (bool?)parser.Context.Input.GetOrDefault("Nullable")
+                        ?? (bool)parser.Context.Input.GetOrDefault("Third", true);
+                    var columnName = (string)parser.Context.Input.GetOrDefault((string)holder["CSharpEnumCast"]);
+                    var map = extractor.EnumMappings.EmptyIfNull().FirstOrDefault(e => e.ColumnFullName == columnName);
+                    return map != null ? "({0})".FormatInvariantCulture(ToCsharpType((string)value, nullable)) : string.Empty;
+                }
+            };
             yield return new TemplatorKeyword("CSharpType")
             {
-                ManipulateOutput = true,
-                OnGetValue = (holder, parser, value) => ToCsharpType((string) value)
+                OnGetValue = (holder, parser, value) =>
+                {
+                    var nullable = (bool?)parser.Context.Input.GetOrDefault("Nullable")
+                        ?? (bool)parser.Context.Input.GetOrDefault("Third", false);
+                    var columnName = (string)parser.Context.Input.GetOrDefault((string)holder["CSharpType"]);
+                    var map = extractor.EnumMappings.EmptyIfNull().FirstOrDefault(e => e.ColumnFullName.Trim() == columnName);
+                    return map == null ? ToCsharpType((string) value, nullable) : map.EnumTypeName + (nullable ? "?" : "");
+                }
             };
             yield return new TemplatorKeyword("SqlShortName")
             {
                 ManipulateOutput = true,
                 OnGetValue = (holder, parser, value) => GetSqlObjectShortName((string)value)
+            };
+            yield return new TemplatorKeyword("SqlbareName")
+            {
+                ManipulateOutput = true,
+                OnGetValue = (holder, parser, value) =>
+                {
+                    var s = (string) value;
+                    if (s != null)
+                    {
+                        return s.Replace("[", "")
+                            .Replace("]", "")
+                            .Replace(".", "_");
+                    }
+                    return null;
+                }
             };
             yield return new TemplatorKeyword("DbHelperSqlType")
             {

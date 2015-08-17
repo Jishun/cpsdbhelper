@@ -9,7 +9,7 @@ namespace CpsDbHelper.TestDataModel
         
         public string Name { get; set; }
         
-        public int Descript { get; set; }
+        public int? Descript { get; set; }
         
     }
 }

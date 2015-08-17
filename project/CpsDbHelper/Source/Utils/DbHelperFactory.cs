@@ -8,55 +8,56 @@ namespace CpsDbHelper.Utils
     /// </summary>
     public class DbHelperFactory
     {
-        private readonly string _connectionString;
-        private SqlConnection _dbConnection;
-        private SqlTransaction _dbTransaction;
+        public SqlConnection DbConnection;
+        public SqlTransaction DbTransaction;
+
+        public readonly string ConnectionString;
 
         public DbHelperFactory(string connectionString)
         {
-            _connectionString = connectionString;
+            ConnectionString = connectionString;
         }
 
         public DataReaderHelper BeginReader(string text)
         {
             if (CheckExistingConnection())
             {
-                return new DataReaderHelper(text, _dbConnection, _dbTransaction);
+                return new DataReaderHelper(text, DbConnection, DbTransaction);
             }
-            return new DataReaderHelper(text, _connectionString);
+            return new DataReaderHelper(text, ConnectionString);
         }
 
         public XmlReaderHelper BeginXmlReader(string text)
         {
             if (CheckExistingConnection())
             {
-                return new XmlReaderHelper(text, _dbConnection, _dbTransaction);
+                return new XmlReaderHelper(text, DbConnection, DbTransaction);
             }
-            return new XmlReaderHelper(text, _connectionString);
+            return new XmlReaderHelper(text, ConnectionString);
         }
 
         public NonQueryHelper BeginNonQuery(string text)
         {
             if (CheckExistingConnection())
             {
-                return new NonQueryHelper(text, _dbConnection, _dbTransaction);
+                return new NonQueryHelper(text, DbConnection, DbTransaction);
             }
-            return new NonQueryHelper(text, _connectionString);
+            return new NonQueryHelper(text, ConnectionString);
         }
 
         public ScalarHelper<T> BeginScalar<T>(string text)
         {
             if (CheckExistingConnection())
             {
-                return new ScalarHelper<T>(text, _dbConnection, _dbTransaction);
+                return new ScalarHelper<T>(text, DbConnection, DbTransaction);
             }
-            return new ScalarHelper<T>(text, _connectionString);
+            return new ScalarHelper<T>(text, ConnectionString);
         }
 
         public void Connect(bool beginTran = false, IsolationLevel transactionLevel = IsolationLevel.ReadCommitted)
         {
-            _dbConnection = new SqlConnection(_connectionString);
-            _dbConnection.Open();
+            DbConnection = new SqlConnection(ConnectionString);
+            DbConnection.Open();
             if (beginTran)
             {
                 BeginTransaction(transactionLevel);
@@ -65,11 +66,12 @@ namespace CpsDbHelper.Utils
 
         public void EndConnection(bool commitTran = true)
         {
-            if (commitTran && _dbTransaction != null)
+            if (commitTran && DbTransaction != null)
             {
                 CommitTransaction();
             }
-            _dbConnection.Dispose();
+            DbTransaction = null;
+            DbConnection.Dispose();
         }
 
         public void BeginTransaction(IsolationLevel transactionLevel = IsolationLevel.ReadCommitted)
@@ -78,31 +80,37 @@ namespace CpsDbHelper.Utils
             {
                 Connect();
             }
-            _dbTransaction = _dbConnection.BeginTransaction(transactionLevel);
+            if (DbTransaction == null)
+            {
+                DbTransaction = DbConnection.BeginTransaction(transactionLevel);
+            }
         }
 
         public void CommitTransaction()
         {
-            _dbTransaction.Commit();
+            DbTransaction.Commit();
+            DbTransaction = null;
         }
 
         public void RollbackTransaction()
         {
-            _dbTransaction.Rollback();
+            DbTransaction.Rollback();
+            DbTransaction = null;
         }
 
         private bool CheckExistingConnection()
         {
-            if (_dbConnection != null && _dbConnection.State == ConnectionState.Open)
+            if (DbConnection != null && DbConnection.State == ConnectionState.Open)
             {
                 return true;
             }
-            if (_dbConnection == null)
+            if (DbConnection == null)
             {
                 return false;
             }
-            _dbConnection.Dispose();
-            _dbConnection = null;
+            DbConnection.Dispose();
+            DbTransaction = null;
+            DbConnection = null;
             return false;
         }
     }

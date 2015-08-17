@@ -20,7 +20,7 @@ namespace CpsDbHelper.CodeGenerator
             get { return SqlToCsharpHelper.GetSqlObjectShortName(TableName); }
         }
 
-        public static IEnumerable<Entity> GetEntities(XElement xml)
+        public static IEnumerable<Entity> GetEntities(XElement xml, DacpacExtractor extractor)
         {
             const string xpath = "/DataSchemaModel/Model/Element[@Type='SqlTable']";
             var elements = xml.XPathSelectElements(xpath);
@@ -38,9 +38,15 @@ namespace CpsDbHelper.CodeGenerator
                         Name = pe.GetAttributeString("Name"),
                         Type = pe.XPathSelectElement("Relationship[@Name='TypeSpecifier']/Entry/Element[@Type='SqlTypeSpecifier']/Relationship[@Name='Type']/Entry/References").GetAttributeString("Name"),
                     };
-                    entity.Properties.Add(p);
+                    if (!extractor.ObjectsToIgnore.EmptyIfNull().Contains(p.Name))
+                    {
+                        entity.Properties.Add(p);
+                    }
                 }
-                yield return entity;
+                if (!extractor.ObjectsToIgnore.EmptyIfNull().Contains(entity.TableName))
+                {
+                    yield return entity;
+                }
             }
         }
 

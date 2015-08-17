@@ -19,7 +19,7 @@ namespace CpsDbHelper.TestDataModel
         
         Table1 GetTable1ById(int id);
         
-        Table2 GetTable2ByNameAndDescript(string name, int descript);
+        Table2 GetTable2ByNameAndDescript(string name, int? descript);
         
         
         void SaveTable1ById(Table1 table1);
@@ -28,6 +28,13 @@ namespace CpsDbHelper.TestDataModel
         int? SaveTable2ById(Table2 table2);
         
         int? SaveTable2ByNameAndDescript(Table2 table2);
+        
+        
+        void DeleteTable2ById(int id);
+        
+        void DeleteTable1ById(int id);
+        
+        void DeleteTable2ByNameAndDescript(string name, int? descript);
         
     }
 }

@@ -13,6 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <BuildPackage>true</BuildPackage>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,6 +33,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Data.Tools.Schema.Sql">
+      <HintPath>..\packages\Microsoft.SqlServer.Dac.1.0.1\lib\Microsoft.Data.Tools.Schema.Sql.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Tools.Utilities">
+      <HintPath>..\packages\Microsoft.SqlServer.Dac.1.0.1\lib\Microsoft.Data.Tools.Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Dac">
+      <HintPath>..\packages\Microsoft.SqlServer.Dac.1.0.1\lib\Microsoft.SqlServer.Dac.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -63,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CpsDbHelper.nuspec" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />

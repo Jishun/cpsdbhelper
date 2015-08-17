@@ -23,6 +23,11 @@ namespace CpsDbHelper.CodeGenerator
             public string EntityName { get; set; }
             public string PluralForm { get; set; }
         }
+        public class EnumMapping
+        {
+            public string ColumnFullName { get; set; }
+            public string EnumTypeName { get; set; }
+        }
 
         public string DbProjectPath { get; set; }
 
@@ -33,8 +38,13 @@ namespace CpsDbHelper.CodeGenerator
         public string DataAccessClassName { get; set; }
         public string FileNameExtensionPrefix { get; set; }
 
+        [XmlElement("ObjectsToIgnore")]
+        public string[] ObjectsToIgnore { get; set; }
         [XmlElement("PluralMappings")]
         public PluralMapping[] PluralMappings { get; set; }
+
+        [XmlElement("EnumMappings")]
+        public EnumMapping[] EnumMappings { get; set; }
 
         public void ParseDacpac(string dacpacFileName)
         {
@@ -55,10 +65,10 @@ namespace CpsDbHelper.CodeGenerator
                             x.Name = x.Name.LocalName;
                             x.ReplaceAttributes((from xattrib in x.Attributes().Where(xa => !xa.IsNamespaceDeclaration) select new XAttribute(xattrib.Name.LocalName, xattrib.Value)));
                         }
-                        var entities = Entity.GetEntities(xml.Root).ToList();
+                        var entities = Entity.GetEntities(xml.Root, this).ToList();
                         var config = TemplatorConfig.DefaultInstance;
                         var parser = new TemplatorParser(config);
-                        foreach (var templatorKeyword in SqlToCsharpHelper.GetCustomizedTemplatorKeyword(PluralMappings))
+                        foreach (var templatorKeyword in SqlToCsharpHelper.GetCustomizedTemplatorKeyword(this))
                         {
                             config.Keywords.AddOrOverwrite(templatorKeyword.Name, templatorKeyword);
                         }
@@ -84,10 +94,10 @@ namespace CpsDbHelper.CodeGenerator
                                 sw.Write(file);
                             }
                         }
-                        var methods = Method.GetMethods(xml.Root, entities).ToList();
+                        var methods = Method.GetMethods(xml.Root, this, entities).ToList();
                         template = GetTemplate(Method.Template);
                         var iTemplate = GetTemplate(Method.InterfaceTemplate);
-                        var name = FileNameExtensionPrefix.IsNullOrWhiteSpace() ? "DataAccess.cs" : "DataAccess.{0}.cs".FormatInvariantCulture(FileNameExtensionPrefix);
+                        var name = FileNameExtensionPrefix.IsNullOrWhiteSpace() ? DataAccessClassName + ".cs" : "{0}.{1}.cs".FormatInvariantCulture(DataAccessClassName, FileNameExtensionPrefix);
                         using (var sw = new StreamWriter(Path.Combine(DalOutPath, name)))
                         {
                             using (var isw = new StreamWriter(Path.Combine(DalOutPath, "I" + name)))
@@ -97,7 +107,11 @@ namespace CpsDbHelper.CodeGenerator
                                     NonQueryMethods = methods.Where(m => m.IdentityColumns.IsNullOrEmpty() && m.Unique),
                                     ScalarMethods = methods.Where(m => !m.IdentityColumns.IsNullOrEmpty()),
                                     UniqueMethods = methods.Where(m => m.Unique),
-                                    MultipleMethods = methods.Where(m => !m.Unique)
+                                    MultipleMethods = methods.Where(m => !m.Unique),
+                                    InlineTableFunctions = StoredProcedure.GetInlineTableValuedFunctions(xml.Root, this),
+                                    TableFunctions = StoredProcedure.GetlMultiStatementTableValuedFunctions(xml.Root, this),
+                                    ScalarFunctions = StoredProcedure.GetScalarFunctions(xml.Root, this),
+                                    Sps = StoredProcedure.GetStoredProcedures(xml.Root, this),
                                 });
                                 var input = json.ParseJsonDict();
                                 input.Add("DataAccessClassName", DataAccessClassName);

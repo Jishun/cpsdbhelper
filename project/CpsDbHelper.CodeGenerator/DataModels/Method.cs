@@ -14,12 +14,12 @@ namespace CpsDbHelper.CodeGenerator
         public const string Template = "DataAccess.txt";
         public const string InterfaceTemplate = "IDataAccess.txt";
         public string TableName;
-        public IList<Pair<string, string>> Params;
+        public IList<Triple<string, string, bool>> Params;
         public IList<EntityProperty> Columns;
         public IList<EntityProperty> IdentityColumns;
         public bool Unique;
 
-        public static IEnumerable<Method> GetMethods(XElement xml, IList<Entity> entities)
+        public static IEnumerable<Method> GetMethods(XElement xml, DacpacExtractor extractor, IList<Entity> entities)
         {
             const string xpath = "/DataSchemaModel/Model/Element[@Type='SqlPrimaryKeyConstraint']";
             var elements = xml.XPathSelectElements(xpath);
@@ -34,11 +34,14 @@ namespace CpsDbHelper.CodeGenerator
                     Params =
                         element.XPathSelectElements(
                             "Relationship[@Name='ColumnSpecifications']/Entry/Element[@Type='SqlIndexedColumnSpecification']/Relationship[@Name='Column']/Entry/References")
-                            .Select(e => new Pair<string, string>(e.GetAttributeString("Name"), ""))
+                            .Select(e => new Triple<string, string, bool>(e.GetAttributeString("Name"), "", false))
                             .ToList()
                 };
-                GetType(entities, ret);
-                yield return ret;
+                SqlToCsharpHelper.GetType(entities, ret);
+                if (!extractor.ObjectsToIgnore.EmptyIfNull().Contains(ret.TableName))
+                {
+                    yield return ret;
+                }
             }
             elements = xml.XPathSelectElements("/DataSchemaModel/Model/Element[@Type='SqlIndex']");
             foreach (var element in elements)
@@ -53,30 +56,16 @@ namespace CpsDbHelper.CodeGenerator
                     Params =
                         element.XPathSelectElements(
                             "Relationship[@Name='ColumnSpecifications']/Entry/Element[@Type='SqlIndexedColumnSpecification']/Relationship[@Name='Column']/Entry/References")
-                            .Select(e => new Pair<string, string>(e.GetAttributeString("Name"), ""))
+                            .Select(e => new Triple<string, string, bool>(e.GetAttributeString("Name"), "", false))
                             .ToList()
                 };
-                GetType(entities, ret);
-                yield return ret;
-            }
-        }
-
-        private static void GetType(IList<Entity> entities, Method method)
-        {
-            var e = entities.FirstOrDefault(en => en.TableName == method.TableName);
-            if (e != null)
-            {
-                method.Columns = e.Properties.Where(p => !p.Identity).ToList(); //&& method.Params.All(pa => pa.First != p.Name)
-                method.IdentityColumns = e.Properties.Where(p => p.Identity).ToList();
-                foreach (var param in method.Params)
+                SqlToCsharpHelper.GetType(entities, ret);
+                if (!extractor.ObjectsToIgnore.EmptyIfNull().Contains(ret.TableName))
                 {
-                    var p = e.Properties.FirstOrDefault(pr => pr.Name == param.First);
-                    if (p != null)
-                    {
-                        param.Second = p.Type;
-                    }
+                    yield return ret;
                 }
             }
         }
+
     }
 }

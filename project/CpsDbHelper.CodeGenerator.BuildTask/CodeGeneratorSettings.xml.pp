@@ -15,4 +15,10 @@
         <EntityName>Tax</EntityName>
         <PluralForm>Taxes</PluralForm><!--to map non 's' plural forms to get method name mroe pretty-->
     </PluralMappings>
+    <EnumMappings>
+        <ColumnFullName>[dbo].[Table1].[TableStatus]</ColumnFullName>
+        <EnumTypeName>TableStatusEnum</EnumTypeName><!--to map non 's' plural forms to get method name mroe pretty-->
+    </EnumMappings>
+    <ObjectsToIgnore>[dbo].[Table1]</ObjectsToIgnore>
+    <ObjectsToIgnore>[dbo].[Table2].[Id]</ObjectsToIgnore>
 </DacpacExtractor>

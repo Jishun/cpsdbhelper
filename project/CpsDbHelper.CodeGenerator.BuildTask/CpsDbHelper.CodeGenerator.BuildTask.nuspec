@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>CpsDbHelper.CodeGenerator.BuildTask</id>
-    <version>1.0.0.3</version>
+    <version>1.0.0.5</version>
     <title>CpsDbHelper CodeGenerator's BuildTask</title>
       <authors>Jishun Duan</authors>
       <owners>Jishun Duan</owners>
@@ -11,7 +11,7 @@
       <iconUrl>https://github.com/djsxp/cpsdbhelper</iconUrl>
       <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Msbuild task for auto generating CpsDBHelper's data-access code from a Sql dbproject (SSDT), it ONLY works with vs' dbproject</description>
-    <releaseNotes>Map individual columns instead of auto map params in save method generated, remove unnecessary save method against non-unique indexes.</releaseNotes>
+    <releaseNotes>Add delete* methods in data access class generated</releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>CpsDbHelper, dbHelper, CodeGenerator</tags>
   </metadata>
