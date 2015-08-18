@@ -12,7 +12,7 @@ namespace CpsDbHelper.CodeGenerator
     public class StoredProcedure
     {
         public string Name;
-        public IList<Pair<string, string>> Params;
+        public IList<EntityProperty> Params;
 
         public static IEnumerable<StoredProcedure> GetStoredProcedures(XElement xml, DacpacExtractor extractor)
         {
@@ -43,7 +43,7 @@ namespace CpsDbHelper.CodeGenerator
                     Params =
                         element.XPathSelectElements(
                             "Relationship[@Name='Parameters']/Entry/Element[@Type='SqlSubroutineParameter']")
-                            .Select(e => new Pair<string, string>(e.GetAttributeString("Name"), e.XPathSelectElement("Relationship[@Name='Type']/Entry/Element[@Type='SqlTypeSpecifier']/Relationship[@Name='Type']/Entry/References").GetAttributeString("Name")))
+                            .Select(e => new EntityProperty() {Name = e.GetAttributeString("Name"), Type = e.XPathSelectElement("Relationship[@Name='Type']/Entry/Element[@Type='SqlTypeSpecifier']/Relationship[@Name='Type']/Entry/References").GetAttributeString("Name")})
                             .ToList()
                 };
                 yield return ret;

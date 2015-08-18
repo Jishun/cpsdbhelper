@@ -12,19 +12,19 @@ namespace {{Namespace}}
         void BeginTransaction();
         void EndTransaction(bool commit = true);
         {{MultipleMethods[Collection]}}
-        IList<{{TableName[SqlShortName]}}> Get{{TableName[SqlShortName,Plural]}}By{{Params[Collection, Join(And)]}}{{First[SqlShortName]}}{{Params[CollectionEnd]}}({{Params[Collection, Join(, )]}}{{Second[CSharpType(First)]}} {{First[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}});
+        IList<{{TableName[SqlShortName]}}> Get{{TableName[SqlShortName,Plural]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}({{Params[Collection, Join(, )]}}{{Type[CSharpType]}} {{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}});
         {{MultipleMethods[CollectionEnd]}}
         {{UniqueMethods[Collection]}}
-        {{TableName[SqlShortName]}} Get{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{First[SqlShortName]}}{{Params[CollectionEnd]}}({{Params[Collection, Join(, )]}}{{Second[CSharpType(First)]}} {{First[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}});
+        {{TableName[SqlShortName]}} Get{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}({{Params[Collection, Join(, )]}}{{Type[CSharpType]}} {{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}});
         {{UniqueMethods[CollectionEnd]}}
         {{NonQueryMethods[Collection]}}
-        void Save{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{First[SqlShortName]}}{{Params[CollectionEnd]}}({{TableName[SqlShortName]}} {{TableName[SqlShortName, FirstLower]}});
+        void Save{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}({{TableName[SqlShortName]}} {{TableName[SqlShortName, FirstLower]}});
         {{NonQueryMethods[CollectionEnd]}}
         {{ScalarMethods[Collection]}}
-        {{IdentityColumns[Collection]}}{{Type[CSharpType(Name)]}}?{{IdentityColumns[CollectionEnd]}} Save{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{First[SqlShortName]}}{{Params[CollectionEnd]}}({{TableName[SqlShortName]}} {{TableName[SqlShortName, FirstLower]}});
+        {{IdentityColumns[Collection]}}{{Type[CSharpType]}}?{{IdentityColumns[CollectionEnd]}} Save{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}({{TableName[SqlShortName]}} {{TableName[SqlShortName, FirstLower]}});
         {{ScalarMethods[CollectionEnd]}}
         {{UniqueMethods[Collection]}}
-        void Delete{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{First[SqlShortName]}}{{Params[CollectionEnd]}}({{Params[Collection, Join(, )]}}{{Second[CSharpType(First)]}} {{First[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}});
+        void Delete{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}({{Params[Collection, Join(, )]}}{{Type[CSharpType]}} {{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}});
         {{UniqueMethods[CollectionEnd]}}
     }
 }

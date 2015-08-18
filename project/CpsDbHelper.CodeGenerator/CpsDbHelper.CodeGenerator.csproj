@@ -58,7 +58,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DacpacExtractor.cs" />
-    <Compile Include="DataModels\DataAccess.cs" />
     <Compile Include="DataModels\Entity.cs" />
     <Compile Include="DataModels\EntityProperty.cs" />
     <Compile Include="DataModels\Method.cs" />

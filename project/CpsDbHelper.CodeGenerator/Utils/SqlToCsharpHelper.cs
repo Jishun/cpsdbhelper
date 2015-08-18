@@ -78,15 +78,15 @@ namespace CpsDbHelper.CodeGenerator
             var e = entities.FirstOrDefault(en => en.TableName == method.TableName);
             if (e != null)
             {
-                method.Columns = e.Properties.Where(p => !p.Identity).ToList(); //&& method.Params.All(pa => pa.First != p.Name)
+                method.Columns = e.Properties.Where(p => !p.Identity).ToList(); //&& method.Params.All(pa => pa.Name != p.Name)
                 method.IdentityColumns = e.Properties.Where(p => p.Identity).ToList();
                 foreach (var param in method.Params)
                 {
-                    var p = e.Properties.FirstOrDefault(pr => pr.Name == param.First);
+                    var p = e.Properties.FirstOrDefault(pr => pr.Name == param.Name);
                     if (p != null)
                     {
-                        param.Second = p.Type;
-                        param.Third = p.Nullable;
+                        param.Type = p.Type;
+                        param.Nullable = p.Nullable;
                     }
                 }
             }
@@ -111,9 +111,8 @@ namespace CpsDbHelper.CodeGenerator
             {
                 OnGetValue = (holder, parser, value) =>
                 {
-                    var nullable = (bool?)parser.Context.Input.GetOrDefault("Nullable")
-                        ?? (bool)parser.Context.Input.GetOrDefault("Third", true);
-                    var columnName = (string)parser.Context.Input.GetOrDefault((string)holder["CSharpEnumCast"]);
+                    var nullable = (bool) parser.Context.Input.GetOrDefault("Nullable");
+                    var columnName = (string)parser.Context.Input.GetOrDefault("Name");
                     var map = extractor.EnumMappings.EmptyIfNull().FirstOrDefault(e => e.ColumnFullName == columnName);
                     return map != null ? "({0})".FormatInvariantCulture(ToCsharpType((string)value, nullable)) : string.Empty;
                 }
@@ -122,9 +121,8 @@ namespace CpsDbHelper.CodeGenerator
             {
                 OnGetValue = (holder, parser, value) =>
                 {
-                    var nullable = (bool?)parser.Context.Input.GetOrDefault("Nullable")
-                        ?? (bool)parser.Context.Input.GetOrDefault("Third", false);
-                    var columnName = (string)parser.Context.Input.GetOrDefault((string)holder["CSharpType"]);
+                    var nullable = (bool)parser.Context.Input.GetOrDefault("Nullable");
+                    var columnName = (string)parser.Context.Input.GetOrDefault("Name");
                     var map = extractor.EnumMappings.EmptyIfNull().FirstOrDefault(e => e.ColumnFullName.Trim() == columnName);
                     return map == null ? ToCsharpType((string) value, nullable) : map.EnumTypeName + (nullable ? "?" : "");
                 }

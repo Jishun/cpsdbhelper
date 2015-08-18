@@ -30,6 +30,12 @@ namespace CpsDbHelper.CodeGenerator
         }
 
         public string DbProjectPath { get; set; }
+        public bool Enabled { get; set; }
+        public bool ErrorIfDacpacNotFound { get; set; }
+        [XmlElement("EnabledInConfigurations")]
+        public string[] EnabledInConfigurations { get; set; }
+        [XmlElement("ColumnOverrides")]
+        public EntityProperty[] ColumnOverrides { get; set; }
 
         public string ModelNamespace { get; set; }
         public string DalNamespace { get; set; }
@@ -48,6 +54,14 @@ namespace CpsDbHelper.CodeGenerator
 
         public void ParseDacpac(string dacpacFileName)
         {
+            if (!Enabled)
+            {
+                return;
+            }
+            if (!File.Exists(dacpacFileName) && !ErrorIfDacpacNotFound)
+            {
+                return;
+            }
             using (var stream = File.OpenRead(dacpacFileName))
             {
                 using (var zip = new ZipArchive(stream, ZipArchiveMode.Read))

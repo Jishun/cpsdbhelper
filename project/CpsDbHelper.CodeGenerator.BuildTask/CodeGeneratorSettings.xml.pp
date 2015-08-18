@@ -7,17 +7,29 @@
     <DalOutPath>./Models</DalOutPath>
     <DataAccessClassName>DataAccess</DataAccessClassName>
     <FileNameExtensionPrefix>Generated</FileNameExtensionPrefix>
+    <Enabled>true</Enabled>
+    <ErrorIfDacpacNotFound>true</ErrorIfDacpacNotFound>
+    <EnabledInConfigurations>Debug</EnabledInConfigurations>
+    <EnabledInConfigurations>Release</EnabledInConfigurations>
+    <ColumnOverrides>
+        <Name>[dbo].[Table2].[Id]</Name>
+        <Type>bigint</Type>
+        <Nullable>true</Nullable>
+    </ColumnOverrides>
     <PluralMappings>
         <EntityName>Example</EntityName>
-        <PluralForm>Examples</PluralForm><!--can be removed by default generator appends 's'-->
+        <PluralForm>Examples</PluralForm>
+        <!--can be removed by default generator appends 's'-->
     </PluralMappings>
     <PluralMappings>
         <EntityName>Tax</EntityName>
-        <PluralForm>Taxes</PluralForm><!--to map non 's' plural forms to get method name mroe pretty-->
+        <PluralForm>Taxes</PluralForm>
+        <!--to map non 's' plural forms to get method name mroe pretty-->
     </PluralMappings>
     <EnumMappings>
         <ColumnFullName>[dbo].[Table1].[TableStatus]</ColumnFullName>
-        <EnumTypeName>TableStatusEnum</EnumTypeName><!--to map non 's' plural forms to get method name mroe pretty-->
+        <EnumTypeName>TableStatusEnum</EnumTypeName>
+        <!--to map non 's' plural forms to get method name mroe pretty-->
     </EnumMappings>
     <ObjectsToIgnore>[dbo].[Table1]</ObjectsToIgnore>
     <ObjectsToIgnore>[dbo].[Table2].[Id]</ObjectsToIgnore>

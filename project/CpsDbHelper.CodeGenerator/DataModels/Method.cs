@@ -14,7 +14,7 @@ namespace CpsDbHelper.CodeGenerator
         public const string Template = "DataAccess.txt";
         public const string InterfaceTemplate = "IDataAccess.txt";
         public string TableName;
-        public IList<Triple<string, string, bool>> Params;
+        public IList<EntityProperty> Params;
         public IList<EntityProperty> Columns;
         public IList<EntityProperty> IdentityColumns;
         public bool Unique;
@@ -34,7 +34,7 @@ namespace CpsDbHelper.CodeGenerator
                     Params =
                         element.XPathSelectElements(
                             "Relationship[@Name='ColumnSpecifications']/Entry/Element[@Type='SqlIndexedColumnSpecification']/Relationship[@Name='Column']/Entry/References")
-                            .Select(e => new Triple<string, string, bool>(e.GetAttributeString("Name"), "", false))
+                            .Select(e => new EntityProperty() { Name = e.GetAttributeString("Name")})
                             .ToList()
                 };
                 SqlToCsharpHelper.GetType(entities, ret);
@@ -56,7 +56,7 @@ namespace CpsDbHelper.CodeGenerator
                     Params =
                         element.XPathSelectElements(
                             "Relationship[@Name='ColumnSpecifications']/Entry/Element[@Type='SqlIndexedColumnSpecification']/Relationship[@Name='Column']/Entry/References")
-                            .Select(e => new Triple<string, string, bool>(e.GetAttributeString("Name"), "", false))
+                            .Select(e => new EntityProperty() { Name = e.GetAttributeString("Name") })
                             .ToList()
                 };
                 SqlToCsharpHelper.GetType(entities, ret);

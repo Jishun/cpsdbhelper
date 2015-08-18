@@ -38,9 +38,25 @@ namespace CpsDbHelper.CodeGenerator
                         Name = pe.GetAttributeString("Name"),
                         Type = pe.XPathSelectElement("Relationship[@Name='TypeSpecifier']/Entry/Element[@Type='SqlTypeSpecifier']/Relationship[@Name='Type']/Entry/References").GetAttributeString("Name"),
                     };
+                    var over = extractor.ColumnOverrides.EmptyIfNull().FirstOrDefault(o => o.Name == p.Name);
+                    if (over != null)
+                    {
+                        p.Type = over.Type ?? p.Type;
+                        p.Nullable = over.Nullable ?? p.Nullable;
+                        over.Name = null;
+                    }
+
                     if (!extractor.ObjectsToIgnore.EmptyIfNull().Contains(p.Name))
                     {
                         entity.Properties.Add(p);
+                    }
+
+                    foreach (var c in extractor.ColumnOverrides.EmptyIfNull())
+                    {
+                        if (c.Name != null && c.Type != null && c.Name.StartsWith(entity.TableName))
+                        {
+                            entity.Properties.Add(c);
+                        }
                     }
                 }
                 if (!extractor.ObjectsToIgnore.EmptyIfNull().Contains(entity.TableName))

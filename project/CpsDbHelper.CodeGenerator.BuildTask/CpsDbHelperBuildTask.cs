@@ -13,6 +13,7 @@ namespace CpsDbHelper.CodeGenerator.BuildTask
     public class CpsDbHelperBuildTask : Task
     {
         public string ProjectPath { get; set; }
+        public string Configuration { get; set; }
         public override bool Execute()
         {
             var m = new BuildMessageEventArgs("DbHelper code generating", "", "CpsDbHelperBuildTask", MessageImportance.Normal);
@@ -24,6 +25,10 @@ namespace CpsDbHelper.CodeGenerator.BuildTask
             {
                 var xml = XDocument.Load(settingsFile.UnevaluatedInclude);
                 var parser = xml.Root.FromXElement<DacpacExtractor>();
+                if (parser.EnabledInConfigurations != null && !parser.EnabledInConfigurations.Contains(Configuration))
+                {
+                    return true;
+                }
                 if (!File.Exists(parser.DbProjectPath))
                 {
                     var me = new BuildErrorEventArgs("DbHelper code generator", "", ProjectPath, 0, 0, 0, 0, "please config 'DbProjectPath' in 'CodeGeneratorSettings.xml'", "CodeGeneratorSettings.xml", "CpsDbHelperCodeGenerator", DateTime.Now, MessageImportance.High);
@@ -38,7 +43,15 @@ namespace CpsDbHelper.CodeGenerator.BuildTask
                 var fileName = dbProj.GetPropertyValue("SqlTargetFile");
                 var dir = dbProj.GetPropertyValue("TargetDir");
                 var dacpac = Path.Combine(dir, fileName);
-                parser.ParseDacpac(dacpac);
+                if (File.Exists(dacpac))
+                {
+                    parser.ParseDacpac(dacpac);
+                }
+                else
+                {
+                    var me = new BuildMessageEventArgs("Cannot find dacpac file, skip code generating", "", "CpsDbHelperBuildTask", MessageImportance.Normal);
+                    BuildEngine.LogMessageEvent(me);
+                }
             }
             else
             {
