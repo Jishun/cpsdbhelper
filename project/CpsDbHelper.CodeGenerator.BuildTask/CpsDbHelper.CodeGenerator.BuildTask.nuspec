@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>CpsDbHelper.CodeGenerator.BuildTask</id>
-    <version>1.0.0.10</version>
+    <version>1.0.0.12</version>
     <title>CpsDbHelper CodeGenerator's BuildTask</title>
       <authors>Jishun Duan</authors>
       <owners>Jishun Duan</owners>
@@ -11,7 +11,7 @@
       <iconUrl>https://github.com/djsxp/cpsdbhelper</iconUrl>
       <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Msbuild task for auto generating CpsDBHelper's data-access code from a Sql dbproject (SSDT), it ONLY works with vs' dbproject</description>
-    <releaseNotes>Add build condition in config file, allow column settins to be override from config</releaseNotes>
+    <releaseNotes>fix nullable column update excption when null value passed in, add more sql type support</releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>CpsDbHelper, dbHelper, CodeGenerator</tags>
   </metadata>

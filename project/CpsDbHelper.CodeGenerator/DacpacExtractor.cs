@@ -130,6 +130,7 @@ namespace CpsDbHelper.CodeGenerator
                                 var input = json.ParseJsonDict();
                                 input.Add("DataAccessClassName", DataAccessClassName);
                                 input.Add("DalNamespace", DalNamespace);
+                                input.Add("HelperVersion", "1.0.0.4");
                                 input.Add("Namespace", ModelNamespace);
                                 var file = parser.ParseText(template, input);
                                 parser.StartOver();

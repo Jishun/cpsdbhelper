@@ -1,17 +1,32 @@
 ﻿<DacpacExtractor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <ModelNamespace>CpsDbHelper.TestDataModel</ModelNamespace>
+    <ModelNamespace>CpsDbHelper</ModelNamespace>
     <DbProjectPath>../CpsDbHelper.TestDatabase\CpsDbHelper.TestDatabase.sqlproj</DbProjectPath>
-    <DalNamespace>CpsDbHelper.TestDataModel.DataAccess</DalNamespace>
+    <DalNamespace>CpsDbHelper.DataAccess</DalNamespace>
     <ModelOutPath>./Models</ModelOutPath>
     <DalOutPath>./Models</DalOutPath>
     <DataAccessClassName>CpsDbHelperDataAccess</DataAccessClassName>
     <FileNameExtensionPrefix>Generated</FileNameExtensionPrefix>
+    <Enabled>true</Enabled>
+    <ErrorIfDacpacNotFound>true</ErrorIfDacpacNotFound>
+    <EnabledInConfigurations>Debug</EnabledInConfigurations>
+    <EnabledInConfigurations>Release</EnabledInConfigurations>
+    <ColumnOverrides>
+        <Name>[dbo].[Table1].[Name]</Name>
+        <Nullable>false</Nullable>
+    </ColumnOverrides>
     <PluralMappings>
-        <EntityName>Table</EntityName>
-        <PluralForm>Table1es</PluralForm>
+        <EntityName>Example</EntityName>
+        <PluralForm>Examples</PluralForm>
+        <!--can be removed by default generator appends 's'-->
     </PluralMappings>
     <PluralMappings>
-        <EntityName>Table2</EntityName>
-        <PluralForm>Table2es</PluralForm>
+        <EntityName>Tax</EntityName>
+        <PluralForm>Taxes</PluralForm>
+        <!--to map non 's' plural forms to get method name mroe pretty-->
     </PluralMappings>
+    <EnumMappings>
+        <ColumnFullName>[dbo].[Table1].[TableStatus]</ColumnFullName>
+        <EnumTypeName>TableStatusEnum</EnumTypeName>
+        <!--to map non 's' plural forms to get method name mroe pretty-->
+    </EnumMappings>
 </DacpacExtractor>

@@ -20,25 +20,25 @@ namespace CpsDbHelper.Extensions
         /// <summary>
         /// Add an inbound sql parameter
         /// </summary>
-        public static T AddInParam<T>(this DbHelper<T> helper, string parameterName, object value) where T : DbHelper<T>
+        public static T AddInParam<T>(this DbHelper<T> helper, string parameterName, object value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddParam(new SqlParameter(parameterName, value));
+            return helper.AddParam(new SqlParameter(parameterName, value ?? DBNull.Value));
         }
 
         /// <summary>
         /// Add an inbound sql parameter
         /// </summary>
-        public static T AddInParam<T>(this DbHelper<T> helper, string parameterName, SqlDbType dbType, object value) where T : DbHelper<T>
+        public static T AddInParam<T>(this DbHelper<T> helper, string parameterName, SqlDbType dbType, object value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddParam(new SqlParameter(parameterName, dbType) { Value = value });
+            return helper.AddParam(new SqlParameter(parameterName, dbType) { Value = useDbNullIfNull ? (value ?? DBNull.Value) : value });
         }
 
         /// <summary>
         /// Add an inbound sql parameter
         /// </summary>
-        public static T AddInParam<T>(this DbHelper<T> helper, string parameterName, SqlDbType dbType, int size, object value) where T : DbHelper<T>
+        public static T AddInParam<T>(this DbHelper<T> helper, string parameterName, SqlDbType dbType, int size, object value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddParam(new SqlParameter(parameterName, dbType, size) { Value = value });
+            return helper.AddParam(new SqlParameter(parameterName, dbType, size) { Value = useDbNullIfNull ? (value ?? DBNull.Value) : value });
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace CpsDbHelper.Extensions
         /// <summary>
         /// Add an in-outbound sql parameter
         /// </summary>
-        public static T AddInOutParam<T>(this DbHelper<T> helper, string parameterName, object value) where T : DbHelper<T>
+        public static T AddInOutParam<T>(this DbHelper<T> helper, string parameterName, object  value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
             return helper.AddParam(new SqlParameter(parameterName, value) { Direction = ParameterDirection.InputOutput });
         }
@@ -76,17 +76,17 @@ namespace CpsDbHelper.Extensions
         /// <summary>
         /// Add an in-outbound sql parameter
         /// </summary>
-        public static T AddInOutParam<T>(this DbHelper<T> helper, string parameterName, SqlDbType dbType, object value) where T : DbHelper<T>
+        public static T AddInOutParam<T>(this DbHelper<T> helper, string parameterName, SqlDbType dbType, object value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddParam(new SqlParameter(parameterName, dbType) { Value = value, Direction = ParameterDirection.InputOutput });
+            return helper.AddParam(new SqlParameter(parameterName, dbType) { Value = useDbNullIfNull ? (value ?? DBNull.Value) : value, Direction = ParameterDirection.InputOutput });
         }
 
         /// <summary>
         /// Add an in-outbound sql parameter
         /// </summary>
-        public static T AddInOutParam<T>(this DbHelper<T> helper, string parameterName, SqlDbType dbType, int size, object value) where T : DbHelper<T>
+        public static T AddInOutParam<T>(this DbHelper<T> helper, string parameterName, SqlDbType dbType, int size, object value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddParam(new SqlParameter(parameterName, dbType, size) { Value = value, Direction = ParameterDirection.InputOutput });
+            return helper.AddParam(new SqlParameter(parameterName, dbType, size) { Value = useDbNullIfNull ? (value ?? DBNull.Value) : value, Direction = ParameterDirection.InputOutput });
         }
 
         /// <summary>
@@ -147,101 +147,128 @@ namespace CpsDbHelper.Extensions
         }
 
         #region parameters detailed
-        public static T AddIntInParam<T>(this DbHelper<T> helper, string parameterName, int? value)  where T : DbHelper<T>
+        public static T AddIntInParam<T>(this DbHelper<T> helper, string parameterName, int? value, bool useDbNullIfNull = false)  where T : DbHelper<T>
         {
-            return helper.AddInParam(parameterName, SqlDbType.Int, value);
+            return helper.AddInParam(parameterName, SqlDbType.Int, value, useDbNullIfNull);
         }
 
-        public static T AddBigIntInParam<T>(this DbHelper<T> helper, string parameterName, long? value)  where T : DbHelper<T>
+        public static T AddBigIntInParam<T>(this DbHelper<T> helper, string parameterName, long? value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddInParam(parameterName, SqlDbType.BigInt, value);
+            return helper.AddInParam(parameterName, SqlDbType.BigInt, value, useDbNullIfNull);
         }
 
-        public static T AddVarcharInParam<T>(this DbHelper<T> helper, string parameterName, string value)  where T : DbHelper<T>
+        public static T AddVarcharInParam<T>(this DbHelper<T> helper, string parameterName, string value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddInParam(parameterName, SqlDbType.VarChar, value == null ? 0 : value.Length, (object)value);
+            return helper.AddInParam(parameterName, SqlDbType.VarChar, value == null ? 0 : value.Length, (object)value, useDbNullIfNull);
         }
-        public static T AddNcharInParam<T>(this DbHelper<T> helper, string parameterName, string value) where T : DbHelper<T>
+        public static T AddNcharInParam<T>(this DbHelper<T> helper, string parameterName, string  value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddInParam(parameterName, SqlDbType.NChar, value == null ? 0 : value.Length, (object)value);
+            return helper.AddInParam(parameterName, SqlDbType.NChar, value == null ? 0 : value.Length, (object)value, useDbNullIfNull);
         }
-        public static T AddCharInParam<T>(this DbHelper<T> helper, string parameterName, string value) where T : DbHelper<T>
+        public static T AddTextInParam<T>(this DbHelper<T> helper, string parameterName, string  value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddInParam(parameterName, SqlDbType.Char, value == null ? 0 : value.Length, (object)value);
-        }
-
-        public static T AddNvarcharInParam<T>(this DbHelper<T> helper, string parameterName, string value)  where T : DbHelper<T>
-        {
-            return helper.AddInParam(parameterName, SqlDbType.NVarChar, value == null ? 0 : value.Length, (object)value);
-        }
-        public static T AddNtextInParam<T>(this DbHelper<T> helper, string parameterName, string value) where T : DbHelper<T>
-        {
-            return helper.AddInParam(parameterName, SqlDbType.NText, value == null ? 0 : value.Length, (object)value);
+            return helper.AddInParam(parameterName, SqlDbType.Text, value == null ? 0 : value.Length, (object)value, useDbNullIfNull);
         }
 
-        public static T AddXmlInParam<T>(this DbHelper<T> helper, string parameterName, XElement value)  where T : DbHelper<T>
+        public static T AddCharInParam<T>(this DbHelper<T> helper, string parameterName, string  value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddInParam(parameterName, SqlDbType.Xml, value == null ? null : value.ToString());
+            return helper.AddInParam(parameterName, SqlDbType.Char, value == null ? 0 : value.Length, (object)value, useDbNullIfNull);
         }
 
-        public static T AddBitInParam<T>(this DbHelper<T> helper, string parameterName, bool? value)  where T : DbHelper<T>
+        public static T AddNvarcharInParam<T>(this DbHelper<T> helper, string parameterName, string value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddInParam(parameterName, SqlDbType.Bit, value);
+            return helper.AddInParam(parameterName, SqlDbType.NVarChar, value == null ? 0 : value.Length, (object)value, useDbNullIfNull);
+        }
+        public static T AddNtextInParam<T>(this DbHelper<T> helper, string parameterName, string  value, bool useDbNullIfNull = false) where T : DbHelper<T>
+        {
+            return helper.AddInParam(parameterName, SqlDbType.NText, value == null ? 0 : value.Length, (object)value, useDbNullIfNull);
         }
 
-        public static T AddDateTime2InParam<T>(this DbHelper<T> helper, string parameterName, DateTime? value) where T : DbHelper<T>
+        public static T AddXmlInParam<T>(this DbHelper<T> helper, string parameterName, XElement value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddInParam(parameterName, SqlDbType.DateTime2, value);
+            return helper.AddInParam(parameterName, SqlDbType.Xml, value == null ? null : value.ToString(), useDbNullIfNull);
+        }
+        public static T AddXmlInParam<T>(this DbHelper<T> helper, string parameterName, string value, bool useDbNullIfNull = false) where T : DbHelper<T>
+        {
+            return helper.AddInParam(parameterName, SqlDbType.Xml, value, useDbNullIfNull);
         }
 
-        public static T AddDateTimeInParam<T>(this DbHelper<T> helper, string parameterName, DateTime? value)  where T : DbHelper<T>
+        public static T AddBitInParam<T>(this DbHelper<T> helper, string parameterName, bool? value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddInParam(parameterName, SqlDbType.DateTime, value);
+            return helper.AddInParam(parameterName, SqlDbType.Bit, value, useDbNullIfNull);
         }
 
-        public static T AddDateInParam<T>(this DbHelper<T> helper, string parameterName, DateTime? value) where T : DbHelper<T>
+        public static T AddDateTime2InParam<T>(this DbHelper<T> helper, string parameterName, DateTime?  value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddInParam(parameterName, SqlDbType.Date, value);
+            return helper.AddInParam(parameterName, SqlDbType.DateTime2, value, useDbNullIfNull);
         }
 
-        public static T AddDecimalInParam<T>(this DbHelper<T> helper, string parameterName, decimal? value)  where T : DbHelper<T>
+        public static T AddDateTimeInParam<T>(this DbHelper<T> helper, string parameterName, DateTime? value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddInParam(parameterName, SqlDbType.Decimal, value);
+            return helper.AddInParam(parameterName, SqlDbType.DateTime, value, useDbNullIfNull);
         }
 
-        public static T AddMoneyInParam<T>(this DbHelper<T> helper, string parameterName, decimal? value) where T : DbHelper<T>
+        public static T AddDateInParam<T>(this DbHelper<T> helper, string parameterName, DateTime?  value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddInParam(parameterName, SqlDbType.Money, value);
+            return helper.AddInParam(parameterName, SqlDbType.Date, value, useDbNullIfNull);
+        }
+        public static T AddTimeInParam<T>(this DbHelper<T> helper, string parameterName, TimeSpan?  value, bool useDbNullIfNull = false) where T : DbHelper<T>
+        {
+            return helper.AddInParam(parameterName, SqlDbType.Time, value, useDbNullIfNull);
+        }
+        public static T AddDateTimeOffsetInParam<T>(this DbHelper<T> helper, string parameterName, DateTimeOffset?  value, bool useDbNullIfNull = false) where T : DbHelper<T>
+        {
+            return helper.AddInParam(parameterName, SqlDbType.DateTimeOffset, value, useDbNullIfNull);
         }
 
-        public static T AddFloatInParam<T>(this DbHelper<T> helper, string parameterName, float? value)  where T : DbHelper<T>
+        public static T AddDecimalInParam<T>(this DbHelper<T> helper, string parameterName, decimal? value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddInParam(parameterName, SqlDbType.Float, value);
+            return helper.AddInParam(parameterName, SqlDbType.Decimal, value, useDbNullIfNull);
         }
 
-        public static T AddSmallIntInParam<T>(this DbHelper<T> helper, string parameterName, short? value)  where T : DbHelper<T>
+        public static T AddMoneyInParam<T>(this DbHelper<T> helper, string parameterName, decimal?  value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddInParam(parameterName, SqlDbType.SmallInt, value);
+            return helper.AddInParam(parameterName, SqlDbType.Money, value, useDbNullIfNull);
         }
 
-        public static T AddTinyIntInParam<T>(this DbHelper<T> helper, string parameterName, byte? value)  where T : DbHelper<T>
+        public static T AddFloatInParam<T>(this DbHelper<T> helper, string parameterName, double? value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddInParam(parameterName, SqlDbType.TinyInt, value);
+            return helper.AddInParam(parameterName, SqlDbType.Float, value, useDbNullIfNull);
         }
 
-        public static T AddGuidInParam<T>(this DbHelper<T> helper, string parameterName, Guid? value) where T : DbHelper<T>
+        public static T AddSmallIntInParam<T>(this DbHelper<T> helper, string parameterName, short? value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddInParam(parameterName, SqlDbType.UniqueIdentifier, value == null ? null : (object)new System.Data.SqlTypes.SqlGuid(value.Value));
+            return helper.AddInParam(parameterName, SqlDbType.SmallInt, value, useDbNullIfNull);
         }
 
-        public static T AddBinaryInParam<T>(this DbHelper<T> helper, string parameterName, Byte[] value)  where T : DbHelper<T>
+        public static T AddTinyIntInParam<T>(this DbHelper<T> helper, string parameterName, byte? value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddInParam(parameterName, SqlDbType.VarBinary, value );
+            return helper.AddInParam(parameterName, SqlDbType.TinyInt, value, useDbNullIfNull);
         }
 
-        public static T AddStructParam<T>(this DbHelper<T> helper, string parameterName, DataTable value) where T : DbHelper<T>
+        public static T AddGuidInParam<T>(this DbHelper<T> helper, string parameterName, Guid?  value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddInParam(parameterName, SqlDbType.Structured, value);
+            return helper.AddInParam(parameterName, SqlDbType.UniqueIdentifier, value == null ? null : (object)new System.Data.SqlTypes.SqlGuid(value.Value), useDbNullIfNull);
+        }
+
+        public static T AddBinaryInParam<T>(this DbHelper<T> helper, string parameterName, Byte[] value, bool useDbNullIfNull = false) where T : DbHelper<T>
+        {
+            return helper.AddInParam(parameterName, SqlDbType.VarBinary, value, useDbNullIfNull);
+        }
+
+        public static T AddImageInParam<T>(this DbHelper<T> helper, string parameterName, Byte[]  value, bool useDbNullIfNull = false) where T : DbHelper<T>
+        {
+            return helper.AddInParam(parameterName, SqlDbType.Image, value, useDbNullIfNull);
+        }
+
+        public static T AddTimestampInParam<T>(this DbHelper<T> helper, string parameterName, Byte[]  value, bool useDbNullIfNull = false) where T : DbHelper<T>
+        {
+            return helper.AddInParam(parameterName, SqlDbType.Timestamp, value, useDbNullIfNull);
+        }
+
+        public static T AddStructParam<T>(this DbHelper<T> helper, string parameterName, DataTable  value, bool useDbNullIfNull = false) where T : DbHelper<T>
+        {
+            return helper.AddInParam(parameterName, SqlDbType.Structured, value, useDbNullIfNull);
         }
 
         //TODO: tobe defined

@@ -43,7 +43,7 @@ namespace CpsDbHelper.CodeGenerator
                     Params =
                         element.XPathSelectElements(
                             "Relationship[@Name='Parameters']/Entry/Element[@Type='SqlSubroutineParameter']")
-                            .Select(e => new EntityProperty() {Name = e.GetAttributeString("Name"), Type = e.XPathSelectElement("Relationship[@Name='Type']/Entry/Element[@Type='SqlTypeSpecifier']/Relationship[@Name='Type']/Entry/References").GetAttributeString("Name")})
+                            .Select(e => new EntityProperty() { Name = e.GetAttributeString("Name"), Type = e.XPathSelectElement("Relationship[@Name='Type']/Entry/Element[@Type='SqlTypeSpecifier' or @Type='SqlXmlTypeSpecifier']/Relationship[@Name='Type']/Entry/References").GetAttributeString("Name") })
                             .ToList()
                 };
                 yield return ret;

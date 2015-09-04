@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>CpsDbHelper</id>
-    <version>1.0.0.3</version>
+    <version>1.0.0.5</version>
     <title>Chain-styled Sql DB Helper</title>
     <authors>Jishun Duan</authors>
     <owners>Jishun Duan</owners>
@@ -11,7 +11,7 @@
     <iconUrl>https://github.com/djsxp/cpsdbhelper</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A db helper designed to allow code to be chained and simplified, sql call/parameter managing can be much easier with the help of it and it's auto mapping ability</description>
-    <releaseNotes>Include pdbs in package</releaseNotes>
+    <releaseNotes>support option of dbnull passing ,remove unneeded dependency</releaseNotes>
     <copyright>Copyright Jishun Duan, 2011-2015</copyright>
     <tags>ADO.NET, DBHelper</tags>
   </metadata>

@@ -25,7 +25,7 @@ namespace CpsDbHelper.CodeGenerator.BuildTask
             {
                 var xml = XDocument.Load(settingsFile.UnevaluatedInclude);
                 var parser = xml.Root.FromXElement<DacpacExtractor>();
-                if (parser.EnabledInConfigurations != null && !parser.EnabledInConfigurations.Contains(Configuration))
+                if (Configuration != null && parser.EnabledInConfigurations != null && !parser.EnabledInConfigurations.Contains(Configuration))
                 {
                     return true;
                 }

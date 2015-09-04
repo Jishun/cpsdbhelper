@@ -36,7 +36,7 @@ namespace CpsDbHelper.CodeGenerator
                         Nullable = nullableNode == null || nullableNode.GetAttributeBool("Value"),
                         Identity = identityNode != null && identityNode.GetAttributeBool("Value"),
                         Name = pe.GetAttributeString("Name"),
-                        Type = pe.XPathSelectElement("Relationship[@Name='TypeSpecifier']/Entry/Element[@Type='SqlTypeSpecifier']/Relationship[@Name='Type']/Entry/References").GetAttributeString("Name"),
+                        Type = pe.XPathSelectElement("Relationship[@Name='TypeSpecifier']/Entry/Element[@Type='SqlTypeSpecifier' or @Type='SqlXmlTypeSpecifier']/Relationship[@Name='Type']/Entry/References").GetAttributeString("Name"),
                     };
                     var over = extractor.ColumnOverrides.EmptyIfNull().FirstOrDefault(o => o.Name == p.Name);
                     if (over != null)
@@ -50,13 +50,12 @@ namespace CpsDbHelper.CodeGenerator
                     {
                         entity.Properties.Add(p);
                     }
-
-                    foreach (var c in extractor.ColumnOverrides.EmptyIfNull())
+                }
+                foreach (var c in extractor.ColumnOverrides.EmptyIfNull())
+                {
+                    if (c.Name != null && c.Type != null && c.Name.StartsWith(entity.TableName))
                     {
-                        if (c.Name != null && c.Type != null && c.Name.StartsWith(entity.TableName))
-                        {
-                            entity.Properties.Add(c);
-                        }
+                        entity.Properties.Add(c);
                     }
                 }
                 if (!extractor.ObjectsToIgnore.EmptyIfNull().Contains(entity.TableName))

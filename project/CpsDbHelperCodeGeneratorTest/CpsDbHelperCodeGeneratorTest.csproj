@@ -143,11 +143,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CodeGeneratorSettings.xml" />
+    <Content Include="CodeGeneratorSettings.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="TestDataBase.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
