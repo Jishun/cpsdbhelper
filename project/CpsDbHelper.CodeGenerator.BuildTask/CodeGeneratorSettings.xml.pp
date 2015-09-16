@@ -8,6 +8,7 @@
     <DataAccessClassName>DataAccess</DataAccessClassName>
     <FileNameExtensionPrefix>Generated</FileNameExtensionPrefix>
     <Enabled>true</Enabled>
+    <UseAsync>true</UseAsync>
     <ErrorIfDacpacNotFound>true</ErrorIfDacpacNotFound>
     <EnabledInConfigurations>Debug</EnabledInConfigurations>
     <EnabledInConfigurations>Release</EnabledInConfigurations>

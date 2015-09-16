@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using CpsDbHelper.Extensions;
 
 namespace CpsDbHelper
@@ -31,27 +32,18 @@ namespace CpsDbHelper
         {
             using (var reader = cmd.ExecuteReader())
             {
-                var first = true;
-                foreach (var del in _processDelegates)
-                {
-                    if (!first)
-                    {
-                        if (!reader.NextResult())
-                        {
-                            return;
-                        }
-                    }
-                    if (_preActions.ContainsKey(del.Key))
-                    {
-                        _preActions[del.Key](reader);
-                    }
-                    var res = del.Value(reader, this);
-                    _results.Add(del.Key, res);
-                    first = false;
-                }
+                ProcessReader(reader);
             }
         }
 
+        protected override async Task BeginExecuteAsync(SqlCommand cmd)
+        {
+            using (var reader = await cmd.ExecuteReaderAsync())
+            {
+                ProcessReader(reader);
+            }
+        }
+        
         /// <summary>
         /// Define an action that executes right after the sqlCommand.execute() and before looping through the DataReader
         /// </summary>
@@ -183,6 +175,30 @@ namespace CpsDbHelper
             return (T)_results[key];
         }
 
+        /// <summary>
+        /// Get the result after Execute() is called. 
+        /// returns List<T> previous defined by DefineListResult<T>/MapResult<T>/AutoMapResult<T>
+        /// </summary>
+        /// <typeparam name="T">the type of the result to cast to</typeparam>
+        /// <param name="key">The key used to define result</param>
+        /// <returns></returns>
+        public DataReaderHelper GetResultCollection<T>(out IList<T> result, string key = DefaultKey)
+        {
+            result = (IList<T>)_results[key];
+            return this;
+        }
+
+        /// <summary>
+        /// Get the result after Execute() is called. 
+        /// </summary>
+        /// <typeparam name="T">the type of the result to cast to</typeparam>
+        /// <param name="key">The key used to define result</param>
+        /// <returns>List<T> previous defined by DefineListResult<T>/MapResult<T>/AutoMapResult<T></returns>
+        public IList<T> GetResultCollection<T>(string key = DefaultKey)
+        {
+            return (IList<T>)_results[key];
+        }
+
         private object ProcessListResult<T>(IDataReader reader, Func<IDataReader, DataReaderHelper, T> fun)
         {
             var ret = new List<T>();
@@ -191,6 +207,28 @@ namespace CpsDbHelper
                 ret.Add(fun(reader, this));
             }
             return ret;
+        }
+
+        private void ProcessReader(SqlDataReader reader)
+        {
+            var first = true;
+            foreach (var del in _processDelegates)
+            {
+                if (!first)
+                {
+                    if (!reader.NextResult())
+                    {
+                        return;
+                    }
+                }
+                if (_preActions.ContainsKey(del.Key))
+                {
+                    _preActions[del.Key](reader);
+                }
+                var res = del.Value(reader, this);
+                _results.Add(del.Key, res);
+                first = false;
+            }
         }
 
         /// <summary>
@@ -263,7 +301,33 @@ namespace CpsDbHelper
                 var properties = typeof(TValue).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty).Where(p => p.CanWrite && !skips.Contains(p.Name));
                 foreach (var p in properties)
                 {
-                    _mapper.Add(p.Name.ToLower(), p.SetValue);
+                    var u = Nullable.GetUnderlyingType(p.PropertyType);
+                    if ((u != null) && u.IsEnum)
+                    {
+                        _mapper.Add(p.Name.ToLower(), (item, value) =>
+                        {
+                            if (value is int)
+                            {
+                                p.SetValue(item, Enum.ToObject(u, (int)value));
+                            }
+                            else if (value is short)
+                            {
+                                p.SetValue(item, Enum.ToObject(u, (short)value));
+                            }
+                            else if (value is long)
+                            {
+                                p.SetValue(item, Enum.ToObject(u, (long)value));
+                            }
+                            else if (value is byte)
+                            {
+                                p.SetValue(item, Enum.ToObject(u, (byte)value));
+                            }
+                        });
+                    }
+                    else
+                    {
+                        _mapper.Add(p.Name.ToLower(), p.SetValue);
+                    }
                 }
                 return this;
             }
@@ -298,6 +362,7 @@ namespace CpsDbHelper
                     var item = Activator.CreateInstance<TValue>();
                     foreach (var ordinal in ordinals)
                     {
+
                         ordinal.Value(item, reader.IsDBNull(ordinal.Key) ? null : reader.GetValue(ordinal.Key));
                     }
                     foreach (var action in _customMapper)

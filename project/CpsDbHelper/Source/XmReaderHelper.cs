@@ -1,4 +1,5 @@
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using CpsDbHelper.Utils;
 
@@ -20,6 +21,12 @@ namespace CpsDbHelper
         protected override void BeginExecute(SqlCommand cmd)
         {
             var ret = cmd.ExecuteXmlReader();
+            _result = XElement.Load(ret);
+        }
+
+        protected override async Task BeginExecuteAsync(SqlCommand cmd)
+        {
+            var ret = await cmd.ExecuteXmlReaderAsync();
             _result = XElement.Load(ret);
         }
 

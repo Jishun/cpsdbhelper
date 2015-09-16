@@ -48,8 +48,6 @@ namespace CpsDbHelper
         
         public string Name18 { get; set; }
         
-        public byte[] Name19 { get; set; }
-        
         public byte? Name20 { get; set; }
         
         public Guid? Name21 { get; set; }

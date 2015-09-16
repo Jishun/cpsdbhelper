@@ -15,25 +15,43 @@ using DotNetUtils;
 using Microsoft.SqlServer.Dac;
 using Microsoft.SqlServer.Management.Smo;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SSDTDeployer;
 
 namespace CpsDbHelperCodeGeneratorTest
 {
     [TestClass]
     public class DacpacExtractorTest
     {
-        public const string OriginalDbName = "TestDatabase";
-        public string DbName
+        static string _testDbName = null;
+        static SsdtLocalDbDeployer _server;
+        const string ConnectionString = @"Data Source=(localdb)\v11.0; AttachDBFilename='|DataDirectory|\{0}'; Integrated Security=True";
+
+
+        [AssemblyInitialize()]
+        public static void AssemblyInit(TestContext context)
         {
-            get
-            {
-                return  OriginalDbName + Thread.CurrentThread.ManagedThreadId + ".mdf";
-            }
+            _server = new SsdtLocalDbDeployer(DbName, true);
+
+#if DEBUG
+            var dacPackageFile =Path.GetFullPath(Path.Combine(Environment.CurrentDirectory,
+                        @"..\..\..\CpsDbHelper.TestDatabase\bin\Debug\CpsDbHelper.TestDatabase.dacpac"));
+#else
+            var dacPackageFile = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\CpsDbHelper.TestDatabase\bin\Release\CpsDbHelper.TestDatabase.dacpac"));
+#endif
+            _server.DeployDacPac(dacPackageFile);
         }
-        public string DbLogName
+        [AssemblyCleanup()]
+        public static void AssemblyCleanup()
+        {
+            _server.DetachDb();
+        }
+
+        public const string OriginalDbName = "TestDatabase";
+        public static string DbName
         {
             get
             {
-                return OriginalDbName + Thread.CurrentThread.ManagedThreadId + "_log.ldf";
+                return  OriginalDbName  + "12.mdf";
             }
         }
 
@@ -57,62 +75,21 @@ namespace CpsDbHelperCodeGeneratorTest
         [TestMethod]
         public void TestGeneratedCode()
         {
-            var localConnectionString = @"Data Source=(localdb)\v11.0; AttachDBFilename='|DataDirectory|\{0}'; Integrated Security=True".FormatInvariantCulture(DbName);
-            //var localConnectionString = @"Data Source=(localdb)\v11.0; AttachDBFilename='|DataDirectory|\TestDataBase.mdf'; Integrated Security=True";
-
-            var connection = new SqlConnection(localConnectionString);
-            try
-            {
-                connection.Open();
-
-                var dacServices = new DacServices(@"Data Source=(localdb)\v11.0;Integrated Security=True");
-                dacServices.Message += (sender, args) => Debug.WriteLineIf(Debugger.IsAttached, args.Message);
-                dacServices.ProgressChanged +=
-                    (sender, args) =>
-                        Debug.WriteLineIf(Debugger.IsAttached,
-                            String.Format("[{0}] {1} - {2}", args.OperationId, args.Status, args.Message));
-
-#if DEBUG
-                var dacPackageFile =
-                    Path.GetFullPath(Path.Combine(Environment.CurrentDirectory,
-                        @"..\..\..\CpsDbHelper.TestDatabase\bin\Debug\CpsDbHelper.TestDatabase.dacpac"));
-#else
-                var dacPackageFile = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\CpsDbHelper.TestDatabase\bin\Release\CpsDbHelper.TestDatabase.dacpac"));
-#endif
-
-                var package = DacPackage.Load(dacPackageFile);
-                CancellationToken? cancellationToken = new CancellationToken();
-
-                dacServices.Deploy(package, connection.Database, true, null, cancellationToken);
-                connection.Close();
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
-            finally
-            {
-                if (connection.State == ConnectionState.Open)
-                {
-                    connection.Close();
-                }
-            }
-
-
-            var db = new DbHelperFactory(localConnectionString);
-            var da = new CpsDbHelperDataAccess(localConnectionString);
+            var db = new DbHelperFactory(ConnectionString.FormatInvariantCulture(DbName));
+            var da = new CpsDbHelperDataAccess(ConnectionString.FormatInvariantCulture(DbName));
             db.BeginNonQuery("Truncate table dbo.table1")
                 .ExecuteSqlString();
-            db.BeginNonQuery("Truncate table dbo.table2").ExecuteSqlString();
+            Task.WaitAll(db.BeginNonQuery("Truncate table dbo.table2").ExecuteSqlStringAsync());
             var t1 = new Table1()
             {
                 Id = 10,
-                Name = "t1r1"
+                Name = "t1r1",
+                Name13 = "t1r1"
             };
             da.BeginTransaction();
             da.SaveTable1ById(t1);
             var t1load = da.GetTable1ById(t1.Id);
-            Assert.AreEqual(t1load.Name, t1.Name);
+            Assert.AreEqual(t1load.Name13, t1.Name13);
             var t2 = new Table2()
             {
                 Descript = 1,
@@ -124,80 +101,31 @@ namespace CpsDbHelperCodeGeneratorTest
             da.EndTransaction(false);
             t1load = da.GetTable1ById(t1.Id);
             Assert.IsNull(t1load);
-            t1.Name = "t1r1m";
+            t1.Name13 = "t1r1m";
             da.SaveTable1ById(t1);
             t1load = da.GetTable1ById(t1.Id);
-            Assert.AreEqual(t1load.Name, t1.Name);
+            Assert.AreEqual(t1load.Name13, t1.Name13);
             da.BeginTransaction();
-            t1.Name = "t1r1m2";
+            t1.Name13 = "t1r1m2";
             da.SaveTable1ById(t1);
             t1load = da.GetTable1ById(t1.Id);
             da.EndTransaction();
-            Assert.AreEqual(t1load.Name, t1.Name);
+            Assert.AreEqual(t1load.Name13, t1.Name13);
             t1load = da.GetTable1ById(11);
             Assert.IsNull(t1load);
             id = da.SaveTable2ById(t2);
             t2load = da.GetTable2ByNameAndDescript(t2.Name, t2.Descript);
             Assert.AreEqual(t2load.Id, id.Value);
+            var task = db.BeginReader("select * from table2")
+                .AutoMapResult<Table2>()
+                .ExecuteSqlStringAsync();
+            task.Wait();
+            var ret = task.Result
+                .GetResultCollection<Table2>();
+
+            Assert.AreEqual(1, ret.Count);
+            Assert.AreEqual(ret.First().Id, id.Value);
         }
 
-        [TestCleanup]
-        [TestInitialize]
-        public void RemoveAllDb()
-        {
-            var sysdbs = new[] { "model", "master", "msdb", "tempdb" };
-
-            var server = new Server(@"(localdb)\v11.0");
-            var names = (from object db in server.Databases let name = db.ToString().TrimStart('[').TrimEnd(']') 
-                         where !sysdbs.Contains(name) select name).ToList();
-            foreach (var name in names)
-            {
-                var database = server.Databases[name];
-                if (database != null)
-                {
-                    try
-                    {
-                        server.KillAllProcesses(name);
-                    }
-                    catch (Exception)
-                    {
-                        
-                    }
-                    try
-                    {
-                        database.DatabaseOptions.UserAccess = DatabaseUserAccess.Single;
-                    }
-                    catch (Exception)
-                    {
-                        
-                    }
-                    try
-                    {
-                        database.Alter(TerminationClause.RollbackTransactionsImmediately);
-                    }
-                    catch (Exception)
-                    {
-                        
-                    }
-                    try
-                    {
-                        server.DetachDatabase(name, true);
-                    }
-                    catch (Exception)
-                    {
-                        
-                    }
-                }
-            }
-            if (File.Exists(DbName))
-            {
-                File.Delete(DbName);
-            }
-            if (File.Exists(DbLogName))
-            {
-                File.Delete(DbLogName);
-            }
-            File.Copy(OriginalDbName + ".mdf", DbName);
-        }
     }
 }

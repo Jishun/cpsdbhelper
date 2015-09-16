@@ -35,6 +35,7 @@ namespace CpsDbHelper.CodeGenerator
             {"smallmoney","decimal"},
             {"text","string"},
             {"timestamp","byte[]"},
+            {"rowversion","byte[]"},
             {"tinyint","byte"},
             {"uniqueidentifier","Guid"},
             {"varbinary","byte[]"},

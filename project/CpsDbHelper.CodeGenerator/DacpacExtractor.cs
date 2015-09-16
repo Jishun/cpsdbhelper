@@ -31,6 +31,7 @@ namespace CpsDbHelper.CodeGenerator
 
         public string DbProjectPath { get; set; }
         public bool Enabled { get; set; }
+        public bool UseAsync { get; set; }
         public bool ErrorIfDacpacNotFound { get; set; }
         [XmlElement("EnabledInConfigurations")]
         public string[] EnabledInConfigurations { get; set; }

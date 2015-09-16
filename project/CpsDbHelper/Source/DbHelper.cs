@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace CpsDbHelper
@@ -41,6 +42,8 @@ namespace CpsDbHelper
 
         protected abstract void BeginExecute(SqlCommand cmd);
 
+        protected abstract Task BeginExecuteAsync(SqlCommand cmd);
+
         /// <summary>
         /// Add exception handler.
         /// </summary>
@@ -66,6 +69,33 @@ namespace CpsDbHelper
         /// </summary>
         /// <param name="end">finish and clean up. set to false if need to keep the connection and continue with another helper</param>
         /// <returns></returns>
+        public virtual async Task<T> ExecuteAsync(bool end = true)
+        {
+            try
+            {
+                Connect();
+                await InternalExecuteAsync();
+                if (end && !ExternalConnection)
+                {
+                    End();
+                }
+                return (T)this;
+            }
+            catch (Exception e)
+            {
+                if (HandleException(e))
+                {
+                    return (T)this;
+                }
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Execute the command, default as stored procedure
+        /// </summary>
+        /// <param name="end">finish and clean up. set to false if need to keep the connection and continue with another helper</param>
+        /// <returns></returns>
         public virtual T Execute(bool end = true)
         {
             try
@@ -79,24 +109,9 @@ namespace CpsDbHelper
             }
             catch (Exception e)
             {
-                var canContinue = false;
-
-                if (_onException != null)
-                    canContinue = _onException(e, (T)this);
-
-                if (canContinue)
+                if (HandleException(e))
+                {
                     return (T)this;
-
-                // Cannot continue, may be the exception handler is null
-                // or the handler returns fasle, clean up and rethrow.
-                if (Transaction != null)
-                {
-                    Transaction.Rollback();
-                    Transaction.Dispose();
-                }
-                if (Connection != null)
-                {
-                    Connection.Dispose();
                 }
                 throw;
             }
@@ -107,7 +122,7 @@ namespace CpsDbHelper
         /// </summary>
         public virtual T ExecuteStoreProcedure(bool end = true)
         {
-            
+            CommandType = CommandType.StoredProcedure;
             return this.Execute(true);
         }
 
@@ -120,18 +135,38 @@ namespace CpsDbHelper
             return this.Execute();
         }
 
+        /// <summary>
+        /// Execute the text as stored procedure
+        /// </summary>
+        public virtual async Task<T> ExecuteStoreProcedureAsync(bool end = true)
+        {
+            CommandType = CommandType.StoredProcedure;
+            return await this.ExecuteAsync(true);
+        }
+
+        /// <summary>
+        /// Execute the text as sql string
+        /// </summary>
+        public virtual async Task<T> ExecuteSqlStringAsync(bool end = true)
+        {
+            CommandType = CommandType.Text;
+            return await this.ExecuteAsync();
+        }
+
+        protected virtual async Task InternalExecuteAsync()
+        {
+            using (var cmd = Connection.CreateCommand())
+            {
+                SetCommand(cmd);
+                await BeginExecuteAsync(cmd);
+            }
+        }
+        
         protected virtual void InternalExecute()
         {
             using (var cmd = Connection.CreateCommand())
             {
-                cmd.CommandText = Text;
-                cmd.CommandType = CommandType;
-                cmd.Parameters.AddRange(Parameters.Values.ToArray());
-                cmd.Transaction = Transaction;
-                if (_timeOut.HasValue)
-                {
-                    cmd.CommandTimeout = _timeOut.Value;
-                }
+                SetCommand(cmd);
                 BeginExecute(cmd);
             }
         }
@@ -179,6 +214,17 @@ namespace CpsDbHelper
             return (T)this;
         }
 
+        /// <summary>
+        /// Set the SqlCommand CommandType before execute, will be overwritten if ExecuteSqlStrig or ExecuteStoredProcedure gets called instead of execute
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public virtual T SetCommandType(CommandType type)
+        {
+            CommandType = type;
+            return (T)this;
+        }
+
         public virtual T BeginTransaction()
         {
             _needTransaction = true;
@@ -223,7 +269,7 @@ namespace CpsDbHelper
         }
 
         /// <summary>
-        /// Apply an action to the helper itself with out breaking the chain call. just for convinience
+        /// Apply an action to the helper itself with out breaking the chain call. for convenience.
         /// </summary>
         /// <param name="action"></param>
         /// <returns></returns>
@@ -333,6 +379,46 @@ namespace CpsDbHelper
             }
             Parameters[param.ParameterName.ToLower()] = param;
             return (T)this;
+        }
+
+        private bool HandleException(Exception exception)
+        {
+            var canContinue = false;
+
+            if (_onException != null)
+            {
+                canContinue = _onException(exception, (T)this);
+            }
+
+            if (canContinue)
+            {
+                return true;
+            }
+
+            // Cannot continue, may be the exception handler is null
+            // or the handler returns fasle, clean up and rethrow.
+            if (Transaction != null)
+            {
+                Transaction.Rollback();
+                Transaction.Dispose();
+            }
+            if (Connection != null)
+            {
+                Connection.Dispose();
+            }
+            return false;
+        }
+
+        private void SetCommand(SqlCommand cmd)
+        {
+            cmd.CommandText = Text;
+            cmd.CommandType = CommandType;
+            cmd.Parameters.AddRange(Parameters.Values.ToArray());
+            cmd.Transaction = Transaction;
+            if (_timeOut.HasValue)
+            {
+                cmd.CommandTimeout = _timeOut.Value;
+            }
         }
     }
 }

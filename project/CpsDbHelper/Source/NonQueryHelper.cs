@@ -1,4 +1,5 @@
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace CpsDbHelper
 {
@@ -17,6 +18,11 @@ namespace CpsDbHelper
         protected override void BeginExecute(SqlCommand cmd)
         {
             cmd.ExecuteNonQuery();
+        }
+
+        protected override async Task BeginExecuteAsync(SqlCommand cmd)
+        {
+            await cmd.ExecuteNonQueryAsync();
         }
     }
 }

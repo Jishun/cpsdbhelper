@@ -46,7 +46,7 @@ namespace CpsDbHelper.CodeGenerator
                         over.Name = null;
                     }
 
-                    if (!extractor.ObjectsToIgnore.EmptyIfNull().Contains(p.Name))
+                    if (p.Type.ToLower() != "[timestamp]" && p.Type.ToLower() != "[rowversion]" && !extractor.ObjectsToIgnore.EmptyIfNull().Contains(p.Name))
                     {
                         entity.Properties.Add(p);
                     }

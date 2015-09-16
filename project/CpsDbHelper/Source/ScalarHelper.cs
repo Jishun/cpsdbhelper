@@ -1,5 +1,6 @@
 using System;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace CpsDbHelper
 {
@@ -19,6 +20,12 @@ namespace CpsDbHelper
         protected override void BeginExecute(SqlCommand cmd)
         {
             var ret = cmd.ExecuteScalar();
+            _result = ret == DBNull.Value ? default(T) : (T)(dynamic)ret;
+        }
+
+        protected override async Task BeginExecuteAsync(SqlCommand cmd)
+        {
+            var ret = await cmd.ExecuteScalarAsync();
             _result = ret == DBNull.Value ? default(T) : (T)(dynamic)ret;
         }
 
