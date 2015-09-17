@@ -4,7 +4,7 @@
 	Search for "CpsDbHelper" in Nuget Package manager:)
 	
 ## Code generating
-	A OPTIONAL tool to auto generate c# data models and data access classes from a Dacpac package (output of a SqldbProject in visual studio)
+	An OPTIONAL build tool to auto generate c# data models and data access classes from a Dacpac package (output of a SqldbProject in visual studio)
 	###Usages:
 	- Install-Package CpsDbHelper.CodeGenerator.BuildTask in a csproject 
 	- Config db project path in CodeGeneratorSettings.xml
@@ -18,15 +18,16 @@
 	- It will generate SaveModel/DeleteModel methods from each unique index/primary key
 	- It will generate classes as partial for you to extend.
 	- Identity columns will have their identify scope value returned if a new row is inserted
-	- follow the examples in CodeGeneratorSettings.xml shipped with the package to do following
-		- Define whether to use async for Get/Save/Delete methods overall
-		- Overall async setting can be overrided by a "AsyncMappings" entry for specific index/primary key with the full name.
-		- If a specific enum class is needed, put a 'EnumMappings' map the type fullname with the column full name in settings, you can actually put any types you want
-		- If a specific column needs to be overrided, e.g.: dataType/nullable different from db, put a 'ColumnOverrides' entry with the column's full name
-		- If a Model name's Plural form is not '-s', put 'PluralMappings' entry to make the 'GetModels' method prettier
-		- If a column/table/index needs to be ignored, put an 'ObjectsToIgnore' entry
-		- If a column needs to be readonly, put it to ignore list and define it mannually with the same column name and compatible type
-	- After generating, the code files will be in the path specified from CodeGeneratorSettings.xml, include them in the project to use
+	- Futher, follow the examples in CodeGeneratorSettings.xml shipped with the package to do the following
+		- Define whether to use async for Get/Save/Delete methods overall.
+		- Overall async setting can be overrided by an "AsyncMappings" entry for specific index/primary key with the full name.
+		- If a specific enum class is needed, put a 'EnumMappings' map the type fullname with the column full name in settings, you can actually put any types you want.
+		- If a specific column needs to be overrided, e.g.: dataType/nullable different from db, put a 'ColumnOverrides' entry with the column's full name.
+		- If a Model name's Plural form is not '-s', put 'PluralMappings' entry to make the 'GetModels' method prettier.
+		- If a column/table/index needs to be ignored, put an 'ObjectsToIgnore' entry with its full name.
+		- If a column needs to be readonly, put it to ignore list and define it mannually with the same column name and compatible type.
+	- After generating, the code files will be in the path specified in CodeGeneratorSettings.xml, include them in the project to use.
+	- And we are all good!
 
 ## Example Usages:
 
