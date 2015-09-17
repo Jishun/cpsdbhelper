@@ -4,6 +4,7 @@ Source code at https://github.com/djsxp/cpsdbhelper
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using CpsDbHelper;
 using CpsDbHelper.Extensions;
 using CpsDbHelper.Utils;
@@ -15,19 +16,19 @@ namespace {{Namespace}}
         void BeginTransaction();
         void EndTransaction(bool commit = true);
         {{MultipleMethods[Collection]}}
-        IList<{{TableName[SqlShortName]}}> Get{{TableName[SqlShortName,Plural]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}({{Params[Collection, Join(, )]}}{{Type[CSharpType]}} {{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}});
+        {{GetITask}}IList<{{TableName[SqlShortName]}}>{{GetTaskEnd}} Get{{TableName[SqlShortName,Plural]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{GetAsync}}({{Params[Collection, Join(, )]}}{{Type[CSharpType]}} {{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}});
         {{MultipleMethods[CollectionEnd]}}
         {{UniqueMethods[Collection]}}
-        {{TableName[SqlShortName]}} Get{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}({{Params[Collection, Join(, )]}}{{Type[CSharpType]}} {{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}});
+        {{GetITask}}{{TableName[SqlShortName]}}{{GetTaskEnd}} Get{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{GetAsync}}({{Params[Collection, Join(, )]}}{{Type[CSharpType]}} {{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}});
         {{UniqueMethods[CollectionEnd]}}
         {{NonQueryMethods[Collection]}}
-        void Save{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}({{TableName[SqlShortName]}} {{TableName[SqlShortName, FirstLower]}});
+        {{SaveITask}} Save{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{SaveAsync}}({{TableName[SqlShortName]}} {{TableName[SqlShortName, FirstLower]}});
         {{NonQueryMethods[CollectionEnd]}}
         {{ScalarMethods[Collection]}}
-        {{IdentityColumns[Collection]}}{{Type[CSharpType]}}?{{IdentityColumns[CollectionEnd]}} Save{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}({{TableName[SqlShortName]}} {{TableName[SqlShortName, FirstLower]}});
+        {{SaveITask}}{{IdentityColumns[Collection]}}{{Type[CSharpType]}}?{{IdentityColumns[CollectionEnd]}}{{SaveTaskEnd}} Save{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{SaveAsync}}({{TableName[SqlShortName]}} {{TableName[SqlShortName, FirstLower]}});
         {{ScalarMethods[CollectionEnd]}}
         {{UniqueMethods[Collection]}}
-        void Delete{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}({{Params[Collection, Join(, )]}}{{Type[CSharpType]}} {{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}});
+        {{DeleteITask}} Delete{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{DeleteAsync}}({{Params[Collection, Join(, )]}}{{Type[CSharpType]}} {{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}});
         {{UniqueMethods[CollectionEnd]}}
     }
 }

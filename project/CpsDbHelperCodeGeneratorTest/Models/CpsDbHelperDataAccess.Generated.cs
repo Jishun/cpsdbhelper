@@ -4,6 +4,7 @@ Source code at https://github.com/djsxp/cpsdbhelper
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using CpsDbHelper;
 using CpsDbHelper.Extensions;
 using CpsDbHelper.Utils;
@@ -29,14 +30,289 @@ namespace CpsDbHelper
             _db.EndConnection(commit);
         }
         
+        public IList<Table1> GetTable1sByName0(decimal? name0)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name0] = @name0";
+            var reader = _db.BeginReader(query)
+                         .AddDecimalInParam("Name0", name0, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
         public IList<Table1> GetTable1sByName(string name)
         {
             const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name] = @name";
-            var ret = _db.BeginReader(query)
+            var reader = _db.BeginReader(query)
                          .AddCharInParam("Name", name, true)
                          .AutoMapResult<Table1>() 
-                         .ExecuteSqlString()
-                         .GetResult<IList<Table1>>(); 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
+        public IList<Table1> GetTable1sByName11(string name11)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name11] = @name11";
+            var reader = _db.BeginReader(query)
+                         .AddNcharInParam("Name11", name11, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
+        public IList<Table1> GetTable1sByName13(string name13)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name13] = @name13";
+            var reader = _db.BeginReader(query)
+                         .AddNvarcharInParam("Name13", name13, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
+        public IList<Table1> GetTable1sByName14(decimal? name14)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name14] = @name14";
+            var reader = _db.BeginReader(query)
+                         .AddDecimalInParam("Name14", name14, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
+        public IList<Table1> GetTable1sByName15(DateTime? name15)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name15] = @name15";
+            var reader = _db.BeginReader(query)
+                         .AddDateTimeInParam("Name15", name15, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
+        public IList<Table1> GetTable1sByName16(short? name16)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name16] = @name16";
+            var reader = _db.BeginReader(query)
+                         .AddSmallIntInParam("Name16", name16, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
+        public IList<Table1> GetTable1sByName17(decimal? name17)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name17] = @name17";
+            var reader = _db.BeginReader(query)
+                         .AddDecimalInParam("Name17", name17, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
+        public IList<Table1> GetTable1sByName18(string name18)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name18] = @name18";
+            var reader = _db.BeginReader(query)
+                         .AddTextInParam("Name18", name18, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
+        public IList<Table1> GetTable1sByName2(byte[] name2)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name2] = @name2";
+            var reader = _db.BeginReader(query)
+                         .AddBinaryInParam("Name2", name2, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
+        public IList<Table1> GetTable1sByName20(byte? name20)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name20] = @name20";
+            var reader = _db.BeginReader(query)
+                         .AddTinyIntInParam("Name20", name20, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
+        public IList<Table1> GetTable1sByName21(Guid? name21)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name21] = @name21";
+            var reader = _db.BeginReader(query)
+                         .AddGuidInParam("Name21", name21, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
+        public IList<Table1> GetTable1sByName22(byte[] name22)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name22] = @name22";
+            var reader = _db.BeginReader(query)
+                         .AddBinaryInParam("Name22", name22, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
+        public IList<Table1> GetTable1sByName23(string name23)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name23] = @name23";
+            var reader = _db.BeginReader(query)
+                         .AddVarcharInParam("Name23", name23, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
+        public IList<Table1> GetTable1sByName24(string name24)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name24] = @name24";
+            var reader = _db.BeginReader(query)
+                         .AddXmlInParam("Name24", name24, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
+        public IList<Table1> GetTable1sByName25(DateTime? name25)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name25] = @name25";
+            var reader = _db.BeginReader(query)
+                         .AddDateInParam("Name25", name25, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
+        public IList<Table1> GetTable1sByName26(TimeSpan? name26)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name26] = @name26";
+            var reader = _db.BeginReader(query)
+                         .AddTimeInParam("Name26", name26, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
+        public IList<Table1> GetTable1sByName27(DateTimeOffset? name27)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name27] = @name27";
+            var reader = _db.BeginReader(query)
+                         .AddDateTimeOffsetInParam("Name27", name27, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
+        public IList<Table1> GetTable1sByName28(DateTime? name28)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name28] = @name28";
+            var reader = _db.BeginReader(query)
+                         .AddDateTime2InParam("Name28", name28, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
+        public IList<Table1> GetTable1sByName3(bool? name3)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name3] = @name3";
+            var reader = _db.BeginReader(query)
+                         .AddBitInParam("Name3", name3, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
+        public IList<Table1> GetTable1sByName4(string name4)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name4] = @name4";
+            var reader = _db.BeginReader(query)
+                         .AddCharInParam("Name4", name4, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
+        public IList<Table1> GetTable1sByName5(DateTime? name5)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name5] = @name5";
+            var reader = _db.BeginReader(query)
+                         .AddDateTimeInParam("Name5", name5, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
+        public IList<Table1> GetTable1sByName6(decimal? name6)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name6] = @name6";
+            var reader = _db.BeginReader(query)
+                         .AddDecimalInParam("Name6", name6, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
+        public IList<Table1> GetTable1sByName7(double? name7)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name7] = @name7";
+            var reader = _db.BeginReader(query)
+                         .AddFloatInParam("Name7", name7, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
+        public IList<Table1> GetTable1sByName8(byte[] name8)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name8] = @name8";
+            var reader = _db.BeginReader(query)
+                         .AddImageInParam("Name8", name8, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
+            return ret;
+        }
+        
+        public IList<Table1> GetTable1sByName9(int? name9)
+        {
+            const string query = "SELECT * FROM [dbo].[Table1] WHERE [Name9] = @name9";
+            var reader = _db.BeginReader(query)
+                         .AddIntInParam("Name9", name9, true)
+                         .AutoMapResult<Table1>() 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
             return ret;
         }
         
@@ -44,34 +320,34 @@ namespace CpsDbHelper
         public Table2 GetTable2ById(int id)
         {
             const string query = "SELECT * FROM [dbo].[Table2] WHERE [Id] = @id";
-            var ret = _db.BeginReader(query)
+            var reader = _db.BeginReader(query)
                          .AddIntInParam("Id", id, true)
                          .AutoMapResult<Table2>() 
-                         .ExecuteSqlString()
-                         .GetResult<IList<Table2>>(); 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table2>>(); 
             return ret.FirstOrDefault();
         }
         
         public Table1 GetTable1ById(int id)
         {
             const string query = "SELECT * FROM [dbo].[Table1] WHERE [Id] = @id";
-            var ret = _db.BeginReader(query)
+            var reader = _db.BeginReader(query)
                          .AddIntInParam("Id", id, true)
                          .AutoMapResult<Table1>() 
-                         .ExecuteSqlString()
-                         .GetResult<IList<Table1>>(); 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table1>>(); 
             return ret.FirstOrDefault();
         }
         
         public Table2 GetTable2ByNameAndDescript(string name, int? descript)
         {
             const string query = "SELECT * FROM [dbo].[Table2] WHERE [Name] = @name AND [Descript] = @descript";
-            var ret = _db.BeginReader(query)
+            var reader = _db.BeginReader(query)
                          .AddNvarcharInParam("Name", name, true)
                          .AddIntInParam("Descript", descript, true)
                          .AutoMapResult<Table2>() 
-                         .ExecuteSqlString()
-                         .GetResult<IList<Table2>>(); 
+                         .ExecuteSqlString();
+            var ret = reader.GetResult<IList<Table2>>(); 
             return ret.FirstOrDefault();
         }
         
@@ -116,24 +392,24 @@ namespace CpsDbHelper
         public int? SaveTable2ById(Table2 table2)
         {
             const string query = "IF EXISTS(SELECT 1 FROM [dbo].[Table2] WHERE [Id] = @id) UPDATE [dbo].[Table2] SET [Name] = @name, [Descript] = @descript  WHERE [Id] = @id ELSE BEGIN INSERT INTO [dbo].[Table2] ([Name], [Descript]) VALUES(@name, @descript) SELECT SCOPE_IDENTITY() END";
-            var ret = _db.BeginScalar<int?>(query) 
+            var scalar = _db.BeginScalar<int?>(query) 
                          .AddIntInParam("Id", table2.Id, true) 
                          .AddNvarcharInParam("Name",  table2.Name, true) 
                          .AddIntInParam("Descript",  table2.Descript, true)
-                         .ExecuteSqlString()
-                         .GetResult(); 
+                         .ExecuteSqlString();
+            var ret = scalar.GetResult(); 
             return ret;
         }
         
         public int? SaveTable2ByNameAndDescript(Table2 table2)
         {
             const string query = "IF EXISTS(SELECT 1 FROM [dbo].[Table2] WHERE [Name] = @name AND [Descript] = @descript) UPDATE [dbo].[Table2] SET [Name] = @name, [Descript] = @descript  WHERE [Name] = @name AND [Descript] = @descript ELSE BEGIN INSERT INTO [dbo].[Table2] ([Name], [Descript]) VALUES(@name, @descript) SELECT SCOPE_IDENTITY() END";
-            var ret = _db.BeginScalar<int?>(query) 
+            var scalar = _db.BeginScalar<int?>(query) 
                          .AddIntInParam("Id", table2.Id, true) 
                          .AddNvarcharInParam("Name",  table2.Name, true) 
                          .AddIntInParam("Descript",  table2.Descript, true)
-                         .ExecuteSqlString()
-                         .GetResult(); 
+                         .ExecuteSqlString();
+            var ret = scalar.GetResult(); 
             return ret;
         }
         

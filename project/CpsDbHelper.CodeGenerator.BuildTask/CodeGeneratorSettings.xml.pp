@@ -8,7 +8,9 @@
     <DataAccessClassName>DataAccess</DataAccessClassName>
     <FileNameExtensionPrefix>Generated</FileNameExtensionPrefix>
     <Enabled>true</Enabled>
-    <UseAsync>true</UseAsync>
+    <SaveAsync>true</SaveAsync>
+    <GetAsync>true</GetAsync>
+    <DeleteAsync>true</DeleteAsync>
     <ErrorIfDacpacNotFound>true</ErrorIfDacpacNotFound>
     <EnabledInConfigurations>Debug</EnabledInConfigurations>
     <EnabledInConfigurations>Release</EnabledInConfigurations>
@@ -32,6 +34,19 @@
         <EnumTypeName>TableStatusEnum</EnumTypeName>
         <!--to map non 's' plural forms to get method name mroe pretty-->
     </EnumMappings>
+    <AsyncMappings>
+        <IndexName>[dbo].[PK_Table2]</IndexName><!--Primary Key Name-->
+        <SaveAsync>true</SaveAsync>
+        <GetAsync>true</GetAsync>
+        <DeleteAsync>true</DeleteAsync>
+    </AsyncMappings>
+    <AsyncMappings>
+        <IndexName>[dbo].[Table1].[IX_Table2_Name1]</IndexName><!--Index Name-->
+        <SaveAsync>true</SaveAsync>
+        <GetAsync>true</GetAsync>
+        <DeleteAsync>true</DeleteAsync>
+    </AsyncMappings>
     <ObjectsToIgnore>[dbo].[Table1]</ObjectsToIgnore>
     <ObjectsToIgnore>[dbo].[Table2].[Id]</ObjectsToIgnore>
+
 </DacpacExtractor>

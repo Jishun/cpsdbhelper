@@ -28,10 +28,19 @@ namespace CpsDbHelper.CodeGenerator
             public string ColumnFullName { get; set; }
             public string EnumTypeName { get; set; }
         }
+        public class AsyncMapping
+        {
+            public string IndexName { get; set; }
+            public bool GetAsync { get; set; }
+            public bool SaveAsync { get; set; }
+            public bool DeleteAsync { get; set; }
+        }
 
         public string DbProjectPath { get; set; }
         public bool Enabled { get; set; }
-        public bool UseAsync { get; set; }
+        public bool GetAsync { get; set; }
+        public bool SaveAsync { get; set; }
+        public bool DeleteAsync { get; set; }
         public bool ErrorIfDacpacNotFound { get; set; }
         [XmlElement("EnabledInConfigurations")]
         public string[] EnabledInConfigurations { get; set; }
@@ -52,6 +61,8 @@ namespace CpsDbHelper.CodeGenerator
 
         [XmlElement("EnumMappings")]
         public EnumMapping[] EnumMappings { get; set; }
+        [XmlElement("AsyncMappings")]
+        public AsyncMapping[] AsyncMappings { get; set; }
 
         public void ParseDacpac(string dacpacFileName)
         {

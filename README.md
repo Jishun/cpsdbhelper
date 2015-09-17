@@ -4,19 +4,29 @@
 	Search for "CpsDbHelper" in Nuget Package manager:)
 	
 ## Code generating
-	New feature working in progress, A tool to auto generate c# data models and data access classes base on a Dacpac package (output of a SqldbProject in visual studio)
-	###Current stage:
-	- a code generator class constructed as a class library
-	- Basic logic constructed, able to cover to most common scenario, which is generating model classes based on table, working on views and functions 
-	- a msbuild task dll constructed, with following task added to the dbproject file, the build process of the db project will generate corresponding class 
-		<UsingTask AssemblyFile="(Path to CpsDbHelper.CodeGerator.BuildTask.dll)\CpsDbHelper.CodeGerator.BuildTask.dll" TaskName="CpsDbHelper.CodeGerator.BuildTask.CpsDbHelperBuildTask" />
-		  <Target Name="AfterBuild">
-			<CpsDbHelperBuildTask OutputModelPath="../MiddleTierService/Models/" Namespace="YourNamespace.Service" FileExtPrefix="Generated"/>
-		  </Target>
-    ###Next steps:
-	- Working on making the build task into nuget package
-	- Going to be working on stored procedures to dataAccess methods 
-	- Going to support basic queries (e.g. select * from ModelTable where Id = @id, in which id is by unique constant or as a primary key ) base on the db's index definition in data access class
+	A OPTIONAL tool to auto generate c# data models and data access classes from a Dacpac package (output of a SqldbProject in visual studio)
+	###Usages:
+	- Install-Package CpsDbHelper.CodeGenerator.BuildTask in a csproject 
+	- Config db project path in CodeGeneratorSettings.xml
+	- Config the output path in CodeGeneratorSettings.xml
+	- Specify the build configuration which will generate code, default Release and Debug
+	- Specify the file name patterns and the name spaces.
+	- Specify whether to break the build if dacpac is not found
+	- It will generate models out of each table
+	- It will generate GetModel methods from each unique index/primary key
+	- It will generate GetModels methods from each non-unique index
+	- It will generate SaveModel/DeleteModel methods from each unique index/primary key
+	- It will generate classes as partial for you to extend.
+	- Identity columns will have their identify scope value returned if a new row is inserted
+	- follow the examples in CodeGeneratorSettings.xml shipped with the package to do following
+		- Define whether to use async for Get/Save/Delete methods overall
+		- Overall async setting can be overrided by a "AsyncMappings" entry for specific index/primary key with the full name.
+		- If a specific enum class is needed, put a 'EnumMappings' map the type fullname with the column full name in settings, you can actually put any types you want
+		- If a specific column needs to be overrided, e.g.: dataType/nullable different from db, put a 'ColumnOverrides' entry with the column's full name
+		- If a Model name's Plural form is not '-s', put 'PluralMappings' entry to make the 'GetModels' method prettier
+		- If a column/table/index needs to be ignored, put an 'ObjectsToIgnore' entry
+		- If a column needs to be readonly, put it to ignore list and define it mannually with the same column name and compatible type
+	- After generating, the code files will be in the path specified from CodeGeneratorSettings.xml, include them in the project to use
 
 ## Example Usages:
 

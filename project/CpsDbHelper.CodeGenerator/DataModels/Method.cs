@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,10 +15,75 @@ namespace CpsDbHelper.CodeGenerator
         public const string Template = "DataAccess.txt";
         public const string InterfaceTemplate = "IDataAccess.txt";
         public string TableName;
+        public string KeyName;
+        public bool ReadAsAsync;
+        public bool WriteAsAsync;
+        public bool DeleteAsAsync;
         public IList<EntityProperty> Params;
         public IList<EntityProperty> Columns;
         public IList<EntityProperty> IdentityColumns;
         public bool Unique;
+
+        public string GetITask
+        {
+            get { return ReadAsAsync ? "Task<" : String.Empty; }
+        }
+        public string GetTask
+        {
+            get { return ReadAsAsync ? "async " + GetITask : GetITask; }
+        }
+        public string GetTaskEnd
+        {
+            get { return ReadAsAsync ? ">" : String.Empty; }
+        }
+        public string GetAwait
+        {
+            get { return ReadAsAsync ? "await " : String.Empty; }
+        }
+        public string GetAsync
+        {
+            get { return ReadAsAsync ? "Async" : String.Empty; }
+        }
+
+        public string SaveITask
+        {
+            get { return WriteAsAsync ? IdentityColumns.IsNullOrEmpty()? "Task" : "Task<" : IdentityColumns.IsNullOrEmpty()? "void" : String.Empty; }
+        }
+        public string SaveTask
+        {
+            get { return WriteAsAsync ? "async " + SaveITask : SaveITask; }
+        }
+        public string SaveTaskEnd
+        {
+            get { return WriteAsAsync && !IdentityColumns.IsNullOrEmpty() ? ">" : String.Empty; }
+        }
+        public string SaveAwait
+        {
+            get { return WriteAsAsync ? "await " : String.Empty; }
+        }
+        public string SaveAsync
+        {
+            get { return WriteAsAsync ? "Async" : String.Empty; }
+        }
+
+        public string DeleteITask
+        {
+            get { return DeleteAsAsync ? "Task" : "void"; }
+        }
+        public string DeleteTask
+        {
+            get { return DeleteAsAsync ? "async " + DeleteITask : DeleteITask; }
+        }
+        public string DeleteAwait
+        {
+            get { return DeleteAsAsync ? "await " : String.Empty; }
+        }
+        public string DeleteAsync
+        {
+            get { return DeleteAsAsync ? "Async" : String.Empty; }
+        }
+
+
 
         public static IEnumerable<Method> GetMethods(XElement xml, DacpacExtractor extractor, IList<Entity> entities)
         {
@@ -27,6 +93,7 @@ namespace CpsDbHelper.CodeGenerator
             {
                 var ret = new Method
                 {
+                    KeyName = element.GetAttributeString("Name"),
                     TableName =
                         element.XPathSelectElement("Relationship[@Name='DefiningTable']/Entry/References")
                             .GetAttributeString("Name"),
@@ -35,9 +102,19 @@ namespace CpsDbHelper.CodeGenerator
                         element.XPathSelectElements(
                             "Relationship[@Name='ColumnSpecifications']/Entry/Element[@Type='SqlIndexedColumnSpecification']/Relationship[@Name='Column']/Entry/References")
                             .Select(e => new EntityProperty() { Name = e.GetAttributeString("Name")})
-                            .ToList()
+                            .ToList(),
+                            ReadAsAsync = extractor.GetAsync,
+                            DeleteAsAsync = extractor.DeleteAsync,
+                            WriteAsAsync = extractor.SaveAsync
                 };
                 SqlToCsharpHelper.GetType(entities, ret);
+                var map = extractor.AsyncMappings.EmptyIfNull().FirstOrDefault(a => a.IndexName == ret.KeyName);
+                if (map != null)
+                {
+                    ret.ReadAsAsync = map.GetAsync;
+                    ret.WriteAsAsync = map.SaveAsync;
+                    ret.DeleteAsAsync = map.DeleteAsync;
+                }
                 if (!extractor.ObjectsToIgnore.EmptyIfNull().Contains(ret.TableName))
                 {
                     yield return ret;
@@ -57,13 +134,25 @@ namespace CpsDbHelper.CodeGenerator
                         element.XPathSelectElements(
                             "Relationship[@Name='ColumnSpecifications']/Entry/Element[@Type='SqlIndexedColumnSpecification']/Relationship[@Name='Column']/Entry/References")
                             .Select(e => new EntityProperty() { Name = e.GetAttributeString("Name") })
-                            .ToList()
+                            .ToList(),
+                    KeyName = element.GetAttributeString("Name"),
+                    ReadAsAsync = extractor.GetAsync,
+                    DeleteAsAsync = extractor.DeleteAsync,
+                    WriteAsAsync = extractor.SaveAsync
                 };
                 SqlToCsharpHelper.GetType(entities, ret);
+                var map = extractor.AsyncMappings.EmptyIfNull().FirstOrDefault(a => a.IndexName == ret.KeyName);
+                if (map != null)
+                {
+                    ret.ReadAsAsync = map.GetAsync;
+                    ret.WriteAsAsync = map.SaveAsync;
+                    ret.DeleteAsAsync = map.DeleteAsync;
+                }
                 if (!extractor.ObjectsToIgnore.EmptyIfNull().Contains(ret.TableName))
                 {
                     yield return ret;
                 }
+
             }
         }
 
