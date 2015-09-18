@@ -1,52 +1,23 @@
-﻿<DacpacExtractor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+﻿<DacpacExtractor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+     SaveAsync="false" GetAsync="false" DeleteAsync="false" Enabled="true" ErrorIfDacpacNotFound="true">
     <!--For format/options example of the latest version, please take a look at https://github.com/djsxp/cpsdbhelper/blob/master/project/CpsDbHelper.CodeGerator.BuildTask/CodeGeneratorSettings.xml.pp -->
     <ModelNamespace>$rootnamespace$</ModelNamespace>
-    <DbProjectPath>DbProjectPath</DbProjectPath>
+    <DbProjectPath><!--example:-->../CpsDbHelper.TestDatabase\CpsDbHelper.TestDatabase.sqlproj</DbProjectPath>
     <DalNamespace>$rootnamespace$.DataAccess</DalNamespace>
     <ModelOutPath>./Models</ModelOutPath>
     <DalOutPath>./Models</DalOutPath>
-    <DataAccessClassName>DataAccess</DataAccessClassName>
+    <DataAccessClassName>CpsDbHelperDataAccess</DataAccessClassName>
     <FileNameExtensionPrefix>Generated</FileNameExtensionPrefix>
-    <Enabled>true</Enabled>
-    <SaveAsync>true</SaveAsync>
-    <GetAsync>true</GetAsync>
-    <DeleteAsync>true</DeleteAsync>
-    <ErrorIfDacpacNotFound>true</ErrorIfDacpacNotFound>
     <EnabledInConfigurations>Debug</EnabledInConfigurations>
-    <EnabledInConfigurations>Release</EnabledInConfigurations>
-    <ColumnOverrides>
-        <Name>[dbo].[Table2].[Id]</Name>
-        <Type>bigint</Type>
-        <Nullable>true</Nullable>
-    </ColumnOverrides>
-    <PluralMappings>
-        <EntityName>Example</EntityName>
-        <PluralForm>Examples</PluralForm>
-        <!--can be removed by default generator appends 's'-->
-    </PluralMappings>
-    <PluralMappings>
-        <EntityName>Tax</EntityName>
-        <PluralForm>Taxes</PluralForm>
-        <!--to map non 's' plural forms to get method name mroe pretty-->
-    </PluralMappings>
-    <EnumMappings>
-        <ColumnFullName>[dbo].[Table1].[TableStatus]</ColumnFullName>
-        <EnumTypeName>TableStatusEnum</EnumTypeName>
-        <!--to map non 's' plural forms to get method name mroe pretty-->
-    </EnumMappings>
-    <AsyncMappings>
-        <IndexName>[dbo].[PK_Table2]</IndexName><!--Primary Key Name-->
-        <SaveAsync>true</SaveAsync>
-        <GetAsync>true</GetAsync>
-        <DeleteAsync>true</DeleteAsync>
-    </AsyncMappings>
-    <AsyncMappings>
-        <IndexName>[dbo].[Table1].[IX_Table2_Name1]</IndexName><!--Index Name-->
-        <SaveAsync>true</SaveAsync>
-        <GetAsync>true</GetAsync>
-        <DeleteAsync>true</DeleteAsync>
-    </AsyncMappings>
-    <ObjectsToIgnore>[dbo].[Table1]</ObjectsToIgnore>
-    <ObjectsToIgnore>[dbo].[Table2].[Id]</ObjectsToIgnore>
-
+    <!--Uncomment below entries to enable more options-->
+    <!--<Usings>System.Runtime.Serialization</Usings>-->
+    <!--<EnabledInConfigurations>Release</EnabledInConfigurations>-->   <!--Allow Multiple-->
+    <!--<PluralMappings EntityName="Tax"  PluralForm="Taxes"/>-->    <!--to map non 's' plural forms to get method name mroe pretty-->    <!--Allow Multiple-->
+    <!--<EnumMappings ColumnFullName="[dbo].[Table1].[TableStatus]" EnumTypeName="TableStatusEnum"/>--><!--Allow Multiple-->
+    <!--<AsyncMappings IndexName="[dbo].[PK_Table2]" SaveAsync="false" GetAsync="false" DeleteAsync="false"/>--><!--Allow Multiple-->
+    <!--<AsyncMappings IndexName="[dbo].[Table1].[IX_Table2_Name1]" SaveAsync="false" GetAsync="false" DeleteAsync="false"/>--><!--Allow Multiple-->
+    <!--<ColumnOverrides Name="[dbo].[Table1].[Name]" Type="int">--><!--Allow Multiple--><!--
+        <Nullable>false</Nullable>
+        <Annotations>DataMember</Annotations>--><!--Allow Multiple--><!--
+    </ColumnOverrides>-->
 </DacpacExtractor>

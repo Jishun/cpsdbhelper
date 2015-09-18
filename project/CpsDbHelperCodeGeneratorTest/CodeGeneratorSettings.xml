@@ -1,4 +1,5 @@
-﻿<DacpacExtractor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+﻿<DacpacExtractor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+     SaveAsync="false" GetAsync="false" DeleteAsync="false" Enabled="true" ErrorIfDacpacNotFound="true">
     <ModelNamespace>CpsDbHelper</ModelNamespace>
     <DbProjectPath>../CpsDbHelper.TestDatabase\CpsDbHelper.TestDatabase.sqlproj</DbProjectPath>
     <DalNamespace>CpsDbHelper.DataAccess</DalNamespace>
@@ -6,42 +7,15 @@
     <DalOutPath>./Models</DalOutPath>
     <DataAccessClassName>CpsDbHelperDataAccess</DataAccessClassName>
     <FileNameExtensionPrefix>Generated</FileNameExtensionPrefix>
-    <Enabled>true</Enabled>
-    <SaveAsync>false</SaveAsync>
-    <GetAsync>false</GetAsync>
-    <DeleteAsync>false</DeleteAsync>
-    <ErrorIfDacpacNotFound>true</ErrorIfDacpacNotFound>
+    <Usings>System.Runtime.Serialization</Usings>
     <EnabledInConfigurations>Debug</EnabledInConfigurations>
     <EnabledInConfigurations>Release</EnabledInConfigurations>
-    <ColumnOverrides>
-        <Name>[dbo].[Table1].[Name]</Name>
+    <PluralMappings EntityName="Tax"  PluralForm="Taxes"/><!--to map non 's' plural forms to get method name mroe pretty-->
+    <EnumMappings ColumnFullName="[dbo].[Table1].[TableStatus]" EnumTypeName="TableStatusEnum"/>
+    <AsyncMappings IndexName="[dbo].[PK_Table2]" SaveAsync="false" GetAsync="false" DeleteAsync="false"/>
+    <AsyncMappings IndexName="[dbo].[Table1].[IX_Table2_Name1]" SaveAsync="false" GetAsync="false" DeleteAsync="false"/>
+    <ColumnOverrides Name="[dbo].[Table1].[Name]" >
         <Nullable>false</Nullable>
+        <Annotations>DataMember</Annotations>
     </ColumnOverrides>
-    <PluralMappings>
-        <EntityName>Example</EntityName>
-        <PluralForm>Examples</PluralForm>
-        <!--can be removed by default generator appends 's'-->
-    </PluralMappings>
-    <PluralMappings>
-        <EntityName>Tax</EntityName>
-        <PluralForm>Taxes</PluralForm>
-        <!--to map non 's' plural forms to get method name mroe pretty-->
-    </PluralMappings>
-    <EnumMappings>
-        <ColumnFullName>[dbo].[Table1].[TableStatus]</ColumnFullName>
-        <EnumTypeName>TableStatusEnum</EnumTypeName>
-        <!--to map non 's' plural forms to get method name mroe pretty-->
-    </EnumMappings>
-    <AsyncMappings>
-        <IndexName>[dbo].[PK_Table2]</IndexName>
-        <SaveAsync>false</SaveAsync>
-        <GetAsync>false</GetAsync>
-        <DeleteAsync>false</DeleteAsync>
-    </AsyncMappings>
-    <AsyncMappings>
-        <IndexName>[dbo].[Table1].[IX_Table2_Name1]</IndexName>
-        <SaveAsync>false</SaveAsync>
-        <GetAsync>false</GetAsync>
-        <DeleteAsync>false</DeleteAsync>
-    </AsyncMappings>
 </DacpacExtractor>

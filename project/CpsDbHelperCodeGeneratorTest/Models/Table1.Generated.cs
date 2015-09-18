@@ -2,67 +2,98 @@
 Source code at https://github.com/djsxp/cpsdbhelper
 */
 using System;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization;
 
 namespace CpsDbHelper
 {
     public partial class Table1
     {
         
+        
         public int Id { get; set; }
         
+        [DataMember]
         public string Name { get; set; }
+        
         
         public long Name1 { get; set; }
         
+        
         public byte[] Name2 { get; set; }
+        
         
         public bool? Name3 { get; set; }
         
+        
         public string Name4 { get; set; }
+        
         
         public DateTime? Name5 { get; set; }
         
+        
         public decimal? Name6 { get; set; }
+        
         
         public double? Name7 { get; set; }
         
+        
         public byte[] Name8 { get; set; }
+        
         
         public int? Name9 { get; set; }
         
+        
         public decimal? Name0 { get; set; }
+        
         
         public string Name11 { get; set; }
         
+        
         public string Name12 { get; set; }
+        
         
         public string Name13 { get; set; }
         
+        
         public decimal? Name14 { get; set; }
+        
         
         public DateTime? Name15 { get; set; }
         
+        
         public short? Name16 { get; set; }
+        
         
         public decimal? Name17 { get; set; }
         
+        
         public string Name18 { get; set; }
+        
         
         public byte? Name20 { get; set; }
         
+        
         public Guid? Name21 { get; set; }
+        
         
         public byte[] Name22 { get; set; }
         
+        
         public string Name23 { get; set; }
+        
         
         public string Name24 { get; set; }
         
+        
         public DateTime? Name25 { get; set; }
+        
         
         public TimeSpan? Name26 { get; set; }
         
+        
         public DateTimeOffset? Name27 { get; set; }
+        
         
         public DateTime? Name28 { get; set; }
         

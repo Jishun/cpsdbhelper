@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using CpsDbHelper;
 using CpsDbHelper.Extensions;
 using CpsDbHelper.Utils;
+{{Usings[Collection]}}using {{Using}};
+{{Usings[CollectionEnd]}}
 
 namespace {{Namespace}}
 {

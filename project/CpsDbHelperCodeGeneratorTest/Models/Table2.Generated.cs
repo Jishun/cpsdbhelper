@@ -2,15 +2,20 @@
 Source code at https://github.com/djsxp/cpsdbhelper
 */
 using System;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization;
 
 namespace CpsDbHelper
 {
     public partial class Table2
     {
         
+        
         public int Id { get; set; }
         
+        
         public string Name { get; set; }
+        
         
         public int? Descript { get; set; }
         

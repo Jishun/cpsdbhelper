@@ -153,6 +153,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CodeGeneratorSettings - Copy 1.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="CodeGeneratorSettings.xml">
       <SubType>Designer</SubType>
     </Content>

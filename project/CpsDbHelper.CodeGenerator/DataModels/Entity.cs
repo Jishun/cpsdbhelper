@@ -43,6 +43,7 @@ namespace CpsDbHelper.CodeGenerator
                     {
                         p.Type = over.Type ?? p.Type;
                         p.Nullable = over.Nullable ?? p.Nullable;
+                        p.Attributes = over.Attributes;
                         over.Name = null;
                     }
 

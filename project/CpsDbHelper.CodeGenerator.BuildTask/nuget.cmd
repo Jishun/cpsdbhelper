@@ -1,1 +1,1 @@
-nuget pack CpsDbHelper.CodeGenerator.BuildTask.csproj -Tool
+nuget pack -Tool -Symbol

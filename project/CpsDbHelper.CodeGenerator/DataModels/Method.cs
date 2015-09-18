@@ -83,8 +83,6 @@ namespace CpsDbHelper.CodeGenerator
             get { return DeleteAsAsync ? "Async" : String.Empty; }
         }
 
-
-
         public static IEnumerable<Method> GetMethods(XElement xml, DacpacExtractor extractor, IList<Entity> entities)
         {
             const string xpath = "/DataSchemaModel/Model/Element[@Type='SqlPrimaryKeyConstraint']";
@@ -108,13 +106,7 @@ namespace CpsDbHelper.CodeGenerator
                             WriteAsAsync = extractor.SaveAsync
                 };
                 SqlToCsharpHelper.GetType(entities, ret);
-                var map = extractor.AsyncMappings.EmptyIfNull().FirstOrDefault(a => a.IndexName == ret.KeyName);
-                if (map != null)
-                {
-                    ret.ReadAsAsync = map.GetAsync;
-                    ret.WriteAsAsync = map.SaveAsync;
-                    ret.DeleteAsAsync = map.DeleteAsync;
-                }
+                MapAsyncSettings(ret, extractor);
                 if (!extractor.ObjectsToIgnore.EmptyIfNull().Contains(ret.TableName))
                 {
                     yield return ret;
@@ -141,18 +133,23 @@ namespace CpsDbHelper.CodeGenerator
                     WriteAsAsync = extractor.SaveAsync
                 };
                 SqlToCsharpHelper.GetType(entities, ret);
-                var map = extractor.AsyncMappings.EmptyIfNull().FirstOrDefault(a => a.IndexName == ret.KeyName);
-                if (map != null)
-                {
-                    ret.ReadAsAsync = map.GetAsync;
-                    ret.WriteAsAsync = map.SaveAsync;
-                    ret.DeleteAsAsync = map.DeleteAsync;
-                }
+                MapAsyncSettings(ret, extractor);
                 if (!extractor.ObjectsToIgnore.EmptyIfNull().Contains(ret.TableName))
                 {
                     yield return ret;
                 }
 
+            }
+        }
+
+        static void MapAsyncSettings(Method method, DacpacExtractor extractor)
+        {
+            var map = extractor.AsyncMappings.EmptyIfNull().FirstOrDefault(a => a.IndexName == method.KeyName);
+            if (map != null)
+            {
+                method.ReadAsAsync = map.GetAsync;
+                method.WriteAsAsync = map.SaveAsync;
+                method.DeleteAsAsync = map.DeleteAsync;
             }
         }
 

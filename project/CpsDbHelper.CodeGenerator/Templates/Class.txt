@@ -2,12 +2,14 @@
 Source code at https://github.com/djsxp/cpsdbhelper
 */
 using System;
-
+{{Usings[Collection]}}using {{Using}};
+{{Usings[CollectionEnd]}}
 namespace {{Namespace}}
 {
     public partial class {{Name}}
     {
         {{Properties[Collection]}}
+        {{AttrBegin}}{{Attrs[Collection, Join(, )]}}{{Attr}}{{Attrs[CollectionEnd]}}{{AttrEnd}}
         public {{Type[CSharpType(Name)]}} {{Name[SqlShortName]}} { get; set; }
         {{Properties[CollectionEnd]}}
     }

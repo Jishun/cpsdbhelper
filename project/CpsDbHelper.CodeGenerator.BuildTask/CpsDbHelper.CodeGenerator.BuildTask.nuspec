@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>CpsDbHelper.CodeGenerator.BuildTask</id>
-    <version>1.0.1.0</version>
+    <version>1.0.1.1</version>
     <title>CpsDbHelper CodeGenerator's BuildTask</title>
       <authors>Jishun Duan</authors>
       <owners>Jishun Duan</owners>
@@ -11,7 +11,9 @@
       <iconUrl>https://github.com/djsxp/cpsdbhelper</iconUrl>
       <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Msbuild task for auto generating CpsDBHelper's data-access code from a Sql dbproject (SSDT), it ONLY works with vs' dbproject</description>
-    <releaseNotes>Ignore timestamp/rowversion columns by default, add support for async method generation with switch options</releaseNotes>
+    <releaseNotes>Allow to genreate attribute for specific column/property, customised using statement in generated files
+        Reformat config xml
+    </releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>CpsDbHelper, dbHelper, CodeGenerator</tags>
   </metadata>

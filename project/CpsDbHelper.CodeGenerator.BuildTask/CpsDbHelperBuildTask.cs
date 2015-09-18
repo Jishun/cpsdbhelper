@@ -20,18 +20,25 @@ namespace CpsDbHelper.CodeGenerator.BuildTask
             BuildEngine.LogMessageEvent(m);
 
             var proj = ProjectCollection.GlobalProjectCollection.GetLoadedProjects(ProjectPath).FirstOrDefault() ?? new Project(ProjectPath);
-            var settingsFile = proj.GetItemsByEvaluatedInclude("CodeGeneratorSettings.xml").FirstOrDefault();
+            var settingsFile = proj.GetItemsByEvaluatedInclude(DacpacExtractor.ConfigFileName).FirstOrDefault();
             if (settingsFile != null)
             {
                 var xml = XDocument.Load(settingsFile.UnevaluatedInclude);
-                var parser = xml.Root.FromXElement<DacpacExtractor>();
+                string error;
+                var parser = DacpacExtractor.LoadFromXml(xml.Root, out error);
+                if (parser == null)
+                {
+                    var me = new BuildErrorEventArgs("DbHelper code generator", "", ProjectPath, 0, 0, 0, 0, error, DacpacExtractor.ConfigFileName, "CpsDbHelperCodeGenerator", DateTime.Now, MessageImportance.High);
+                    BuildEngine.LogErrorEvent(me);
+                    return false;
+                }
                 if (Configuration != null && parser.EnabledInConfigurations != null && !parser.EnabledInConfigurations.Contains(Configuration))
                 {
                     return true;
                 }
                 if (!File.Exists(parser.DbProjectPath))
                 {
-                    var me = new BuildErrorEventArgs("DbHelper code generator", "", ProjectPath, 0, 0, 0, 0, "please config 'DbProjectPath' in 'CodeGeneratorSettings.xml'", "CodeGeneratorSettings.xml", "CpsDbHelperCodeGenerator", DateTime.Now, MessageImportance.High);
+                    var me = new BuildErrorEventArgs("DbHelper code generator", "", ProjectPath, 0, 0, 0, 0, "please config 'DbProjectPath' in '{0}'".FormatInvariantCulture(DacpacExtractor.ConfigFileName), DacpacExtractor.ConfigFileName, "CpsDbHelperCodeGenerator", DateTime.Now, MessageImportance.High);
                     BuildEngine.LogErrorEvent(me);
                     return false;
                 }
@@ -45,17 +52,30 @@ namespace CpsDbHelper.CodeGenerator.BuildTask
                 var dacpac = Path.Combine(dir, fileName);
                 if (File.Exists(dacpac))
                 {
-                    parser.ParseDacpac(dacpac);
+                    var errorMessage = parser.ParseDacpac(dacpac);
+                    if (errorMessage != null)
+                    {
+                        var me = new BuildErrorEventArgs("DbHelper code generator", "", ProjectPath, 0, 0, 0, 0, errorMessage, DacpacExtractor.ConfigFileName, "CpsDbHelperCodeGenerator", DateTime.Now, MessageImportance.High);
+                        BuildEngine.LogErrorEvent(me);
+                        return false;
+                    }
+                }
+                else if(parser.ErrorIfDacpacNotFound)
+                {
+                    var me = new BuildErrorEventArgs("DbHelper code generator", "", ProjectPath, 0, 0, 0, 0, "Cannot find dacpac file", DacpacExtractor.ConfigFileName, "CpsDbHelperCodeGenerator", DateTime.Now, MessageImportance.High);
+                    BuildEngine.LogErrorEvent(me);
+                    return false;
                 }
                 else
                 {
                     var me = new BuildMessageEventArgs("Cannot find dacpac file, skip code generating", "", "CpsDbHelperBuildTask", MessageImportance.Normal);
                     BuildEngine.LogMessageEvent(me);
+                    return true;
                 }
             }
             else
             {
-                var me = new BuildErrorEventArgs("DbHelper code generator", "", ProjectPath, 0, 0, 0, 0, "Unable to find 'CodeGeneratorSettings.xml'", "CodeGeneratorSettings.xml", "CpsDbHelperCodeGenerator", DateTime.Now, MessageImportance.High);
+                var me = new BuildErrorEventArgs("DbHelper code generator", "", ProjectPath, 0, 0, 0, 0, "Unable to find '{0}'".FormatInvariantCulture(), "CodeGeneratorSettings.xml", DacpacExtractor.ConfigFileName, DateTime.Now, MessageImportance.High);
                 BuildEngine.LogErrorEvent(me);
                 return false;
             }
