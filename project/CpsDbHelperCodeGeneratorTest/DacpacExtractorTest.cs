@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -63,7 +64,7 @@ namespace CpsDbHelperCodeGeneratorTest
             {
                 p.PluralMappings = new[]
                 {
-                    new DacpacExtractor.PluralMapping(){ EntityName = "Table1", PluralForm = "Table1es" }
+                    new DacpacExtractor.PluralMapping(){ EntityName = "TableAnother", PluralForm = "TableAnotheres" }
                     ,new DacpacExtractor.PluralMapping(){ EntityName = "Table2", PluralForm = "Table2es" }
                 };
                 p.ModelNamespace = "hehe";
@@ -77,18 +78,19 @@ namespace CpsDbHelperCodeGeneratorTest
         {
             var db = new DbHelperFactory(ConnectionString.FormatInvariantCulture(DbName));
             var da = new CpsDbHelperDataAccess(ConnectionString.FormatInvariantCulture(DbName));
-            db.BeginNonQuery("Truncate table dbo.table1")
+            Task.WaitAll(db.BeginNonQuery("delete from dbo.table2").ExecuteSqlStringAsync());
+            db.BeginNonQuery("delete from dbo.Table1")
                 .ExecuteSqlString();
-            Task.WaitAll(db.BeginNonQuery("Truncate table dbo.table2").ExecuteSqlStringAsync());
-            var t1 = new Table1()
+            var t1 = new TableAnother()
             {
                 Id = 10,
+                Name1 = 10,
                 Name = "t1r1",
                 Name13 = "t1r1"
             };
             da.BeginTransaction();
-            da.SaveTable1ById(t1);
-            var t1load = da.GetTable1ById(t1.Id);
+            da.SaveTableAnotherByIdAndName1(t1);
+            var t1load = da.GetTableAnotherByIdAndName1(t1.Id, t1.Name1);
             Assert.AreEqual(t1load.Name13, t1.Name13);
             var t2 = new Table2()
             {
@@ -99,19 +101,19 @@ namespace CpsDbHelperCodeGeneratorTest
             var t2load = da.GetTable2ById(id.Value);
             Assert.AreEqual(t2.Name, t2load.Name);
             da.EndTransaction(false);
-            t1load = da.GetTable1ById(t1.Id);
+            t1load = da.GetTableAnotherByIdAndName1(t1.Id,  t1.Name1);
             Assert.IsNull(t1load);
             t1.Name13 = "t1r1m";
-            da.SaveTable1ById(t1);
-            t1load = da.GetTable1ById(t1.Id);
+            da.SaveTableAnotherByIdAndName1(t1);
+            t1load = da.GetTableAnotherByIdAndName1(t1.Id, t1.Name1);
             Assert.AreEqual(t1load.Name13, t1.Name13);
             da.BeginTransaction();
             t1.Name13 = "t1r1m2";
-            da.SaveTable1ById(t1);
-            t1load = da.GetTable1ById(t1.Id);
+            da.SaveTableAnotherByIdAndName1(t1);
+            t1load = da.GetTableAnotherByIdAndName1(t1.Id, t1.Name1);
             da.EndTransaction();
             Assert.AreEqual(t1load.Name13, t1.Name13);
-            t1load = da.GetTable1ById(11);
+            t1load = da.GetTableAnotherByIdAndName1(11, 11);
             Assert.IsNull(t1load);
             id = da.SaveTable2ById(t2);
             t2load = da.GetTable2ByNameAndDescript(t2.Name, t2.Descript);
@@ -125,6 +127,22 @@ namespace CpsDbHelperCodeGeneratorTest
 
             Assert.AreEqual(1, ret.Count);
             Assert.AreEqual(ret.First().Id, id.Value);
+
+            t2 = new Table2()
+            {
+                ForId = t1.Id,
+                ForName = t1.Name1,
+                Name = "hehe"
+            };
+            id = da.SaveTable2ByForIdAndForName(t2);
+            var retT2 = da.GetTable2sByForIdAndForName(t2.ForId, t2.ForName);
+            Assert.AreEqual(1,retT2.Count);
+            Assert.AreEqual(t2.Name, retT2.First().Name);
+            t1load = da.GetTableAnotherByIdAndName1(t2.ForId.Value, t2.ForName.Value, true);
+            Assert.AreEqual(1, t1load.Table2s.Count);
+            Assert.AreEqual(t2.Name, t1load.Table2s.First().Name);
+            t1load = da.GetTableAnotherByIdAndName1(t2.ForId.Value, t2.ForName.Value);
+            Assert.AreEqual(null, t1load.Table2s);
         }
 
     }

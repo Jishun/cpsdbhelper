@@ -18,6 +18,8 @@ namespace CpsDbHelper.CodeGenerator
         public bool? Nullable { get; set; }
         [XmlIgnore]
         public bool Identity { get; set; }
+        [XmlIgnore]
+        public string ForeignName { get; set; }
 
         public string AttrBegin
         {

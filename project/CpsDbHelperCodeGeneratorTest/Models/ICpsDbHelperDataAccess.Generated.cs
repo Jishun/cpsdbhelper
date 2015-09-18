@@ -9,7 +9,6 @@ using CpsDbHelper;
 using CpsDbHelper.Extensions;
 using CpsDbHelper.Utils;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization;
 
 
 namespace CpsDbHelper
@@ -19,68 +18,20 @@ namespace CpsDbHelper
         void BeginTransaction();
         void EndTransaction(bool commit = true);
         
-        IList<Table1> GetTable1sByName0(decimal? name0);
-        
-        IList<Table1> GetTable1sByName(string name);
-        
-        IList<Table1> GetTable1sByName11(string name11);
-        
-        IList<Table1> GetTable1sByName13(string name13);
-        
-        IList<Table1> GetTable1sByName14(decimal? name14);
-        
-        IList<Table1> GetTable1sByName15(DateTime? name15);
-        
-        IList<Table1> GetTable1sByName16(short? name16);
-        
-        IList<Table1> GetTable1sByName17(decimal? name17);
-        
-        IList<Table1> GetTable1sByName18(string name18);
-        
-        IList<Table1> GetTable1sByName2(byte[] name2);
-        
-        IList<Table1> GetTable1sByName20(byte? name20);
-        
-        IList<Table1> GetTable1sByName21(Guid? name21);
-        
-        IList<Table1> GetTable1sByName22(byte[] name22);
-        
-        IList<Table1> GetTable1sByName23(string name23);
-        
-        IList<Table1> GetTable1sByName24(string name24);
-        
-        IList<Table1> GetTable1sByName25(DateTime? name25);
-        
-        IList<Table1> GetTable1sByName26(TimeSpan? name26);
-        
-        IList<Table1> GetTable1sByName27(DateTimeOffset? name27);
-        
-        IList<Table1> GetTable1sByName28(DateTime? name28);
-        
-        IList<Table1> GetTable1sByName3(bool? name3);
-        
-        IList<Table1> GetTable1sByName4(string name4);
-        
-        IList<Table1> GetTable1sByName5(DateTime? name5);
-        
-        IList<Table1> GetTable1sByName6(decimal? name6);
-        
-        IList<Table1> GetTable1sByName7(double? name7);
-        
-        IList<Table1> GetTable1sByName8(byte[] name8);
-        
-        IList<Table1> GetTable1sByName9(int? name9);
+        IList<Table2> GetTable2sByForIdAndForName(int? forId, long? forName);
         
         
         Table2 GetTable2ById(int id);
         
-        Table1 GetTable1ById(int id);
+        TableAnother GetTableAnotherByIdAndName1(int id, long name1, bool includeTable2s = false);
         
         Table2 GetTable2ByNameAndDescript(string name, int? descript);
         
         
-        void SaveTable1ById(Table1 table1);
+        void SaveTableAnotherByIdAndName1(TableAnother tableAnother);
         
+        
+        int? SaveTable2ByForIdAndForName(Table2 table2);
         
         int? SaveTable2ById(Table2 table2);
         
@@ -89,7 +40,7 @@ namespace CpsDbHelper
         
         void DeleteTable2ById(int id);
         
-        void DeleteTable1ById(int id);
+        void DeleteTableAnotherByIdAndName1(int id, long name1);
         
         void DeleteTable2ByNameAndDescript(string name, int? descript);
         

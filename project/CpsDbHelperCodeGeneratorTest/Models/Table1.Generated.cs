@@ -3,10 +3,10 @@ Source code at https://github.com/djsxp/cpsdbhelper
 */
 using System;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization;
 
 namespace CpsDbHelper
 {
+    [DataContract]
     public partial class Table1
     {
         

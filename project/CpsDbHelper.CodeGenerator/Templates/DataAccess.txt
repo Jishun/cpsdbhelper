@@ -32,52 +32,57 @@ namespace {{Namespace}}
             _db.EndConnection(commit);
         }
         {{MultipleMethods[Collection]}}
-        public {{GetTask}}IList<{{TableName[SqlShortName]}}>{{GetTaskEnd}} Get{{TableName[SqlShortName,Plural]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{GetAsync}}({{Params[Collection, Join(, )]}}{{Type[CSharpType]}} {{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}})
+        public {{GetTask}}IList<{{EntityName}}>{{GetTaskEnd}} Get{{EntityName[Plural]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{GetAsync}}({{Params[Collection, Join(, )]}}{{Type[CSharpType]}} {{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}})
         {
             const string query = "SELECT * FROM {{TableName}} WHERE {{Params[Collection, Join( AND )]}}[{{Name[SqlShortName]}}] = @{{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}}";
             var reader = {{GetAwait}}_db.BeginReader(query){{Params[Collection]}}
                          .Add{{Type[DbHelperSqlType,FirstUpper]}}InParam("{{Name[SqlShortName]}}", {{Type[CSharpEnumCast(Name)]}}{{Name[SqlShortName, FirstLower]}}, true){{Params[CollectionEnd]}}
-                         .AutoMapResult<{{TableName[SqlShortName]}}>() 
+                         .AutoMapResult<{{EntityName}}>() 
                          .ExecuteSqlString{{GetAsync}}();
-            var ret = reader.GetResult<IList<{{TableName[SqlShortName]}}>>(); 
+            var ret = reader.GetResult<IList<{{EntityName}}>>(); 
             return ret;
         }
         {{MultipleMethods[CollectionEnd]}}
         {{UniqueMethods[Collection]}}
-        public {{GetTask}}{{TableName[SqlShortName]}}{{GetTaskEnd}} Get{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{GetAsync}}({{Params[Collection, Join(, )]}}{{Type[CSharpType]}} {{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}})
+        public {{GetTask}}{{EntityName}}{{GetTaskEnd}} Get{{EntityName}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{GetAsync}}({{Params[Collection, Join(, )]}}{{Type[CSharpType]}} {{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}}{{Foreigns[Collection]}}, bool include{{EntityName[Plural]}} = false{{Foreigns[CollectionEnd]}})
         {
-            const string query = "SELECT * FROM {{TableName}} WHERE {{Params[Collection, Join( AND )]}}[{{Name[SqlShortName]}}] = @{{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}}";
+            const string query = "SELECT * FROM {{TableName}} WHERE {{Params[Collection, Join( AND )]}}[{{Name[SqlShortName]}}] = @{{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}}{{Foreigns[Collection]}} IF(@include{{EntityName[Plural]}} = 1) SELECT * FROM {{TableName}} WHERE{{Params[Collection,Join( AND)]}} {{Name[SqlShortName]}} = @{{ForeignName[SqlShortName,FirstLower]}} {{Params[CollectionEnd]}}{{Foreigns[CollectionEnd]}}";
             var reader = {{GetAwait}}_db.BeginReader(query){{Params[Collection]}}
-                         .Add{{Type[DbHelperSqlType,FirstUpper]}}InParam("{{Name[SqlShortName]}}", {{Type[CSharpEnumCast(Name)]}}{{Name[SqlShortName, FirstLower]}}, true){{Params[CollectionEnd]}}
-                         .AutoMapResult<{{TableName[SqlShortName]}}>() 
+                         .Add{{Type[DbHelperSqlType,FirstUpper]}}InParam("{{Name[SqlShortName]}}", {{Type[CSharpEnumCast(Name)]}}{{Name[SqlShortName, FirstLower]}}, true){{Params[CollectionEnd]}}{{Foreigns[Collection]}}
+                         .AddBitInParam("include{{EntityName[Plural]}}", include{{EntityName[Plural]}}){{Foreigns[CollectionEnd]}}
+                         .AutoMapResult<{{EntityName}}>(){{Foreigns[Collection]}}
+                         .AutoMapResult<{{EntityName}}>("{{EntityName[Plural]}}"){{Foreigns[CollectionEnd]}}
                          .ExecuteSqlString{{GetAsync}}();
-            var ret = reader.GetResult<IList<{{TableName[SqlShortName]}}>>(); 
-            return ret.FirstOrDefault();
+            var ret = reader.GetResultCollection<{{EntityName}}>().FirstOrDefault();{{Foreigns[Collection]}}
+            if(include{{EntityName[Plural]}} && ret != null){
+                ret.{{EntityName[Plural]}} = reader.GetResultCollection<{{EntityName}}>("{{EntityName[Plural]}}");
+            }{{Foreigns[CollectionEnd]}}
+            return ret;
         }
         {{UniqueMethods[CollectionEnd]}}
         {{NonQueryMethods[Collection]}}
-        public {{SaveTask}} Save{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{SaveAsync}}({{TableName[SqlShortName]}} {{TableName[SqlShortName, FirstLower]}})
+        public {{SaveTask}} Save{{EntityName}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{SaveAsync}}({{EntityName}} {{EntityName[FirstLower]}})
         {
             const string query = "IF EXISTS(SELECT 1 FROM {{TableName}} WHERE {{Params[Collection, Join( AND )]}}[{{Name[SqlShortName]}}] = @{{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}}) UPDATE {{TableName}} SET {{Columns[Collection, Join(, )]}}[{{Name[SqlShortName]}}] = @{{Name[SqlShortName, FirstLower]}}{{Columns[CollectionEnd]}}  WHERE {{Params[Collection, Join( AND )]}}[{{Name[SqlShortName]}}] = @{{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}} ELSE INSERT INTO {{TableName}} ({{Columns[Collection, Join(, )]}}[{{Name[SqlShortName]}}]{{Columns[CollectionEnd]}}) VALUES({{Columns[Collection, Join(, )]}}@{{Name[SqlShortName, FirstLower]}}{{Columns[CollectionEnd]}})";
             var ret = {{SaveAwait}}_db.BeginNonQuery(query){{Columns[Collection]}} 
-                         .Add{{Type[DbHelperSqlType,FirstUpper]}}InParam("{{Name[SqlShortName]}}",  {{Type[CSharpEnumCast(Name)]}}{{TableName[SqlShortName, FirstLower, Inherited(1)]}}.{{Name[SqlShortName]}}, true){{Columns[CollectionEnd]}}
+                         .Add{{Type[DbHelperSqlType,FirstUpper]}}InParam("{{Name[SqlShortName]}}",  {{Type[CSharpEnumCast(Name)]}}{{EntityName[FirstLower, Inherited(1)]}}.{{Name[SqlShortName]}}, true){{Columns[CollectionEnd]}}
                          .ExecuteSqlString{{SaveAsync}}(); 
         }
         {{NonQueryMethods[CollectionEnd]}}
         {{ScalarMethods[Collection]}}
-        public {{SaveTask}}{{IdentityColumns[Collection]}}{{Type[CSharpType]}}?{{IdentityColumns[CollectionEnd]}}{{SaveTaskEnd}} Save{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{SaveAsync}}({{TableName[SqlShortName]}} {{TableName[SqlShortName, FirstLower]}})
+        public {{SaveTask}}{{IdentityColumns[Collection]}}{{Type[CSharpType]}}?{{IdentityColumns[CollectionEnd]}}{{SaveTaskEnd}} Save{{EntityName}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{SaveAsync}}({{EntityName}} {{EntityName[FirstLower]}})
         {
             const string query = "IF EXISTS(SELECT 1 FROM {{TableName}} WHERE {{Params[Collection, Join( AND )]}}[{{Name[SqlShortName]}}] = @{{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}}) UPDATE {{TableName}} SET {{Columns[Collection, Join(, )]}}[{{Name[SqlShortName]}}] = @{{Name[SqlShortName, FirstLower]}}{{Columns[CollectionEnd]}}  WHERE {{Params[Collection, Join( AND )]}}[{{Name[SqlShortName]}}] = @{{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}} ELSE BEGIN INSERT INTO {{TableName}} ({{Columns[Collection, Join(, )]}}[{{Name[SqlShortName]}}]{{Columns[CollectionEnd]}}) VALUES({{Columns[Collection, Join(, )]}}@{{Name[SqlShortName, FirstLower]}}{{Columns[CollectionEnd]}}) SELECT SCOPE_IDENTITY() END";
             var scalar = {{SaveAwait}}_db.BeginScalar<{{IdentityColumns[Collection]}}{{Type[CSharpType]}}?{{IdentityColumns[CollectionEnd]}}>(query){{IdentityColumns[Collection]}} 
-                         .Add{{Type[DbHelperSqlType,FirstUpper]}}InParam("{{Name[SqlShortName]}}", {{TableName[SqlShortName, FirstLower, Inherited(1)]}}.{{Name[SqlShortName]}}, true){{IdentityColumns[CollectionEnd]}}{{Columns[Collection]}} 
-                         .Add{{Type[DbHelperSqlType,FirstUpper]}}InParam("{{Name[SqlShortName]}}",  {{Type[CSharpEnumCast(Name)]}}{{TableName[SqlShortName, FirstLower, Inherited(1)]}}.{{Name[SqlShortName]}}, true){{Columns[CollectionEnd]}}
+                         .Add{{Type[DbHelperSqlType,FirstUpper]}}InParam("{{Name[SqlShortName]}}", {{EntityName[FirstLower, Inherited(1)]}}.{{Name[SqlShortName]}}, true){{IdentityColumns[CollectionEnd]}}{{Columns[Collection]}} 
+                         .Add{{Type[DbHelperSqlType,FirstUpper]}}InParam("{{Name[SqlShortName]}}",  {{Type[CSharpEnumCast(Name)]}}{{EntityName[FirstLower, Inherited(1)]}}.{{Name[SqlShortName]}}, true){{Columns[CollectionEnd]}}
                          .ExecuteSqlString{{SaveAsync}}();
             var ret = scalar.GetResult(); 
             return ret;
         }
         {{ScalarMethods[CollectionEnd]}}
         {{UniqueMethods[Collection]}}
-        public {{DeleteTask}} Delete{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{DeleteAsync}}({{Params[Collection, Join(, )]}}{{Type[CSharpType]}} {{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}})
+        public {{DeleteTask}} Delete{{EntityName}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{DeleteAsync}}({{Params[Collection, Join(, )]}}{{Type[CSharpType]}} {{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}})
         {
             const string query = "DELETE FROM {{TableName}} WHERE {{Params[Collection, Join( AND )]}}[{{Name[SqlShortName]}}] = @{{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}}";
             {{DeleteAwait}}_db.BeginNonQuery(query){{Params[Collection]}}

@@ -2,11 +2,12 @@
 Source code at https://github.com/djsxp/cpsdbhelper
 */
 using System;
-using System.Runtime.Serialization;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace CpsDbHelper
 {
+    
     public partial class Table2
     {
         
@@ -17,7 +18,14 @@ namespace CpsDbHelper
         public string Name { get; set; }
         
         
+        public int? ForId { get; set; }
+        
+        
+        public long? ForName { get; set; }
+        
+        
         public int? Descript { get; set; }
+        
         
     }
 }

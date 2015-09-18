@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 using System.Xml.XPath;
 using DotNetUtils;
 
@@ -11,13 +12,48 @@ namespace CpsDbHelper.CodeGenerator
 {
     public class Entity
     {
+        private string _name = null;
+
+        [XmlIgnore]
         public const string Template = "Class.txt";
-        public string TableName;
+
+        [XmlAttribute]
+        public string TableName { get; set; }
+
+        [XmlAttribute]
+        public bool IncludeForeignKey { get; set; }
+
+        [XmlIgnore]
         public IList<EntityProperty> Properties  = new List<EntityProperty>();
 
+        [XmlElement]
+        public string[] Annotations { get; set; }
+
+        [XmlIgnore]
+        public IList<Method> Foreigns = new List<Method>();
+        
+        [XmlAttribute]
         public string Name
         {
-            get { return SqlToCsharpHelper.GetSqlObjectShortName(TableName); }
+            get { return _name ?? SqlToCsharpHelper.GetSqlObjectShortName(TableName); }
+            set { _name = value; }
+        }
+
+        public string AttrBegin
+        {
+            get { return Annotations.IsNullOrEmpty() ? String.Empty : "["; }
+        }
+        public string AttrEnd
+        {
+            get { return Annotations.IsNullOrEmpty() ? String.Empty : "]"; }
+        }
+        [XmlIgnore]
+        public object[] Attrs
+        {
+            get
+            {
+                return Annotations.EmptyIfNull().Select(a => new Dictionary<string, object>() { { "Attr", a } }).Cast<object>().ToArray();
+            }
         }
 
         public static IEnumerable<Entity> GetEntities(XElement xml, DacpacExtractor extractor)
@@ -26,7 +62,7 @@ namespace CpsDbHelper.CodeGenerator
             var elements = xml.XPathSelectElements(xpath);
             foreach (var e in elements)
             {
-                var entity = new Entity {TableName = e.GetAttributeString("Name")};
+                var entity = new Entity {TableName = e.GetAttributeString("Name"), IncludeForeignKey = extractor.IncludeForeignKey};
                 foreach (var pe in e.XPathSelectElements("Relationship[@Name='Columns']/Entry/Element[@Type='SqlSimpleColumn']"))
                 {
                     var nullableNode = pe.XPathSelectElement("Property[@Name='IsNullable']");
@@ -58,6 +94,13 @@ namespace CpsDbHelper.CodeGenerator
                     {
                         entity.Properties.Add(c);
                     }
+                }
+                var an = extractor.EntityOverrides.EmptyIfNull().FirstOrDefault(ae => ae.TableName == entity.TableName);
+                if (an != null)
+                {
+                    entity.Annotations = an.Annotations;
+                    entity.Name = an.Name;
+                    entity.IncludeForeignKey = an.IncludeForeignKey;
                 }
                 if (!extractor.ObjectsToIgnore.EmptyIfNull().Contains(entity.TableName))
                 {

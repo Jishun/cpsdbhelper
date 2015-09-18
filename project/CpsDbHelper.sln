@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CpsDbHelper.CodeGenerator.B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CpsDbHelperCodeGeneratorTest2", "CpsDbHelperCodeGeneratorTest\CpsDbHelperCodeGeneratorTest2.csproj", "{F8E194DB-699E-4661-8962-0C755BD5E9AF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CpsDbHelper.CodeGenerator.Executeable", "CpsDbHelper.CodeGenerator.Executeable\CpsDbHelper.CodeGenerator.Executeable.csproj", "{D470C464-F1E8-4F72-8E4B-0FA338FAE142}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,10 @@ Global
 		{F8E194DB-699E-4661-8962-0C755BD5E9AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F8E194DB-699E-4661-8962-0C755BD5E9AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8E194DB-699E-4661-8962-0C755BD5E9AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D470C464-F1E8-4F72-8E4B-0FA338FAE142}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D470C464-F1E8-4F72-8E4B-0FA338FAE142}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D470C464-F1E8-4F72-8E4B-0FA338FAE142}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D470C464-F1E8-4F72-8E4B-0FA338FAE142}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

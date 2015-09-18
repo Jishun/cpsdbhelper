@@ -23,7 +23,6 @@ namespace CpsDbHelper.CodeGenerator
 
         public const string ConfigFileName = "CodeGeneratorSettings.xml";
 
-
         public class PluralMapping
         {
             [XmlAttribute]
@@ -54,6 +53,14 @@ namespace CpsDbHelper.CodeGenerator
         [XmlAttribute]
         public bool Enabled { get; set; }
         [XmlAttribute]
+        public bool IncludePrimaryKey { get; set; }
+        [XmlAttribute]
+        public bool IncludeUniqueIndex { get; set; }
+        [XmlAttribute]
+        public bool IncludeNonUniqueIndex { get; set; }
+        [XmlAttribute]
+        public bool IncludeForeignKey { get; set; }
+        [XmlAttribute]
         public bool GetAsync { get; set; }
         [XmlAttribute]
         public bool SaveAsync { get; set; }
@@ -77,6 +84,8 @@ namespace CpsDbHelper.CodeGenerator
         public string[] EnabledInConfigurations { get; set; }
         [XmlElement]
         public EntityProperty[] ColumnOverrides { get; set; }
+        [XmlElement]
+        public Entity[] EntityOverrides { get; set; }
 
         [XmlElement]
         public PluralMapping[] PluralMappings { get; set; }
@@ -84,6 +93,16 @@ namespace CpsDbHelper.CodeGenerator
         public EnumMapping[] EnumMappings { get; set; }
         [XmlElement]
         public AsyncMapping[] AsyncMappings { get; set; }
+
+        public DacpacExtractor()
+        {
+            ErrorIfDacpacNotFound = 
+            Enabled =
+            IncludeForeignKey =
+            IncludeNonUniqueIndex = 
+            IncludePrimaryKey = 
+            IncludeUniqueIndex = true;
+        }
 
         public static DacpacExtractor LoadFromXml(XElement element, out string errorMessage)
         {
@@ -130,6 +149,7 @@ namespace CpsDbHelper.CodeGenerator
                                 x.ReplaceAttributes((from xattrib in x.Attributes().Where(xa => !xa.IsNamespaceDeclaration) select new XAttribute(xattrib.Name.LocalName, xattrib.Value)));
                             }
                             var entities = Entity.GetEntities(xml.Root, this).ToList();
+                            var methods = Method.GetMethods(xml.Root, this, entities).ToList();
                             var config = TemplatorConfig.DefaultInstance;
                             var parser = new TemplatorParser(config);
                             foreach (var templatorKeyword in SqlToCsharpHelper.GetCustomizedTemplatorKeyword(this))
@@ -159,7 +179,6 @@ namespace CpsDbHelper.CodeGenerator
                                     sw.Write(file);
                                 }
                             }
-                            var methods = Method.GetMethods(xml.Root, this, entities).ToList();
                             template = GetTemplate(Method.Template);
                             var iTemplate = GetTemplate(Method.InterfaceTemplate);
                             var name = FileNameExtensionPrefix.IsNullOrWhiteSpace() ? DataAccessClassName + ".cs" : "{0}.{1}.cs".FormatInvariantCulture(DataAccessClassName, FileNameExtensionPrefix);

@@ -136,6 +136,7 @@
     <Compile Include="Models\ICpsDbHelperDataAccess.Generated.cs" />
     <Compile Include="Models\Table1.Generated.cs" />
     <Compile Include="Models\Table2.Generated.cs" />
+    <Compile Include="Models\TableAnother.Generated.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

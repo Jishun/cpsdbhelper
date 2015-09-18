@@ -18,19 +18,19 @@ namespace {{Namespace}}
         void BeginTransaction();
         void EndTransaction(bool commit = true);
         {{MultipleMethods[Collection]}}
-        {{GetITask}}IList<{{TableName[SqlShortName]}}>{{GetTaskEnd}} Get{{TableName[SqlShortName,Plural]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{GetAsync}}({{Params[Collection, Join(, )]}}{{Type[CSharpType]}} {{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}});
+        {{GetITask}}IList<{{EntityName}}>{{GetTaskEnd}} Get{{EntityName[Plural]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{GetAsync}}({{Params[Collection, Join(, )]}}{{Type[CSharpType]}} {{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}});
         {{MultipleMethods[CollectionEnd]}}
         {{UniqueMethods[Collection]}}
-        {{GetITask}}{{TableName[SqlShortName]}}{{GetTaskEnd}} Get{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{GetAsync}}({{Params[Collection, Join(, )]}}{{Type[CSharpType]}} {{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}});
+        {{GetITask}}{{EntityName}}{{GetTaskEnd}} Get{{EntityName}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{GetAsync}}({{Params[Collection, Join(, )]}}{{Type[CSharpType]}} {{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}}{{Foreigns[Collection]}}, bool include{{EntityName[Plural]}} = false{{Foreigns[CollectionEnd]}});
         {{UniqueMethods[CollectionEnd]}}
         {{NonQueryMethods[Collection]}}
-        {{SaveITask}} Save{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{SaveAsync}}({{TableName[SqlShortName]}} {{TableName[SqlShortName, FirstLower]}});
+        {{SaveITask}} Save{{EntityName}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{SaveAsync}}({{EntityName}} {{EntityName[FirstLower]}});
         {{NonQueryMethods[CollectionEnd]}}
         {{ScalarMethods[Collection]}}
-        {{SaveITask}}{{IdentityColumns[Collection]}}{{Type[CSharpType]}}?{{IdentityColumns[CollectionEnd]}}{{SaveTaskEnd}} Save{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{SaveAsync}}({{TableName[SqlShortName]}} {{TableName[SqlShortName, FirstLower]}});
+        {{SaveITask}}{{IdentityColumns[Collection]}}{{Type[CSharpType]}}?{{IdentityColumns[CollectionEnd]}}{{SaveTaskEnd}} Save{{EntityName}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{SaveAsync}}({{EntityName}} {{EntityName[FirstLower]}});
         {{ScalarMethods[CollectionEnd]}}
         {{UniqueMethods[Collection]}}
-        {{DeleteITask}} Delete{{TableName[SqlShortName]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{DeleteAsync}}({{Params[Collection, Join(, )]}}{{Type[CSharpType]}} {{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}});
+        {{DeleteITask}} Delete{{EntityName}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{DeleteAsync}}({{Params[Collection, Join(, )]}}{{Type[CSharpType]}} {{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}});
         {{UniqueMethods[CollectionEnd]}}
     }
 }

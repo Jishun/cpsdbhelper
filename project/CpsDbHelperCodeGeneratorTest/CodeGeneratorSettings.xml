@@ -1,5 +1,6 @@
 ﻿<DacpacExtractor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-     SaveAsync="false" GetAsync="false" DeleteAsync="false" Enabled="true" ErrorIfDacpacNotFound="true">
+     SaveAsync="false" GetAsync="false" DeleteAsync="false" Enabled="true" ErrorIfDacpacNotFound="true"
+     IncludePrimaryKey="true" IncludeUniqueIndex="true" IncludeNonUniqueIndex="true" IncludeForeignKey="true">
     <ModelNamespace>CpsDbHelper</ModelNamespace>
     <DbProjectPath>../CpsDbHelper.TestDatabase\CpsDbHelper.TestDatabase.sqlproj</DbProjectPath>
     <DalNamespace>CpsDbHelper.DataAccess</DalNamespace>
@@ -14,6 +15,9 @@
     <EnumMappings ColumnFullName="[dbo].[Table1].[TableStatus]" EnumTypeName="TableStatusEnum"/>
     <AsyncMappings IndexName="[dbo].[PK_Table2]" SaveAsync="false" GetAsync="false" DeleteAsync="false"/>
     <AsyncMappings IndexName="[dbo].[Table1].[IX_Table2_Name1]" SaveAsync="false" GetAsync="false" DeleteAsync="false"/>
+    <EntityOverrides TableName="[dbo].[Table1]" Name="TableAnother" IncludeForeignKey="true">
+        <Annotations>DataContract</Annotations>
+    </EntityOverrides>
     <ColumnOverrides Name="[dbo].[Table1].[Name]" >
         <Nullable>false</Nullable>
         <Annotations>DataMember</Annotations>

@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>CpsDbHelper.CodeGenerator.BuildTask</id>
-    <version>1.0.1.1</version>
+    <version>1.0.1.2</version>
     <title>CpsDbHelper CodeGenerator's BuildTask</title>
       <authors>Jishun Duan</authors>
       <owners>Jishun Duan</owners>
@@ -11,17 +11,23 @@
       <iconUrl>https://github.com/djsxp/cpsdbhelper</iconUrl>
       <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Msbuild task for auto generating CpsDBHelper's data-access code from a Sql dbproject (SSDT), it ONLY works with vs' dbproject</description>
-    <releaseNotes>Allow to genreate attribute for specific column/property, customised using statement in generated files
-        Reformat config xml
+    <releaseNotes>
+        Support data annotation/attributes to be added to class,
+        Allow entity name to be overrided to be different from table name,
+        Add command line tool (GenDacpac.exe) to allow mannually generate code from a dacpack file,
+        Support switch on-off primary key/indexes/foreign key query methods,
+        Support nested IList member for foreign entity.
+        Clean up package.
     </releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>CpsDbHelper, dbHelper, CodeGenerator</tags>
   </metadata>
     <files>
         <!--<file src="Install.ps1" target="tools" />-->
-        <file src="bin\$configuration$\*.*" exclude="lib" />
+        <file src="**" exclude="**" />
         <file src="CodeGeneratorSettings.xml.pp" target="content" />
         <file src="CpsDbHelper.CodeGenerator.BuildTask.targets" target="build" />
+        <file src="bin\$configuration$\*.exe" target="build" />
         <file src="bin\$configuration$\*.dll" target="build" />
         <file src="bin\$configuration$\*.pdb" target="build" />
     </files>

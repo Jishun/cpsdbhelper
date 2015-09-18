@@ -104,11 +104,20 @@ namespace CpsDbHelper.CodeGenerator
             }
             return null;
         }
-        public static void GetType(IList<Entity> entities, Method method)
+        public static void GetType(IList<Entity> entities, Method method, bool isPrimaryKey, string foreignTableName)
         {
+            if (foreignTableName != null)
+            {
+                var fe = entities.FirstOrDefault(en => en.TableName == foreignTableName);
+                if (fe != null && fe.IncludeForeignKey)
+                {
+                    fe.Foreigns.Add(method);
+                }
+            }
             var e = entities.FirstOrDefault(en => en.TableName == method.TableName);
             if (e != null)
             {
+                method.EntityName = e.Name;
                 method.Columns = e.Properties.Where(p => !p.Identity).ToList(); //&& method.Params.All(pa => pa.Name != p.Name)
                 method.IdentityColumns = e.Properties.Where(p => p.Identity).ToList();
                 foreach (var param in method.Params)
@@ -118,6 +127,25 @@ namespace CpsDbHelper.CodeGenerator
                     {
                         param.Type = p.Type;
                         param.Nullable = p.Nullable;
+                    }
+                }
+                if (isPrimaryKey)
+                {
+                    foreach (var fes in e.Foreigns.Where(ef => ef.Params.Count == method.Params.Count))
+                    {
+                        var i = 0;
+                        for (; i < method.Params.Count; i++)
+                        {
+                            if (fes.Params[i].ForeignName != method.Params[i].Name)
+                            {
+                                break;
+                            }
+                        }
+                        if (i == method.Params.Count)
+                        {
+                            method.Foreigns.Add(fes);
+                            break;
+                        }
                     }
                 }
             }

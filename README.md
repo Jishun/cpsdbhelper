@@ -12,10 +12,12 @@
 	- Specify the build configuration which will generate code, default Release and Debug
 	- Specify the file name patterns and the name spaces.
 	- Specify whether to break the build if dacpac is not found
+	- Config whether to process primary key/foreign key/unique index/non-unique index, default all true
 	- It will generate models out of each table
 	- It will generate GetModel methods from each unique index/primary key
 	- It will generate GetModels methods from each non-unique index
 	- It will generate SaveModel/DeleteModel methods from each unique index/primary key
+	- It will generate SaveModel/DeleteModel methods from each foreign key, and load entities to a IList member in foreign entity
 	- It will generate classes as partial for you to extend.
 	- Identity columns will have their identify scope value returned if a new row is inserted
 	- Futher, follow the examples in CodeGeneratorSettings.xml shipped with the package to do the following

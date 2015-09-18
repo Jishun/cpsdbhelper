@@ -22,6 +22,7 @@ namespace CpsDbHelper.CodeGenerator
         public IList<EntityProperty> Params;
         public IList<EntityProperty> Columns;
         public IList<EntityProperty> IdentityColumns;
+        public IList<Method> Foreigns = new List<Method>();
         public bool Unique;
 
         public string GetITask
@@ -83,62 +84,107 @@ namespace CpsDbHelper.CodeGenerator
             get { return DeleteAsAsync ? "Async" : String.Empty; }
         }
 
+        public string EntityName { get; set; }
+
         public static IEnumerable<Method> GetMethods(XElement xml, DacpacExtractor extractor, IList<Entity> entities)
         {
-            const string xpath = "/DataSchemaModel/Model/Element[@Type='SqlPrimaryKeyConstraint']";
-            var elements = xml.XPathSelectElements(xpath);
-            foreach (var element in elements)
+            if (extractor.IncludeForeignKey)
             {
-                var ret = new Method
+                var elements = xml.XPathSelectElements("/DataSchemaModel/Model/Element[@Type='SqlForeignKeyConstraint']");
+                foreach (var element in elements)
                 {
-                    KeyName = element.GetAttributeString("Name"),
-                    TableName =
-                        element.XPathSelectElement("Relationship[@Name='DefiningTable']/Entry/References")
-                            .GetAttributeString("Name"),
-                    Unique = true,
-                    Params =
-                        element.XPathSelectElements(
-                            "Relationship[@Name='ColumnSpecifications']/Entry/Element[@Type='SqlIndexedColumnSpecification']/Relationship[@Name='Column']/Entry/References")
-                            .Select(e => new EntityProperty() { Name = e.GetAttributeString("Name")})
-                            .ToList(),
-                            ReadAsAsync = extractor.GetAsync,
-                            DeleteAsAsync = extractor.DeleteAsync,
-                            WriteAsAsync = extractor.SaveAsync
-                };
-                SqlToCsharpHelper.GetType(entities, ret);
-                MapAsyncSettings(ret, extractor);
-                if (!extractor.ObjectsToIgnore.EmptyIfNull().Contains(ret.TableName))
-                {
-                    yield return ret;
+                    var foreignTable = element.XPathSelectElement("Relationship[@Name='ForeignTable']/Entry/References")
+                        .GetAttributeString("Name");
+                    var ps = element.XPathSelectElements("Relationship[@Name='Columns']/Entry/References")
+                            .Select(e => new EntityProperty() { Name = e.GetAttributeString("Name") }).ToList();
+                    for (int index = 0; index < ps.Count; index++)
+                    {
+                        var property = ps[index];
+                        property.ForeignName =
+                            element.XPathSelectElement("Relationship[@Name='ForeignColumns']/Entry[" + (index + 1) + "]/References")
+                                .GetAttributeString("Name");
+                    }
+                    var ret = new Method
+                    {
+                        TableName =
+                            element.XPathSelectElement("Relationship[@Name='DefiningTable']/Entry/References")
+                                .GetAttributeString("Name"),
+                        Params = ps,
+                        KeyName = element.GetAttributeString("Name"),
+                        ReadAsAsync = extractor.GetAsync,
+                        DeleteAsAsync = extractor.DeleteAsync,
+                        WriteAsAsync = extractor.SaveAsync
+                    };
+                    if (!extractor.ObjectsToIgnore.EmptyIfNull().Contains(ret.TableName))
+                    {
+                        SqlToCsharpHelper.GetType(entities, ret, false, foreignTable);
+                        MapAsyncSettings(ret, extractor);
+                        yield return ret;
+                    }
                 }
             }
-            elements = xml.XPathSelectElements("/DataSchemaModel/Model/Element[@Type='SqlIndex']");
-            foreach (var element in elements)
+            if (extractor.IncludePrimaryKey)
             {
-                var uniqueNode = element.XPathSelectElement("Property[@Name='IsUnique']");
-                var ret = new Method
+                var elements = xml.XPathSelectElements("/DataSchemaModel/Model/Element[@Type='SqlPrimaryKeyConstraint']");
+                foreach (var element in elements)
                 {
-                    TableName =
-                        element.XPathSelectElement("Relationship[@Name='IndexedObject']/Entry/References")
-                            .GetAttributeString("Name"),
-                    Unique = uniqueNode != null && uniqueNode.GetAttributeBool("Value"),
-                    Params =
-                        element.XPathSelectElements(
-                            "Relationship[@Name='ColumnSpecifications']/Entry/Element[@Type='SqlIndexedColumnSpecification']/Relationship[@Name='Column']/Entry/References")
-                            .Select(e => new EntityProperty() { Name = e.GetAttributeString("Name") })
-                            .ToList(),
-                    KeyName = element.GetAttributeString("Name"),
-                    ReadAsAsync = extractor.GetAsync,
-                    DeleteAsAsync = extractor.DeleteAsync,
-                    WriteAsAsync = extractor.SaveAsync
-                };
-                SqlToCsharpHelper.GetType(entities, ret);
-                MapAsyncSettings(ret, extractor);
-                if (!extractor.ObjectsToIgnore.EmptyIfNull().Contains(ret.TableName))
-                {
-                    yield return ret;
+                    var ret = new Method
+                    {
+                        KeyName = element.GetAttributeString("Name"),
+                        TableName =
+                            element.XPathSelectElement("Relationship[@Name='DefiningTable']/Entry/References")
+                                .GetAttributeString("Name"),
+                        Unique = true,
+                        Params =
+                            element.XPathSelectElements(
+                                "Relationship[@Name='ColumnSpecifications']/Entry/Element[@Type='SqlIndexedColumnSpecification']/Relationship[@Name='Column']/Entry/References")
+                                .Select(e => new EntityProperty() { Name = e.GetAttributeString("Name") })
+                                .ToList(),
+                        ReadAsAsync = extractor.GetAsync,
+                        DeleteAsAsync = extractor.DeleteAsync,
+                        WriteAsAsync = extractor.SaveAsync
+                    };
+                    if (!extractor.ObjectsToIgnore.EmptyIfNull().Contains(ret.TableName))
+                    {
+                        SqlToCsharpHelper.GetType(entities, ret, true, null);
+                        MapAsyncSettings(ret, extractor);
+                        yield return ret;
+                    }
                 }
-
+            }
+            if (extractor.IncludeNonUniqueIndex || extractor.IncludeUniqueIndex)
+            {
+                var elements = xml.XPathSelectElements("/DataSchemaModel/Model/Element[@Type='SqlIndex']");
+                foreach (var element in elements)
+                {
+                    var uniqueNode = element.XPathSelectElement("Property[@Name='IsUnique']");
+                    var ret = new Method
+                    {
+                        TableName =
+                            element.XPathSelectElement("Relationship[@Name='IndexedObject']/Entry/References")
+                                .GetAttributeString("Name"),
+                        Unique = uniqueNode != null && uniqueNode.GetAttributeBool("Value"),
+                        Params =
+                            element.XPathSelectElements(
+                                "Relationship[@Name='ColumnSpecifications']/Entry/Element[@Type='SqlIndexedColumnSpecification']/Relationship[@Name='Column']/Entry/References")
+                                .Select(e => new EntityProperty() { Name = e.GetAttributeString("Name") })
+                                .ToList(),
+                        KeyName = element.GetAttributeString("Name"),
+                        ReadAsAsync = extractor.GetAsync,
+                        DeleteAsAsync = extractor.DeleteAsync,
+                        WriteAsAsync = extractor.SaveAsync
+                    };
+                    if (!extractor.ObjectsToIgnore.EmptyIfNull().Contains(ret.TableName))
+                    {
+                        if ((extractor.IncludeNonUniqueIndex && !ret.Unique)
+                            || (extractor.IncludeUniqueIndex && ret.Unique))
+                        {
+                            SqlToCsharpHelper.GetType(entities, ret, false, null);
+                            MapAsyncSettings(ret, extractor);
+                            yield return ret;
+                        }
+                    }
+                }
             }
         }
 
