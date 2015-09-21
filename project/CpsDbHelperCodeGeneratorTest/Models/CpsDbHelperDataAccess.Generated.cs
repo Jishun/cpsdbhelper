@@ -13,7 +13,7 @@ using System.Runtime.Serialization;
 
 namespace CpsDbHelper
 {
-    public partial class CpsDbHelperDataAccess : ICpsDbHelperDataAccess
+    internal partial class CpsDbHelperDataAccess : ICpsDbHelperDataAccess
     {
         private DbHelperFactory _db;
 

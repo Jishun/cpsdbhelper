@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CpsDbHelper.Examples.Models
 {
-    public class Address
+    internal class Address
     {
         public string City { get; set; }
         public string Country { get; set; }

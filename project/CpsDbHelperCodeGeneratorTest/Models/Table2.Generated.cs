@@ -8,7 +8,7 @@ using System.Runtime.Serialization;
 namespace CpsDbHelper
 {
     
-    public partial class Table2
+    internal partial class Table2
     {
         
         

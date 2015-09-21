@@ -13,7 +13,7 @@ using CpsDbHelper.Utils;
 
 namespace {{Namespace}}
 {
-    public partial class {{DataAccessClassName}} : I{{DataAccessClassName}}
+    {{ClassAccess}} partial class {{DataAccessClassName}} : I{{DataAccessClassName}}
     {
         private DbHelperFactory _db;
 

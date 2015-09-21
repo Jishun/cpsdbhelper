@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>CpsDbHelper.CodeGenerator.BuildTask</id>
-    <version>1.0.1.2</version>
+    <version>1.0.1.3</version>
     <title>CpsDbHelper CodeGenerator's BuildTask</title>
       <authors>Jishun Duan</authors>
       <owners>Jishun Duan</owners>
@@ -17,6 +17,7 @@
         Add command line tool (GenDacpac.exe) to allow mannually generate code from a dacpack file,
         Support switch on-off primary key/indexes/foreign key query methods,
         Support nested IList member for foreign entity.
+        Support class access modifier(public/internal)
         Clean up package.
     </releaseNotes>
     <copyright>Copyright 2015</copyright>

@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace CpsDbHelper.Examples.Models
 {
-    public enum Gender
+    internal enum Gender
     {
         Male = 0,
         Female = 1
     }
 
-    public class Person
+    internal class Person
     {
         public int Id { get; set; }
         public string Name { get; set; }

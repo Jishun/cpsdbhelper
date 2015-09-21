@@ -49,7 +49,6 @@ namespace CpsDbHelper.CodeGenerator
             public bool DeleteAsync { get; set; }
         }
 
-        public string DbProjectPath { get; set; }
         [XmlAttribute]
         public bool Enabled { get; set; }
         [XmlAttribute]
@@ -69,6 +68,8 @@ namespace CpsDbHelper.CodeGenerator
         [XmlAttribute]
         public bool ErrorIfDacpacNotFound { get; set; }
 
+        public string ClassAccess { get; set; }
+        public string DbProjectPath { get; set; }
         public string ModelNamespace { get; set; }
         public string DalNamespace { get; set; }
         public string ModelOutPath { get; set; }
@@ -202,6 +203,7 @@ namespace CpsDbHelper.CodeGenerator
                                     input.Add("DalNamespace", DalNamespace);
                                     input.Add("HelperVersion", "1.0.0.4");
                                     input.Add("Namespace", ModelNamespace);
+                                    input.Add("ClassAccess", ClassAccess ?? "public");
                                     input.Add("Usings", Usings.EmptyIfNull().Select(u => new Dictionary<string, object>() { { "Using", u } }).Cast<object>().ToArray());
                                     var file = parser.ParseText(template, input);
                                     parser.StartOver();

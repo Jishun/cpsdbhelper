@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace {{Namespace}}
 {
     {{AttrBegin}}{{Attrs[Collection, Join(, )]}}{{Attr}}{{Attrs[CollectionEnd]}}{{AttrEnd}}
-    public partial class {{Name}}
+    {{ClassAccess}} partial class {{Name}}
     {
         {{Properties[Collection]}}
         {{AttrBegin}}{{Attrs[Collection, Join(, )]}}{{Attr}}{{Attrs[CollectionEnd]}}{{AttrEnd}}

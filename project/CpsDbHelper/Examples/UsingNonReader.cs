@@ -10,7 +10,7 @@ using CpsDbHelper.Utils;
 
 namespace CpsDbHelper.Examples
 {
-    public class UsingNonReader
+    internal class UsingNonReader
     {
         private readonly DbHelperFactory _db = new DbHelperFactory("dummy connection string");
 

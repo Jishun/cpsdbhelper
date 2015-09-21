@@ -23,6 +23,9 @@ namespace CpsDbHelper.CodeGenerator
         [XmlAttribute]
         public bool IncludeForeignKey { get; set; }
 
+        [XmlAttribute]
+        public string ClassAccess { get; set; }
+
         [XmlIgnore]
         public IList<EntityProperty> Properties  = new List<EntityProperty>();
 
@@ -62,7 +65,11 @@ namespace CpsDbHelper.CodeGenerator
             var elements = xml.XPathSelectElements(xpath);
             foreach (var e in elements)
             {
-                var entity = new Entity {TableName = e.GetAttributeString("Name"), IncludeForeignKey = extractor.IncludeForeignKey};
+                var entity = new Entity {
+                    TableName = e.GetAttributeString("Name"), 
+                    IncludeForeignKey = extractor.IncludeForeignKey,
+                    ClassAccess = extractor.ClassAccess ?? "public"
+                };
                 foreach (var pe in e.XPathSelectElements("Relationship[@Name='Columns']/Entry/Element[@Type='SqlSimpleColumn']"))
                 {
                     var nullableNode = pe.XPathSelectElement("Property[@Name='IsNullable']");
@@ -101,6 +108,7 @@ namespace CpsDbHelper.CodeGenerator
                     entity.Annotations = an.Annotations;
                     entity.Name = an.Name;
                     entity.IncludeForeignKey = an.IncludeForeignKey;
+                    entity.ClassAccess = an.ClassAccess.IsNullOrWhiteSpace() ? entity.ClassAccess : an.ClassAccess;
                 }
                 if (!extractor.ObjectsToIgnore.EmptyIfNull().Contains(entity.TableName))
                 {

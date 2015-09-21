@@ -11,11 +11,12 @@
     <Usings>System.Runtime.Serialization</Usings>
     <EnabledInConfigurations>Debug</EnabledInConfigurations>
     <EnabledInConfigurations>Release</EnabledInConfigurations>
+    <ClassAccess>internal</ClassAccess>
     <PluralMappings EntityName="Tax"  PluralForm="Taxes"/><!--to map non 's' plural forms to get method name mroe pretty-->
     <EnumMappings ColumnFullName="[dbo].[Table1].[TableStatus]" EnumTypeName="TableStatusEnum"/>
     <AsyncMappings IndexName="[dbo].[PK_Table2]" SaveAsync="false" GetAsync="false" DeleteAsync="false"/>
     <AsyncMappings IndexName="[dbo].[Table1].[IX_Table2_Name1]" SaveAsync="false" GetAsync="false" DeleteAsync="false"/>
-    <EntityOverrides TableName="[dbo].[Table1]" Name="TableAnother" IncludeForeignKey="true">
+    <EntityOverrides TableName="[dbo].[Table1]" Name="TableAnother" IncludeForeignKey="true" ClassAccess="public" >
         <Annotations>DataContract</Annotations>
     </EntityOverrides>
     <ColumnOverrides Name="[dbo].[Table1].[Name]" >

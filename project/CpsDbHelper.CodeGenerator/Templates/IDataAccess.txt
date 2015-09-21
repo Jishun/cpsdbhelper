@@ -13,7 +13,7 @@ using CpsDbHelper.Utils;
 
 namespace {{Namespace}}
 {
-    public partial interface I{{DataAccessClassName}}
+    {{ClassAccess}} partial interface I{{DataAccessClassName}}
     {
         void BeginTransaction();
         void EndTransaction(bool commit = true);
