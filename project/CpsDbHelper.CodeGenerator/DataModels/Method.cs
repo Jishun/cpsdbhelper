@@ -25,60 +25,16 @@ namespace CpsDbHelper.CodeGenerator
         public IList<Method> Foreigns = new List<Method>();
         public bool Unique;
 
-        public string GetITask
-        {
-            get { return ReadAsAsync ? "Task<" : String.Empty; }
-        }
-        public string GetTask
-        {
-            get { return ReadAsAsync ? "async " + GetITask : GetITask; }
-        }
-        public string GetTaskEnd
-        {
-            get { return ReadAsAsync ? ">" : String.Empty; }
-        }
-        public string GetAwait
-        {
-            get { return ReadAsAsync ? "await " : String.Empty; }
-        }
         public string GetAsync
         {
             get { return ReadAsAsync ? "Async" : String.Empty; }
         }
 
-        public string SaveITask
-        {
-            get { return WriteAsAsync ? IdentityColumns.IsNullOrEmpty()? "Task" : "Task<" : IdentityColumns.IsNullOrEmpty()? "void" : String.Empty; }
-        }
-        public string SaveTask
-        {
-            get { return WriteAsAsync ? "async " + SaveITask : SaveITask; }
-        }
-        public string SaveTaskEnd
-        {
-            get { return WriteAsAsync && !IdentityColumns.IsNullOrEmpty() ? ">" : String.Empty; }
-        }
-        public string SaveAwait
-        {
-            get { return WriteAsAsync ? "await " : String.Empty; }
-        }
         public string SaveAsync
         {
             get { return WriteAsAsync ? "Async" : String.Empty; }
         }
 
-        public string DeleteITask
-        {
-            get { return DeleteAsAsync ? "Task" : "void"; }
-        }
-        public string DeleteTask
-        {
-            get { return DeleteAsAsync ? "async " + DeleteITask : DeleteITask; }
-        }
-        public string DeleteAwait
-        {
-            get { return DeleteAsAsync ? "await " : String.Empty; }
-        }
         public string DeleteAsync
         {
             get { return DeleteAsAsync ? "Async" : String.Empty; }

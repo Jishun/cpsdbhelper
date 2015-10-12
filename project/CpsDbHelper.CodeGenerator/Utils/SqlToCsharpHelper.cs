@@ -225,20 +225,11 @@ namespace CpsDbHelper.CodeGenerator
                 ManipulateOutput = true,
                 OnGetValue = (holder, parser, value) => ((string)value).Substring(0, 1).ToUpper() + ((string)value).Substring(1, ((string)(value)).Length - 1)
             };
-            yield return new TemplatorKeyword("Join")
+            yield return new TemplatorKeyword("IList")
             {
                 ManipulateOutput = true,
                 HandleNullOrEmpty = true,
-                OnGetValue = (holder, parser, value) =>
-                {
-                    var key = parser.StackLevel + holder.Name + "InputIndex";
-                    var i = (int?) parser.Context[key];
-                    if (i.HasValue && i > 0)
-                    {
-                        parser.AppendResult(holder["Join"]);
-                    }
-                    return value;
-                }
+                OnGetValue = (holder, parser, value) => String.Concat("IList<", value, ">")
             };
         }
     }
