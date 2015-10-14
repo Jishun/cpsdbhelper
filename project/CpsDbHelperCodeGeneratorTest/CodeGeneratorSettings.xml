@@ -11,7 +11,7 @@
     <Usings>System.Runtime.Serialization</Usings>
     <EnabledInConfigurations>Debug</EnabledInConfigurations>
     <EnabledInConfigurations>Release</EnabledInConfigurations>
-    <ClassAccess>internal</ClassAccess>
+    <ClassAccess>public</ClassAccess>
     <PluralMappings EntityName="Tax"  PluralForm="Taxes"/><!--to map non 's' plural forms to get method name mroe pretty-->
     <EnumMappings ColumnFullName="[dbo].[Table1].[TableStatus]" EnumTypeName="TableStatusEnum"/>
     <AsyncMappings IndexName="[dbo].[PK_Table2]" SaveAsync="false" GetAsync="false" DeleteAsync="false"/>

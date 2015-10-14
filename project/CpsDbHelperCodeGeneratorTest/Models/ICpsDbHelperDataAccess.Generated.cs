@@ -13,7 +13,7 @@ using System.Runtime.Serialization;
 
 namespace CpsDbHelper
 {
-    internal partial interface ICpsDbHelperDataAccess
+    public partial interface ICpsDbHelperDataAccess
     {
         void BeginTransaction();
         void EndTransaction(bool commit = true);

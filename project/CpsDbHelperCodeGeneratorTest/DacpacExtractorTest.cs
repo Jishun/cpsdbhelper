@@ -5,16 +5,11 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using CpsDbHelper;
 using CpsDbHelper.CodeGenerator;
 using CpsDbHelper.Utils;
 using DotNetUtils;
-using Microsoft.SqlServer.Dac;
-using Microsoft.SqlServer.Management.Smo;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SSDTDeployer;
 
