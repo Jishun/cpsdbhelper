@@ -35,7 +35,7 @@
 ## Example DbHelper Usages:
 
 	### with the following example models:
-	```cs
+	```c#
 	public class Address
 	{
 		public string City { get; set; }
@@ -60,7 +60,7 @@
 	}
 	```	
 	### Using Readers:
-	```cs
+	```c#
 	public class UsingReader
   {
       private readonly DbHelperFactory _db = new DbHelperFactory("dummy connection string");
@@ -188,7 +188,7 @@
   }
 	```
 	### User NonReaders:
-	```cs
+	```c#
   public class UsingNonReader
 	{
       private readonly DbHelperFactory _db = new DbHelperFactory("dummy connection string");
