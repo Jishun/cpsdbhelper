@@ -7,6 +7,7 @@
 ## Code generating
 	An OPTIONAL build tool to auto generate c# data models and data access classes from a Dacpac package (output of a SqldbProject in visual studio)
 ### Code generator Usages:
+  - Code generator generated code can give a good insight about how the helper works, scroll down to find the code example of using the db helper without code generator.
   - Install-Package CpsDbHelper.CodeGenerator.BuildTask in a csproject 
   - Config db project path in CodeGeneratorSettings.xml
   - Config the output path in CodeGeneratorSettings.xml
@@ -186,7 +187,7 @@ public class UsingReader
              .FirstOrDefault();
       }
   }
-	```
+```
 ### User NonReaders:
 ```csharp
 public class UsingNonReader
