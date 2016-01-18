@@ -34,34 +34,34 @@
 
 ## Example DbHelper Usages:
 
-	### with the following example models:
-	```csharp
-	public class Address
-	{
-		public string City { get; set; }
-		public string Country { get; set; }
-	}
-	 public class Company
-	{
-		public string Name { get; set; }
-		public Address Address { get; set; }
-		public string PropertyWithNoMatchingColumn { get; set; }
-	}
-	public enum Gender
-	{
-		Male = 0,
-		Female = 1
-	}
-	public class Person
-	{
-		public int Id { get; set; }
-		public string Name { get; set; }
-		public Gender Gender { get; set; }
-	}
-	```	
-	### Using Readers:
-	```csharp
-	public class UsingReader
+### with the following example models:
+```csharp
+public class Address
+{
+	public string City { get; set; }
+	public string Country { get; set; }
+}
+ public class Company
+{
+	public string Name { get; set; }
+	public Address Address { get; set; }
+	public string PropertyWithNoMatchingColumn { get; set; }
+}
+public enum Gender
+{
+	Male = 0,
+	Female = 1
+}
+public class Person
+{
+	public int Id { get; set; }
+	public string Name { get; set; }
+	public Gender Gender { get; set; }
+}
+```	
+### Using Readers:
+```csharp
+public class UsingReader
   {
       private readonly DbHelperFactory _db = new DbHelperFactory("dummy connection string");
 
@@ -187,49 +187,49 @@
       }
   }
 	```
-	### User NonReaders:
-	```csharp
-  public class UsingNonReader
+### User NonReaders:
+```csharp
+public class UsingNonReader
+{
+	private readonly DbHelperFactory _db = new DbHelperFactory("dummy connection string");
+	
+	/// <summary>
+	/// Save a set of addresses with a user-defined table-valued structure type parameter
+	/// and finally selects a count out
+	/// </summary>
+	/// <param name="addresses"></param>
+	public int SaveAddresses(IEnumerable<Address> addresses)
 	{
-      private readonly DbHelperFactory _db = new DbHelperFactory("dummy connection string");
-
-      /// <summary>
-      /// Save a set of addresses with a user-defined table-valued structure type parameter
-      /// and finally selects a count out
-      /// </summary>
-      /// <param name="addresses"></param>
-      public int SaveAddresses(IEnumerable<Address> addresses)
-      {
-          return _db.BeginScalar<int>("sp_saveAddresses")
-             .BeginAddStructParam<ScalarHelper<int>, Address>("Addresses")
-             .MapField("City", item => item.City)
-             .MapField("Country", item => item.Country)
-             .FinishMap(addresses)
-              //can also use the auto mapper if the columns are name match and sequence match
-              .AutoMapStructParam("Addresses", addresses)
-             .Execute()
-             .GetResult();
-      }
-
-      /// <summary>
-      /// Save a person and return the id value
-      /// </summary>
-      /// <param name="person"></param>
-      /// <returns></returns>
-      public int SavePerson(Person person)
-      {
-          return _db.BeginNonQuery("sp_SavePerson")
-                    .AddVarcharInParam("name", person.Name)
-                    .AddIntInParam("gender", (int) person.Gender)
-                    .Execute()
-                    .GetReturnValue<int>();
-      }
-
-      public XElement UsingXmlReader()
-      {
-          return _db.BeginXmlReader("sp_returnXml")
-                    .Execute()
-                    .GetResult();
-      }
-  }
+	  return _db.BeginScalar<int>("sp_saveAddresses")
+	     .BeginAddStructParam<ScalarHelper<int>, Address>("Addresses")
+	     .MapField("City", item => item.City)
+	     .MapField("Country", item => item.Country)
+	     .FinishMap(addresses)
+	      //can also use the auto mapper if the columns are name match and sequence match
+	      .AutoMapStructParam("Addresses", addresses)
+	     .Execute()
+	     .GetResult();
+	}
+	
+	/// <summary>
+	/// Save a person and return the id value
+	/// </summary>
+	/// <param name="person"></param>
+	/// <returns></returns>
+	public int SavePerson(Person person)
+	{
+	  return _db.BeginNonQuery("sp_SavePerson")
+	            .AddVarcharInParam("name", person.Name)
+	            .AddIntInParam("gender", (int) person.Gender)
+	            .Execute()
+	            .GetReturnValue<int>();
+	}
+	
+	public XElement UsingXmlReader()
+	{
+	  return _db.BeginXmlReader("sp_returnXml")
+	            .Execute()
+	            .GetResult();
+	}
+}
 ```
