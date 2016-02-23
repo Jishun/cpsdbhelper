@@ -11,7 +11,7 @@ using CpsDbHelper.Utils;
 {{Usings[Collection]}}using {{Using}};
 {{Usings[CollectionEnd]}}
 
-namespace {{Namespace}}
+namespace {{DalNamespace}}
 {
     {{ClassAccess}} partial class {{DataAccessClassName}} : I{{DataAccessClassName}}
     {
@@ -32,6 +32,7 @@ namespace {{Namespace}}
             _db.EndConnection(commit);
         }
         {{MultipleMethods[Collection]}}
+		//Generated from '{{KeyName}}'
         public {{(EntityName)[Wrap(async Task<;>;GetAsync),IList]}} Get{{EntityName[Plural]}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{GetAsync}}({{Params[Collection, Join(, )]}}{{Type[CSharpType]}} {{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}})
         {
             const string query = "SELECT * FROM {{TableName}} WHERE {{Params[Collection, Join( AND )]}}[{{Name[SqlShortName]}}] = @{{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}}";
@@ -44,6 +45,7 @@ namespace {{Namespace}}
         }
         {{MultipleMethods[CollectionEnd]}}
         {{UniqueMethods[Collection]}}
+		//Generated from '{{KeyName}}'
         public {{(EntityName)[Wrap(async Task<;>;GetAsync)]}} Get{{EntityName}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{GetAsync}}({{Params[Collection, Join(, )]}}{{Type[CSharpType]}} {{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}}{{Foreigns[Collection]}}, bool include{{EntityName[Plural]}} = false{{Foreigns[CollectionEnd]}})
         {
             const string query = "SELECT * FROM {{TableName}} WHERE {{Params[Collection, Join( AND )]}}[{{Name[SqlShortName]}}] = @{{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}}{{Foreigns[Collection]}} IF(@include{{EntityName[Plural]}} = 1) SELECT * FROM {{TableName}} WHERE{{Params[Collection,Join( AND)]}} {{Name[SqlShortName]}} = @{{ForeignName[SqlShortName,FirstLower]}} {{Params[CollectionEnd]}}{{Foreigns[CollectionEnd]}}";
@@ -61,6 +63,7 @@ namespace {{Namespace}}
         }
         {{UniqueMethods[CollectionEnd]}}
         {{NonQueryMethods[Collection]}}
+		//Generated from '{{KeyName}}'
         public {{Task[Select(async Task;void;SaveAsync)]}} Save{{EntityName}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{SaveAsync}}({{EntityName}} {{EntityName[FirstLower]}})
         {
             const string query = "IF EXISTS(SELECT 1 FROM {{TableName}} WHERE {{Params[Collection, Join( AND )]}}[{{Name[SqlShortName]}}] = @{{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}}) UPDATE {{TableName}} SET {{Columns[Collection, Join(, )]}}[{{Name[SqlShortName]}}] = @{{Name[SqlShortName, FirstLower]}}{{Columns[CollectionEnd]}}  WHERE {{Params[Collection, Join( AND )]}}[{{Name[SqlShortName]}}] = @{{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}} ELSE INSERT INTO {{TableName}} ({{Columns[Collection, Join(, )]}}[{{Name[SqlShortName]}}]{{Columns[CollectionEnd]}}) VALUES({{Columns[Collection, Join(, )]}}@{{Name[SqlShortName, FirstLower]}}{{Columns[CollectionEnd]}})";
@@ -70,6 +73,7 @@ namespace {{Namespace}}
         }
         {{NonQueryMethods[CollectionEnd]}}
         {{ScalarMethods[Collection]}}
+		//Generated from '{{KeyName}}'
         public {{IdentityColumns[Collection,Wrap(async Task<;SaveAsync)]}}{{Type[CSharpType]}}?{{IdentityColumns[CollectionEnd,Wrap(>;SaveAsync)]}} Save{{EntityName}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{SaveAsync}}({{EntityName}} {{EntityName[FirstLower]}})
         {
             const string query = "IF EXISTS(SELECT 1 FROM {{TableName}} WHERE {{Params[Collection, Join( AND )]}}[{{Name[SqlShortName]}}] = @{{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}}) UPDATE {{TableName}} SET {{Columns[Collection, Join(, )]}}[{{Name[SqlShortName]}}] = @{{Name[SqlShortName, FirstLower]}}{{Columns[CollectionEnd]}}  WHERE {{Params[Collection, Join( AND )]}}[{{Name[SqlShortName]}}] = @{{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}} ELSE BEGIN INSERT INTO {{TableName}} ({{Columns[Collection, Join(, )]}}[{{Name[SqlShortName]}}]{{Columns[CollectionEnd]}}) VALUES({{Columns[Collection, Join(, )]}}@{{Name[SqlShortName, FirstLower]}}{{Columns[CollectionEnd]}}) SELECT SCOPE_IDENTITY() END";
@@ -82,6 +86,7 @@ namespace {{Namespace}}
         }
         {{ScalarMethods[CollectionEnd]}}
         {{UniqueMethods[Collection]}}
+		//Generated from '{{KeyName}}'
         public {{Task[Select(async Task;void;DeleteAsync)]}} Delete{{EntityName}}By{{Params[Collection, Join(And)]}}{{Name[SqlShortName]}}{{Params[CollectionEnd]}}{{DeleteAsync}}({{Params[Collection, Join(, )]}}{{Type[CSharpType]}} {{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}})
         {
             const string query = "DELETE FROM {{TableName}} WHERE {{Params[Collection, Join( AND )]}}[{{Name[SqlShortName]}}] = @{{Name[SqlShortName, FirstLower]}}{{Params[CollectionEnd]}}";

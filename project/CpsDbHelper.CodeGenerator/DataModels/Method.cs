@@ -71,7 +71,7 @@ namespace CpsDbHelper.CodeGenerator
                         DeleteAsAsync = extractor.DeleteAsync,
                         WriteAsAsync = extractor.SaveAsync
                     };
-                    if (!extractor.ObjectsToIgnore.EmptyIfNull().Contains(ret.TableName))
+                    if (!extractor.IsIgnored(ret.TableName) && !extractor.IsIgnored(ret.KeyName))
                     {
                         SqlToCsharpHelper.GetType(entities, ret, false, foreignTable);
                         MapAsyncSettings(ret, extractor);
@@ -100,8 +100,8 @@ namespace CpsDbHelper.CodeGenerator
                         DeleteAsAsync = extractor.DeleteAsync,
                         WriteAsAsync = extractor.SaveAsync
                     };
-                    if (!extractor.ObjectsToIgnore.EmptyIfNull().Contains(ret.TableName))
-                    {
+                    if (!extractor.IsIgnored(ret.TableName) && !extractor.IsIgnored(ret.KeyName))
+                        {
                         SqlToCsharpHelper.GetType(entities, ret, true, null);
                         MapAsyncSettings(ret, extractor);
                         yield return ret;
@@ -130,7 +130,7 @@ namespace CpsDbHelper.CodeGenerator
                         DeleteAsAsync = extractor.DeleteAsync,
                         WriteAsAsync = extractor.SaveAsync
                     };
-                    if (!extractor.ObjectsToIgnore.EmptyIfNull().Contains(ret.TableName))
+                    if (!extractor.IsIgnored(ret.TableName) && !extractor.IsIgnored(ret.KeyName))
                     {
                         if ((extractor.IncludeNonUniqueIndex && !ret.Unique)
                             || (extractor.IncludeUniqueIndex && ret.Unique))

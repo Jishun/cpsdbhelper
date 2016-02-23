@@ -90,7 +90,7 @@ namespace CpsDbHelper.CodeGenerator
                         over.Name = null;
                     }
 
-                    if (p.Type.ToLower() != "[timestamp]" && p.Type.ToLower() != "[rowversion]" && !extractor.ObjectsToIgnore.EmptyIfNull().Contains(p.Name))
+                    if (p.Type.ToLower() != "[timestamp]" && p.Type.ToLower() != "[rowversion]" && !extractor.IsIgnored(p.Name))
                     {
                         entity.Properties.Add(p);
                     }

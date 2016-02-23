@@ -46,7 +46,10 @@ namespace CpsDbHelper.CodeGenerator
                             .Select(e => new EntityProperty() { Name = e.GetAttributeString("Name"), Type = e.XPathSelectElement("Relationship[@Name='Type']/Entry/Element[@Type='SqlTypeSpecifier' or @Type='SqlXmlTypeSpecifier']/Relationship[@Name='Type']/Entry/References").GetAttributeString("Name") })
                             .ToList()
                 };
-                yield return ret;
+                if (!extractor.IsIgnored(ret.Name))
+                {
+                    yield return ret;
+                }
             }
         }
 

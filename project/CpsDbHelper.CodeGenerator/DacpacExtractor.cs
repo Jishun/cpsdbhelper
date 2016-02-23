@@ -105,6 +105,11 @@ namespace CpsDbHelper.CodeGenerator
             IncludeUniqueIndex = true;
         }
 
+        public bool IsIgnored(string key)
+        {
+            return !key.IsNullOrEmpty() && ObjectsToIgnore.EmptyIfNull().Contains(key);
+        }
+
         public static DacpacExtractor LoadFromXml(XElement element, out string errorMessage)
         {
             try
