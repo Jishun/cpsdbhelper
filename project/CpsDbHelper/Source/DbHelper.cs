@@ -19,12 +19,13 @@ namespace CpsDbHelper
         protected readonly IDictionary<string, SqlParameter> Parameters = new Dictionary<string, SqlParameter>();
 
         private Func<Exception, T, bool> _onException = null;
-        public SqlTransaction Transaction;
+        public IDbTransaction Transaction;
         private bool _needTransaction = false;
         private IsolationLevel _isolationLevel = System.Data.IsolationLevel.ReadCommitted;
         private int? _timeOut = null;
+        private bool _secure = false;
 
-        public SqlConnection Connection;
+        public IDbConnection Connection;
 
         protected DbHelper(string text, string connectionString)
         {
@@ -32,7 +33,7 @@ namespace CpsDbHelper
             _connectionString = connectionString;
         }
 
-        protected DbHelper(string text, SqlConnection connection, SqlTransaction transaction)
+        protected DbHelper(string text, IDbConnection connection, IDbTransaction transaction)
         {
             Text = text;
             Connection = connection;
@@ -40,9 +41,9 @@ namespace CpsDbHelper
             ExternalConnection = true;
         }
 
-        protected abstract void BeginExecute(SqlCommand cmd);
+        protected abstract void BeginExecute(IDbCommand cmd);
 
-        protected abstract Task BeginExecuteAsync(SqlCommand cmd);
+        protected abstract Task BeginExecuteAsync(IDbCommand cmd);
 
         /// <summary>
         /// Add exception handler.
@@ -55,7 +56,7 @@ namespace CpsDbHelper
         /// where
         ///     ex: The exception caught by the Execute method of the dbHelper object.
         ///     dbHelper: The DbHelper object that is executing the command which throws the exception.
-        ///     returns: true if you close the transaction and connection yourself and eat the exception,
+        ///     returns: true if you close the transaction and connection yourself and swallow the exception,
         ///     otherwise false (you want the db helper do the cleanup, and rethrow the exception).
         /// </remarks>
         public T OnException(Func<Exception, T, bool> onException)
@@ -74,6 +75,7 @@ namespace CpsDbHelper
             try
             {
                 Connect();
+                
                 await InternalExecuteAsync();
                 if (end && !ExternalConnection)
                 {
@@ -151,6 +153,12 @@ namespace CpsDbHelper
         {
             CommandType = CommandType.Text;
             return await this.ExecuteAsync();
+        }
+
+        public virtual T Secure(bool secure = true)
+        {
+            _secure = secure;
+            return (T) this;
         }
 
         protected virtual async Task InternalExecuteAsync()
@@ -237,10 +245,7 @@ namespace CpsDbHelper
 
         public virtual T CommitTransaction()
         {
-            if (Transaction != null)
-            {
-                Transaction.Commit();
-            }
+            Transaction?.Commit();
             return (T)this;
         }
 
@@ -275,10 +280,7 @@ namespace CpsDbHelper
         /// <returns></returns>
         public T Do(Action<T> action)
         {
-            if (action != null)
-            {
-                action((T)this);
-            }
+            action?.Invoke((T)this);
             return (T)this;
         }
 
@@ -402,18 +404,18 @@ namespace CpsDbHelper
                 Transaction.Rollback();
                 Transaction.Dispose();
             }
-            if (Connection != null)
-            {
-                Connection.Dispose();
-            }
+            Connection?.Dispose();
             return false;
         }
 
-        private void SetCommand(SqlCommand cmd)
+        private void SetCommand(IDbCommand cmd)
         {
             cmd.CommandText = Text;
             cmd.CommandType = CommandType;
-            cmd.Parameters.AddRange(Parameters.Values.ToArray());
+            foreach (var sqlParameter in Parameters.Values)
+            {
+                cmd.Parameters.Add(sqlParameter);
+            }
             cmd.Transaction = Transaction;
             if (_timeOut.HasValue)
             {

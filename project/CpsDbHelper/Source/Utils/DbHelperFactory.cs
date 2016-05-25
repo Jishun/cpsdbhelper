@@ -18,42 +18,6 @@ namespace CpsDbHelper.Utils
             ConnectionString = connectionString;
         }
 
-        public DataReaderHelper BeginReader(string text)
-        {
-            if (CheckExistingConnection())
-            {
-                return new DataReaderHelper(text, DbConnection, DbTransaction);
-            }
-            return new DataReaderHelper(text, ConnectionString);
-        }
-
-        public XmlReaderHelper BeginXmlReader(string text)
-        {
-            if (CheckExistingConnection())
-            {
-                return new XmlReaderHelper(text, DbConnection, DbTransaction);
-            }
-            return new XmlReaderHelper(text, ConnectionString);
-        }
-
-        public NonQueryHelper BeginNonQuery(string text)
-        {
-            if (CheckExistingConnection())
-            {
-                return new NonQueryHelper(text, DbConnection, DbTransaction);
-            }
-            return new NonQueryHelper(text, ConnectionString);
-        }
-
-        public ScalarHelper<T> BeginScalar<T>(string text)
-        {
-            if (CheckExistingConnection())
-            {
-                return new ScalarHelper<T>(text, DbConnection, DbTransaction);
-            }
-            return new ScalarHelper<T>(text, ConnectionString);
-        }
-
         public void Connect(bool beginTran = false, IsolationLevel transactionLevel = IsolationLevel.ReadCommitted)
         {
             DbConnection = new SqlConnection(ConnectionString);
@@ -98,7 +62,7 @@ namespace CpsDbHelper.Utils
             DbTransaction = null;
         }
 
-        private bool CheckExistingConnection()
+        public bool CheckExistingConnection()
         {
             if (DbConnection != null && DbConnection.State == ConnectionState.Open)
             {

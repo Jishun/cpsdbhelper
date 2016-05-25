@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using CpsDbHelper.Extensions;
+using CpsDbHelper.Utils;
 
 namespace CpsDbHelper
 {
@@ -22,13 +24,13 @@ namespace CpsDbHelper
 
         }
 
-        public DataReaderHelper(string text, SqlConnection connection, SqlTransaction transaction)
+        public DataReaderHelper(string text, IDbConnection connection, IDbTransaction transaction)
             : base(text, connection, transaction)
         {
 
         }
 
-        protected override void BeginExecute(SqlCommand cmd)
+        protected override void BeginExecute(IDbCommand cmd)
         {
             using (var reader = cmd.ExecuteReader())
             {
@@ -36,14 +38,22 @@ namespace CpsDbHelper
             }
         }
 
-        protected override async Task BeginExecuteAsync(SqlCommand cmd)
+        protected override async Task BeginExecuteAsync(IDbCommand cmd)
         {
-            using (var reader = await cmd.ExecuteReaderAsync())
+            var command = cmd as DbCommand;
+            if (command != null)
             {
-                ProcessReader(reader);
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    ProcessReader(reader);
+                }
+            }
+            else
+            {
+                throw new NotSupportedException("The async operation is not supported by this data provider");
             }
         }
-        
+
         /// <summary>
         /// Define an action that executes right after the sqlCommand.execute() and before looping through the DataReader
         /// </summary>
@@ -209,7 +219,7 @@ namespace CpsDbHelper
             return ret;
         }
 
-        private void ProcessReader(SqlDataReader reader)
+        private void ProcessReader(IDataReader reader)
         {
             var first = true;
             foreach (var del in _processDelegates)
@@ -373,6 +383,18 @@ namespace CpsDbHelper
                 }
                 return ret;
             }
+        }
+    }
+
+    public static partial class FactoryExtensions
+    {
+        public static DataReaderHelper BeginReader(this DbHelperFactory factory, string text)
+        {
+            if (factory.CheckExistingConnection())
+            {
+                return new DataReaderHelper(text, factory.DbConnection, factory.DbTransaction);
+            }
+            return new DataReaderHelper(text, factory.ConnectionString);
         }
     }
 }

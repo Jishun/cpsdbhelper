@@ -1,5 +1,9 @@
+using System;
+using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using CpsDbHelper.Utils;
 
 namespace CpsDbHelper
 {
@@ -10,19 +14,39 @@ namespace CpsDbHelper
         {
         }
 
-        public NonQueryHelper(string text, SqlConnection connection, SqlTransaction transaction)
+        public NonQueryHelper(string text, IDbConnection connection, IDbTransaction transaction)
             : base(text, connection, transaction)
         {
         }
 
-        protected override void BeginExecute(SqlCommand cmd)
+        protected override void BeginExecute(IDbCommand cmd)
         {
             cmd.ExecuteNonQuery();
         }
 
-        protected override async Task BeginExecuteAsync(SqlCommand cmd)
+        protected override async Task BeginExecuteAsync(IDbCommand cmd)
         {
-            await cmd.ExecuteNonQueryAsync();
+            var command = cmd as DbCommand;
+            if (command != null)
+            {
+                await command.ExecuteNonQueryAsync();
+            }
+            else
+            {
+                throw new NotSupportedException("The async operation is not supported by this data provider");
+            }
+        }
+    }
+
+    public static partial class FactoryExtensions
+    {
+        public static NonQueryHelper BeginNonQuery(this DbHelperFactory factory, string text)
+        {
+            if (factory.CheckExistingConnection())
+            {
+                return new NonQueryHelper(text, factory.DbConnection, factory.DbTransaction);
+            }
+            return new NonQueryHelper(text, factory.ConnectionString);
         }
     }
 }

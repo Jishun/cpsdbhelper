@@ -1,3 +1,6 @@
+using System;
+using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -13,21 +16,37 @@ namespace CpsDbHelper
         {
         }
 
-        public XmlReaderHelper(string text, SqlConnection connection, SqlTransaction transaction)
+        public XmlReaderHelper(string text, IDbConnection connection, IDbTransaction transaction)
             : base(text, connection, transaction)
         {
         }
 
-        protected override void BeginExecute(SqlCommand cmd)
+        protected override void BeginExecute(IDbCommand cmd)
         {
-            var ret = cmd.ExecuteXmlReader();
-            _result = XElement.Load(ret);
+            var command = cmd as SqlCommand;
+            if (command != null)
+            {
+                var ret = command.ExecuteXmlReader();
+                _result = XElement.Load(ret);
+            }
+            else
+            {
+                throw new NotSupportedException("The xml operation is not supported by this data provider");
+            }
         }
 
-        protected override async Task BeginExecuteAsync(SqlCommand cmd)
+        protected override async Task BeginExecuteAsync(IDbCommand cmd)
         {
-            var ret = await cmd.ExecuteXmlReaderAsync();
-            _result = XElement.Load(ret);
+            var command = cmd as SqlCommand;
+            if (command != null)
+            {
+                var ret = await command.ExecuteXmlReaderAsync();
+                _result = XElement.Load(ret);
+            }
+            else
+            {
+                throw new NotSupportedException("The xml async operation is not supported by this data provider");
+            }
         }
 
         public XmlReaderHelper GetResult(out XElement result)
@@ -65,4 +84,15 @@ namespace CpsDbHelper
         }
     }
 
+    public static partial class FactoryExtensions
+    {
+        public static XmlReaderHelper BeginXmlReader(this DbHelperFactory factory, string text)
+        {
+            if (factory.CheckExistingConnection())
+            {
+                return new XmlReaderHelper(text, factory.DbConnection, factory.DbTransaction);
+            }
+            return new XmlReaderHelper(text, factory.ConnectionString);
+        }
+    }
 }
