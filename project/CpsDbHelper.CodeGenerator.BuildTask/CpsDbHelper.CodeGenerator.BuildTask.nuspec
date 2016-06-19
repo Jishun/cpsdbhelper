@@ -6,9 +6,9 @@
     <title>CpsDbHelper CodeGenerator's BuildTask</title>
       <authors>Jishun Duan</authors>
       <owners>Jishun Duan</owners>
-      <licenseUrl>https://github.com/djsxp/cpsdbhelper/blob/master/LICENSE</licenseUrl>
-      <projectUrl>https://github.com/djsxp/cpsdbhelper</projectUrl>
-      <iconUrl>https://github.com/djsxp/cpsdbhelper</iconUrl>
+      <licenseUrl>https://github.com/jishun/cpsdbhelper/blob/master/LICENSE</licenseUrl>
+      <projectUrl>https://github.com/jishun/cpsdbhelper</projectUrl>
+      <iconUrl>https://github.com/jishun/cpsdbhelper</iconUrl>
       <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Msbuild task for auto generating CpsDBHelper's data-access code from a Sql dbproject (SSDT), it ONLY works with vs' dbproject</description>
     <releaseNotes>
