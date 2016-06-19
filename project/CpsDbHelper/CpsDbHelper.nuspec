@@ -6,9 +6,9 @@
     <title>Chain-styled Sql DB Helper</title>
     <authors>Jishun Duan</authors>
     <owners>Jishun Duan</owners>
-    <licenseUrl>https://github.com/djsxp/cpsdbhelper/blob/master/LICENSE</licenseUrl>
-    <projectUrl>https://github.com/djsxp/cpsdbhelper</projectUrl>
-    <iconUrl>https://github.com/djsxp/cpsdbhelper</iconUrl>
+    <licenseUrl>https://github.com/jishun/cpsdbhelper/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/jishun/cpsdbhelper</projectUrl>
+    <iconUrl>https://github.com/jishun/cpsdbhelper</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A db helper designed to allow code to be chained and simplified, sql call/parameter managing can be much easier with the help of it and it's auto mapping ability</description>
     <releaseNotes>Add wrapper for async methods</releaseNotes>
