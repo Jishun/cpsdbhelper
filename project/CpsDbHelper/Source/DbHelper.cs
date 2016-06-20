@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -10,22 +11,23 @@ namespace CpsDbHelper
 {
     public abstract class DbHelper<T> where T : DbHelper<T>
     {
-        protected readonly string Text;
-        protected readonly bool ExternalConnection;
-        protected CommandType CommandType = CommandType.StoredProcedure;
-        protected SqlParameter ReturnValue;
         private readonly string _connectionString;
         private readonly IDictionary<string, SqlParameter> _outParameters = new Dictionary<string, SqlParameter>();
-        protected readonly IDictionary<string, SqlParameter> Parameters = new Dictionary<string, SqlParameter>();
 
         private Func<Exception, T, bool> _onException = null;
-        public IDbTransaction Transaction;
         private bool _needTransaction = false;
-        private IsolationLevel _isolationLevel = System.Data.IsolationLevel.ReadCommitted;
         private int? _timeOut = null;
-        private bool _secure = false;
+        private IsolationLevel _isolationLevel = System.Data.IsolationLevel.ReadCommitted;
+
+        protected readonly string Text;
+        protected readonly bool ExternalConnection;
+        protected readonly IDictionary<string, SqlParameter> Parameters = new Dictionary<string, SqlParameter>();
+
+        protected CommandType CommandType = CommandType.StoredProcedure;
+        protected SqlParameter ReturnValue;
 
         public IDbConnection Connection;
+        public IDbTransaction Transaction;
 
         protected DbHelper(string text, string connectionString)
         {
@@ -64,7 +66,7 @@ namespace CpsDbHelper
             _onException = onException;
             return (T)this;
         }
-
+        
         /// <summary>
         /// Execute the command, default as stored procedure
         /// </summary>
@@ -153,12 +155,6 @@ namespace CpsDbHelper
         {
             CommandType = CommandType.Text;
             return await this.ExecuteAsync();
-        }
-
-        public virtual T Secure(bool secure = true)
-        {
-            _secure = secure;
-            return (T) this;
         }
 
         protected virtual async Task InternalExecuteAsync()

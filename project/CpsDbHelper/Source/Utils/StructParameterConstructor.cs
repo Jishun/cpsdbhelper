@@ -12,17 +12,19 @@ namespace CpsDbHelper.Utils
     /// </summary>
     /// <typeparam name="T">The dbhelper</typeparam>
     /// <typeparam name="TValue">the type of the item of which properties are supposed to match the column defination of the user-defined type </typeparam>
-    public class StructParameterConstructor<T, TValue> where T : DbHelper<T>
+    public class StructParameterConstructor<T, TValue> : Mapper<StructParameterConstructor<T, TValue>> where T : DbHelper<T>
     {
         private readonly string _parameterName;
         private readonly DbHelper<T> _dbHelper;
+        private readonly IEnumerable<TValue> _source;
         private readonly IDictionary<string, Func<TValue, object>> _mapper = new Dictionary<string, Func<TValue, object>>();
         private readonly HashSet<string> _skip = new HashSet<string>();
 
-        public StructParameterConstructor(string parameterName, DbHelper<T> dbHelper)
+        public StructParameterConstructor(string parameterName, DbHelper<T> dbHelper, IEnumerable<TValue> source = null)
         {
             _parameterName = parameterName;
             _dbHelper = dbHelper;
+            _source = source;
         }
 
         /// <summary>
@@ -37,6 +39,7 @@ namespace CpsDbHelper.Utils
             return this;
         }
 
+
         /// <summary>
         /// Auto map the TValue's properties and use the properties' names as columns' names
         /// </summary>
@@ -45,7 +48,8 @@ namespace CpsDbHelper.Utils
         /// <returns></returns>
         public StructParameterConstructor<T, TValue> AutoMap(bool enumToInt = true, params string[] skips)
         {
-            var properties = typeof(TValue).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty).Where(p => p.CanRead && !skips.Any(s => s.EndsWith(p.Name, StringComparison.OrdinalIgnoreCase)));
+            var type = (_source != null && _source.Any()) ? _source.First().GetType() : typeof (TValue);
+            var properties = type.GetProperties(BindingFlag).Where(p => p.CanRead && !skips.Any(s => s.EndsWith(p.Name, StringComparison.OrdinalIgnoreCase)));
 
             foreach (var p in properties)
             {
@@ -63,7 +67,7 @@ namespace CpsDbHelper.Utils
         /// <returns></returns>
         public StructParameterConstructor<T, TValue> AutoMap(Type tValue, bool enumToInt = true, params string[] skips)
         {
-            var properties = tValue.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty).Where(p => p.CanRead && !skips.Any(s => s.EndsWith(p.Name, StringComparison.OrdinalIgnoreCase)));
+            var properties = tValue.GetProperties(BindingFlag).Where(p => p.CanRead && !skips.Any(s => s.EndsWith(p.Name, StringComparison.OrdinalIgnoreCase)));
 
             foreach (var p in properties)
             {
@@ -101,10 +105,11 @@ namespace CpsDbHelper.Utils
         /// <summary>
         /// Finish the mapping, put the DataTable to dbhelper with the parameter name, and return the context to the dbhelper
         /// </summary>
-        /// <param name="source">the source colletion used to fill the data table</param>
+        /// <param name="source">the source colletion used to fill the data table, can be null if provided when constructing this mapper</param>
         /// <returns></returns>
-        public DbHelper<T> FinishMap(IEnumerable<TValue> source)
+        public DbHelper<T> FinishMap(IEnumerable<TValue> source = null)
         {
+            source = source ?? _source;
             var t = new DataTable();
             foreach (var func in _mapper.Where(func => !_skip.Contains(func.Key)))
             {

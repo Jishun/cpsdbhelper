@@ -11,12 +11,14 @@ namespace CpsDbHelper.Utils
     /// untested code
     /// </summary>
     /// <typeparam name="TValue"></typeparam>
-    public class XmlMapper<TValue>
+    public class XmlMapper<TValue> : Mapper<XmlMapper<TValue>>
     {
         private readonly IDictionary<Type, IDictionary<string, string>> _attributeMapper = new Dictionary<Type, IDictionary<string, string>>();
         private readonly IDictionary<Type, IDictionary<string, string>> _elementMapper = new Dictionary<Type, IDictionary<string, string>>();
         private readonly IDictionary<Type, HashSet<string>> _skip = new Dictionary<Type, HashSet<string>>();
         private readonly IList<Action<TValue, XElement>> _customMapper = new List<Action<TValue, XElement>>();
+
+        protected override bool ForGet => false;
 
         /// <summary>
         /// Map a property name to another attribute name
@@ -100,7 +102,7 @@ namespace CpsDbHelper.Utils
             var skip = _skip.ContainsKey(type) ? _skip[type] : new HashSet<string>();
             var attibutes = GetTypeAttributeDict(type);
             var elements = GetTypeElementDict(type);
-            var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty).Where(p => p.CanWrite && !skip.Contains(p.Name));
+            var properties = type.GetProperties(BindingFlag).Where(p => p.CanWrite && !skip.Contains(p.Name));
             foreach (var p in properties)
             {
                 if (p.PropertyType.IsPrimitive || p.PropertyType == typeof(string))
@@ -140,7 +142,7 @@ namespace CpsDbHelper.Utils
             var skip = _skip.ContainsKey(type) ? _skip[type] : new HashSet<string>();
             var attributes = _attributeMapper.ContainsKey(type) ? _attributeMapper[type] : new Dictionary<string, string>();
             var elements = _elementMapper.ContainsKey(type) ? _elementMapper[type] : new Dictionary<string, string>();
-            var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty).Where(p => p.CanWrite && !skip.Contains(p.Name));
+            var properties = type.GetProperties(BindingFlag).Where(p => p.CanWrite && !skip.Contains(p.Name));
             var item = Activator.CreateInstance(type);
             foreach (var p in properties)
             {

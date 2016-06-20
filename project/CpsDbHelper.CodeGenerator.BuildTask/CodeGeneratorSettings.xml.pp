@@ -1,7 +1,7 @@
 ﻿<DacpacExtractor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
      SaveAsync="false" GetAsync="false" DeleteAsync="false" Enabled="true" ErrorIfDacpacNotFound="true"
     EnablePrimaryKey="true" EnableUniqueIndex="true" EnableNonUniqueIndex="true" EnableForeignKey="true">
-    <!--For format/options example of the latest version, please take a look at https://github.com/djsxp/cpsdbhelper/blob/master/project/CpsDbHelper.CodeGerator.BuildTask/CodeGeneratorSettings.xml.pp-->
+    <!--For format/options example of the latest version, please take a look at https://github.com/Jishun/cpsdbhelper/blob/master/project/CpsDbHelper.CodeGerator.BuildTask/CodeGeneratorSettings.xml.pp-->
     <ModelNamespace>$rootnamespace$</ModelNamespace>
     <DbProjectPath>../CpsDbHelper.TestDatabase\CpsDbHelper.TestDatabase.sqlproj</DbProjectPath>
     <DalNamespace>$rootnamespace$.DataAccess</DalNamespace>

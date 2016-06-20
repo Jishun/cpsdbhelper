@@ -103,6 +103,18 @@ namespace CpsDbHelper.Extensions
         }
 
         /// <summary>
+        /// Start mapping a structured parameter, will turn the call context into the mapper. and map the table-valued type's columns with the item's properties
+        /// </summary>
+        /// <typeparam name="T">the dbhelper</typeparam>
+        /// <param name="helper"></param>
+        /// <param name="parameterName">the structured param name</param>
+        /// <returns></returns>
+        public static StructParameterConstructor<T, object> BeginAddStructParam<T>(this DbHelper<T> helper, string parameterName) where T : DbHelper<T>
+        {
+            return new StructParameterConstructor<T, object>(parameterName, helper);
+        }
+
+        /// <summary>
         /// auto map a collection of type TValue and construct a data table which uses the property names as column name and put values in
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -119,7 +131,24 @@ namespace CpsDbHelper.Extensions
         }
 
         /// <summary>
-        /// Begin map an item to stored procedure parameters, will turn the context into the mapper till the finishMap() is called
+        /// auto map a collection of type TValue and construct a data table which uses the property names as column name and put values in
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="helper"></param>
+        /// <param name="parameterName"></param>
+        /// <param name="value">the item collection</param>
+        /// <param name="enumToInt">convert enum to int, set false then to string</param>
+        /// <param name="skips">the propert names to skip</param>
+        /// <returns></returns>
+        public static T AutoMapStructParam<T>(this DbHelper<T> helper, string parameterName, IEnumerable<object> value, bool enumToInt = true, params string[] skips) where T : DbHelper<T>
+        {
+            return (T)(new StructParameterConstructor<T, object>(parameterName, helper).AutoMap(enumToInt, skips).FinishMap(value));
+        }
+
+
+        /// <summary>
+        /// Begin map an item to command parameters, will turn the context into the mapper till the finishMap() is called
         /// </summary>
         /// <typeparam name="T">The dbhelper</typeparam>
         /// <typeparam name="TEntity"></typeparam>
@@ -133,7 +162,20 @@ namespace CpsDbHelper.Extensions
         }
 
         /// <summary>
-        /// Try automatically map the item's propertis into stored procedure's parameters, will try to detect the types, skip those which are not mappable
+        /// Begin map an item to command parameters, will turn the context into the mapper till the finishMap() is called
+        /// </summary>
+        /// <typeparam name="T">The dbhelper</typeparam>
+        /// <param name="helper"></param>
+        /// <param name="item"></param>
+        /// <param name="enumToInt">convert enum to int, otherwise string</param>
+        /// <returns></returns>
+        public static ParameterMapper<T, object> BeginMapParam<T>(this DbHelper<T> helper, object item, bool enumToInt = true) where T : DbHelper<T>
+        {
+            return new ParameterMapper<T, object>(helper, enumToInt);
+        }
+
+        /// <summary>
+        /// Try automatically map the item's propertis/fields into command parameters, will try to detect the types, skip those which are not mappable
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TEntity">the item's type</typeparam>
@@ -144,6 +186,19 @@ namespace CpsDbHelper.Extensions
         public static T AutoMapParam<T, TEntity>(this DbHelper<T> helper, TEntity item, bool enumToInt = true) where T : DbHelper<T>
         {
             return (new ParameterMapper<T,TEntity>(helper, enumToInt)).AutoMap(item).FinishMap();
+        }
+
+        /// <summary>
+        /// Try automatically map the item's propertis/fields into command parameters, will try to detect the types, skip those which are not mappable
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="helper"></param>
+        /// <param name="item">the object instance which provides propertoes</param>
+        /// <param name="enumToInt">convert enum to int, otherwise string</param>
+        /// <returns></returns>
+        public static T AutoMapParam<T>(this DbHelper<T> helper, object item, bool enumToInt = true) where T : DbHelper<T>
+        {
+            return (new ParameterMapper<T, object>(helper, enumToInt)).AutoMap(item).FinishMap();
         }
 
         #region parameters detailed

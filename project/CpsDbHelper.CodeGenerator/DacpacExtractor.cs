@@ -19,7 +19,7 @@ namespace CpsDbHelper.CodeGenerator
     public class DacpacExtractor
     {
         private const string ConfigErrorMessage =
-            "if you have recently upgraded code generator, please find examples from 'https://github.com/djsxp/cpsdbhelper/blob/master/project/CpsDbHelper.CodeGerator.BuildTask/CodeGeneratorSettings.xml.pp' to update the format, appologize for the inconvenience";
+            "if you have recently upgraded code generator, please find examples from 'https://github.com/Jishun/cpsdbhelper/blob/master/project/CpsDbHelper.CodeGerator.BuildTask/CodeGeneratorSettings.xml.pp' to update the format, appologize for the inconvenience";
 
         public const string ConfigFileName = "CodeGeneratorSettings.xml";
 

@@ -62,21 +62,21 @@ namespace CpsDbHelper.Examples
         {
             var presavedColumnIndexToImprovePerformance = 0;
             var reader = _db.BeginReader("sp_getCompanyWithAddress")
-                         .AddIntInParam("companyId", id)
-                         .PreProcessResult(rd => presavedColumnIndexToImprovePerformance = rd.GetOrdinal("Country"))
-                         .BeginMapResult<Company>("Company") //it is also ok to leave the result key default 
-                         .AutoMap() //can partially use the automap ability, the mapper will map the columns with properties with same names and leave the others to you
-                         .MapField<string>("AdditionalColumnName", (item, columnValue) => item.PropertyWithNoMatchingColumn = columnValue)
-                         .MapField((item, rd) =>
-                             { //customizing a map logic to assign value to non-automapable field.
-                                 item.Address = new Address()
-                                     {
-                                         City = rd.Get<string>("City"), //operating at current row. use the reader extension to read value of Column 'City'
-                                         Country = rd.Get<string>(presavedColumnIndexToImprovePerformance) //or we can pre-get the ordinal and use it to get better performance
-                                     };
-                             })
-                         .FinishMap()
-                         .Execute();
+                .AddIntInParam("companyId", id)
+                .PreProcessResult(rd => presavedColumnIndexToImprovePerformance = rd.GetOrdinal("Country"))
+                .BeginMapResult<Company>("Company") //it is also ok to leave the result key default 
+                .AutoMap() //can partially use the automap ability, the mapper will map the columns with properties with same names and leave the others to you
+                .MapField<string>("AdditionalColumnName", (item, columnValue) => item.PropertyWithNoMatchingColumn = columnValue)
+                .MapField((item, rd) =>
+                { //customizing a map logic to assign value to non-automapable field.
+                    item.Address = new Address()
+                    {
+                        City = rd.Get<string>("City"), //operating at current row. use the reader extension to read value of Column 'City'
+                        Country = rd.Get<string>(presavedColumnIndexToImprovePerformance) //or we can pre-get the ordinal and use it to get better performance
+                    };
+                })
+                .FinishMap()
+                .Execute();
             //retrieve the results with result key
             var ret = reader.GetResult<IList<Company>>("Company");
             return ret.FirstOrDefault();

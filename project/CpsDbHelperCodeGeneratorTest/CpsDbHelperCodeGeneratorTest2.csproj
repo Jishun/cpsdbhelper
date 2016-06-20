@@ -38,8 +38,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DotNetUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DotNetUtils.1.0.0.3\lib\net45\DotNetUtils.dll</HintPath>
+      <HintPath>..\packages\DotNetUtils.1.0.1.1\lib\net45\DotNetUtils.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
@@ -47,7 +47,7 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml.Serialization" />
     <Reference Include="Templator, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Templator.1.0.1.1\lib\net45\Templator.dll</HintPath>
+      <HintPath>..\packages\Templator.1.0.0.7\lib\net45\Templator.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -82,7 +82,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CodeGeneratorSettings.xml" />
+    <Content Include="CodeGeneratorSettings.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

@@ -16,7 +16,7 @@ namespace CpsDbHelper.Utils
     /// </summary>
     /// <typeparam name="T">The target derived dbhelper type</typeparam>
     /// <typeparam name="TEntity">the item type used to provide param value</typeparam>
-    public class ParameterMapper<T, TEntity> where T : DbHelper<T>
+    public class ParameterMapper<T, TEntity> : Mapper<ParameterMapper<T, TEntity>> where T : DbHelper<T>
     {
         /// <summary>
         /// The mapping between c# types and sql db type. 
@@ -98,13 +98,13 @@ namespace CpsDbHelper.Utils
         }
         
         /// <summary>
-        /// Try auto map all the mapable properties of item
+        /// Try auto map all the mapable properties/fields of item
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
         public ParameterMapper<T, TEntity> AutoMap(TEntity item, params string[] skips)
         {
-            var properties = typeof(TEntity).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty).Where(p => p.CanRead);
+            var properties = item.GetType().GetProperties(BindingFlag).Where(p => p.CanRead);
 
             foreach (var p in properties)
             {
@@ -126,7 +126,6 @@ namespace CpsDbHelper.Utils
                 }
                 else
                 {
-
                     MapProperty(p.Name, _enumToInt
                         ? u == null
                             ? p.PropertyType.IsEnum ? (int) v : v

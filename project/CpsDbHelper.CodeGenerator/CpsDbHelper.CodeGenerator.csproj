@@ -37,8 +37,8 @@
       <HintPath>..\packages\CsvEnumerator.1.0.0.0\lib\net45\CsvEnumerator.dll</HintPath>
     </Reference>
     <Reference Include="DotNetUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DotNetUtils.1.0.0.8\lib\net45\DotNetUtils.dll</HintPath>
+      <HintPath>..\packages\DotNetUtils.1.0.1.1\lib\net45\DotNetUtils.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -53,7 +53,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Templator, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Templator.1.0.1.1\lib\net45\Templator.dll</HintPath>
+      <HintPath>..\packages\Templator.1.0.0.7\lib\net45\Templator.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -78,9 +78,7 @@
     <EmbeddedResource Include="Templates\IDataAccess.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TemplatorConfig.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="TemplatorConfig.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

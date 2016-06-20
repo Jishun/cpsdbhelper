@@ -49,6 +49,7 @@
     <Compile Include="Examples\UsingReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\DataReaderHelper.cs" />
+    <Compile Include="Source\Utils\DataReaderMapper.cs" />
     <Compile Include="Source\DbHelper.cs" />
     <Compile Include="Source\Extensions\DataReaderExtension.cs" />
     <Compile Include="Source\Extensions\DbHelperExtension.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Source\NonQueryHelper.cs" />
     <Compile Include="Source\ScalarHelper.cs" />
     <Compile Include="Source\Utils\DbHelperFactory.cs" />
+    <Compile Include="Source\Utils\Mapper.cs" />
     <Compile Include="Source\Utils\StructParameterConstructor.cs" />
     <Compile Include="Source\Utils\ParameterMapper.cs" />
     <Compile Include="Source\Utils\XmlMapper.cs" />
