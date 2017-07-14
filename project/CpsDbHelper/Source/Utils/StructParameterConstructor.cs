@@ -111,23 +111,39 @@ namespace CpsDbHelper.Utils
         public DbHelper<T> FinishMap(IEnumerable<TValue> source = null)
         {
             source = source ?? _source;
-            var t = new DataTable();
-            foreach (var func in _mapper.Where(func => !_skip.Contains(func.Key)))
-            {
-                t.Columns.Add(new DataColumn(func.Key));
-            }
+            var t = new List<SqlDataRecord>();
             if (source != null)
             {
                 foreach (var s in source)
                 {
-                    var row = t.NewRow();
+                    var row = new SqlDataRecord(_mapper.Where(func => !_skip.Contains(func.Key)).Select(func => new SqlMetaData(func.Key, SqlDbType.VarChar)).ToArray());
+                    var i = 0;
                     foreach (var func in _mapper.Where(func => !_skip.Contains(func.Key)))
                     {
-                        row[func.Key] = func.Value(s);
+                        row.SetValue(i++, func.Value(s));
                     }
-                    t.Rows.Add(row);
+                    t.Add(row);
                 }
             }
+
+            //source = source ?? _source;
+            //var t = new DataTable();
+            //foreach (var func in _mapper.Where(func => !_skip.Contains(func.Key)))
+            //{
+            //    t.Columns.Add(new DataColumn(func.Key));
+            //}
+            //if (source != null)
+            //{
+            //    foreach (var s in source)
+            //    {
+            //        var row = t.NewRow();
+            //        foreach (var func in _mapper.Where(func => !_skip.Contains(func.Key)))
+            //        {
+            //            row[func.Key] = func.Value(s);
+            //        }
+            //        t.Rows.Add(row);
+            //    }
+            //}
             return _dbHelper.AddStructParam(_parameterName, t);
         }
     }

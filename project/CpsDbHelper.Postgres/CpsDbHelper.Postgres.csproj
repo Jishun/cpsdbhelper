@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.5</TargetFramework>
+    <PackageId>CpsDbHelper.Postgres</PackageId>
+    <PackageVersion>1.0.0.0</PackageVersion>
+    <Authors>Jishun Duan</Authors>
+    <Description>CpsDbHelper(Chain-styled Sql DB Helper)'s postgres extension, using npgsql as underlying provider</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>First release, including basic ProviderFactory and parameter extensions.</PackageReleaseNotes>
+    <Copyright>Copyright Jishun Duan, 2011-2017</Copyright>
+    <PackageTags>ADO.NET, DBHelper, Postgres, npgsql</PackageTags>
+    <PackageLicenseUrl>https://github.com/jishun/cpsdbhelper/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/jishun/cpsdbhelper</PackageProjectUrl>
+    <PackageIconUrl>https://github.com/jishun/cpsdbhelper</PackageIconUrl>
+    <RepositoryUrl>https://github.com/jishun/cpsdbhelper</RepositoryUrl>
+    <RepositoryType>github</RepositoryType>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Npgsql" Version="3.2.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CpsDbHelper\CpsDbHelper.NetStandard.csproj" />
+  </ItemGroup>
+
+</Project>
