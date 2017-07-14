@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using CpsDbHelper.Extensions;
+using Microsoft.SqlServer.Server;
 
 namespace CpsDbHelper.Utils
 {
@@ -53,7 +54,7 @@ namespace CpsDbHelper.Utils
 
             foreach (var p in properties)
             {
-                _mapper.Add(p.Name, obj => (enumToInt && p.PropertyType.IsEnum) ? (int)p.GetValue(obj) : p.GetValue(obj));
+                _mapper.Add(p.Name, obj => (enumToInt && p.PropertyType.GetTypeInfo().IsEnum) ? (int)p.GetValue(obj) : p.GetValue(obj));
             }
             return this;
         }
@@ -71,7 +72,7 @@ namespace CpsDbHelper.Utils
 
             foreach (var p in properties)
             {
-                _mapper.Add(p.Name, obj => (enumToInt && p.PropertyType.IsEnum) ? (int)p.GetValue(obj) : p.GetValue(obj));
+                _mapper.Add(p.Name, obj => (enumToInt && p.PropertyType.GetTypeInfo().IsEnum) ? (int)p.GetValue(obj) : p.GetValue(obj));
             }
             return this;
         }
@@ -84,7 +85,7 @@ namespace CpsDbHelper.Utils
         /// <returns></returns>
         public StructParameterConstructor<T, TValue> MapBasicType(string columnName, bool enumToInt = true)
         {
-            _mapper.Add(columnName, obj => (enumToInt && typeof(TValue).IsEnum) ? (int)(object)obj : (object)obj);
+            _mapper.Add(columnName, obj => (enumToInt && typeof(TValue).GetTypeInfo().IsEnum) ? (int)(object)obj : (object)obj);
             return this;
         }
 

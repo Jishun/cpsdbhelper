@@ -65,7 +65,7 @@ namespace CpsDbHelper.Utils
             }
             SqlDbType? type = null;
             var valueType = value.GetType();
-            if (valueType.IsGenericType &&
+            if (valueType.GetTypeInfo().IsGenericType &&
                 valueType.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
                 valueType = valueType.GetGenericArguments()[0];
@@ -128,8 +128,8 @@ namespace CpsDbHelper.Utils
                 {
                     MapProperty(p.Name, _enumToInt
                         ? u == null
-                            ? p.PropertyType.IsEnum ? (int) v : v
-                            : (u.IsEnum
+                            ? p.PropertyType.GetTypeInfo().IsEnum ? (int) v : v
+                            : (u.GetTypeInfo().IsEnum
                                 ? v == null ? null : (object) (int) v
                                 : v)
                         : v);

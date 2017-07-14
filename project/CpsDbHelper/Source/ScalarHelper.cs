@@ -10,13 +10,13 @@ namespace CpsDbHelper
     public class ScalarHelper<T> : DbHelper<ScalarHelper<T>>
     {
         private T _result;
-        public ScalarHelper(string text, string connectionString)
-            : base(text, connectionString)
+        public ScalarHelper(string text, string connectionString, IAdoNetProviderFactory provider)
+            : base(text, connectionString, provider)
         {
         }
 
-        public ScalarHelper(string text, IDbConnection connection, IDbTransaction transaction)
-            : base(text, connection, transaction)
+        public ScalarHelper(string text, IDbConnection connection, IDbTransaction transaction, IAdoNetProviderFactory provider)
+            : base(text, connection, transaction, provider)
         {
         }
 
@@ -65,9 +65,9 @@ namespace CpsDbHelper
         {
             if (factory.CheckExistingConnection())
             {
-                return new ScalarHelper<T>(text, factory.DbConnection, factory.DbTransaction);
+                return new ScalarHelper<T>(text, factory.DbConnection, factory.DbTransaction, factory.Provider);
             }
-            return new ScalarHelper<T>(text, factory.ConnectionString);
+            return new ScalarHelper<T>(text, factory.ConnectionString, factory.Provider);
         }
     }
 }

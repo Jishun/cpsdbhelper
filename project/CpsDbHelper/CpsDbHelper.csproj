@@ -49,11 +49,14 @@
     <Compile Include="Examples\UsingReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\DataReaderHelper.cs" />
+    <Compile Include="Source\Extensions\ParameterExtension.cs" />
+    <Compile Include="Source\Providers\SqlServerDataProvider.cs" />
+    <Compile Include="Source\Providers\IAdoNetProviderFactory.cs" />
     <Compile Include="Source\Utils\DataReaderMapper.cs" />
     <Compile Include="Source\DbHelper.cs" />
     <Compile Include="Source\Extensions\DataReaderExtension.cs" />
     <Compile Include="Source\Extensions\DbHelperExtension.cs" />
-    <Compile Include="Source\Extensions\ParameterExtension.cs" />
+    <Compile Include="Source\Providers\SqlParameterExtension.cs" />
     <Compile Include="Source\Extensions\XmlExtension.cs" />
     <Compile Include="Source\NonQueryHelper.cs" />
     <Compile Include="Source\ScalarHelper.cs" />
@@ -65,7 +68,6 @@
     <Compile Include="Source\XmReaderHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="CpsDbHelper.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

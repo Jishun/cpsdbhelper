@@ -105,7 +105,7 @@ namespace CpsDbHelper.Utils
             var properties = type.GetProperties(BindingFlag).Where(p => p.CanWrite && !skip.Contains(p.Name));
             foreach (var p in properties)
             {
-                if (p.PropertyType.IsPrimitive || p.PropertyType == typeof(string))
+                if (p.PropertyType.GetTypeInfo().IsPrimitive || p.PropertyType == typeof(string))
                 {
                     attibutes.Add(p.Name, p.Name);
                 }

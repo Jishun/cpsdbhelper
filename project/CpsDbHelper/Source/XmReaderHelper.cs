@@ -11,13 +11,13 @@ namespace CpsDbHelper
     public class XmlReaderHelper : DbHelper<XmlReaderHelper>
     {
         private XElement _result = null;
-        public XmlReaderHelper(string text, string connectionString)
-            : base(text, connectionString)
+        public XmlReaderHelper(string text, string connectionString, IAdoNetProviderFactory provider)
+            : base(text, connectionString, provider)
         {
         }
 
-        public XmlReaderHelper(string text, IDbConnection connection, IDbTransaction transaction)
-            : base(text, connection, transaction)
+        public XmlReaderHelper(string text, IDbConnection connection, IDbTransaction transaction, IAdoNetProviderFactory provider)
+            : base(text, connection, transaction, provider)
         {
         }
 
@@ -90,9 +90,9 @@ namespace CpsDbHelper
         {
             if (factory.CheckExistingConnection())
             {
-                return new XmlReaderHelper(text, factory.DbConnection, factory.DbTransaction);
+                return new XmlReaderHelper(text, factory.DbConnection, factory.DbTransaction, factory.Provider);
             }
-            return new XmlReaderHelper(text, factory.ConnectionString);
+            return new XmlReaderHelper(text, factory.ConnectionString, factory.Provider);
         }
     }
 }

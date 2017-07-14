@@ -8,19 +8,25 @@ namespace CpsDbHelper.Utils
     /// </summary>
     public class DbHelperFactory
     {
-        public SqlConnection DbConnection;
-        public SqlTransaction DbTransaction;
+        public IDbConnection DbConnection;
+        public IDbTransaction DbTransaction;
+        public IAdoNetProviderFactory Provider;
 
         public readonly string ConnectionString;
 
-        public DbHelperFactory(string connectionString)
+        public DbHelperFactory(string connectionString, IAdoNetProviderFactory provider = null)
         {
             ConnectionString = connectionString;
+            Provider = provider;
         }
 
         public void Connect(bool beginTran = false, IsolationLevel transactionLevel = IsolationLevel.ReadCommitted)
         {
-            DbConnection = new SqlConnection(ConnectionString);
+            if (Provider == null)
+            {
+                Provider = new SqlServerDataProvider();
+            }
+            DbConnection = Provider.CreateConnection(ConnectionString);
             DbConnection.Open();
             if (beginTran)
             {

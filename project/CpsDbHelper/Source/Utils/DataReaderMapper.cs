@@ -75,7 +75,7 @@ namespace CpsDbHelper.Utils
             foreach (var p in properties)
             {
                 var u = Nullable.GetUnderlyingType(p.PropertyType);
-                if ((u != null) && u.IsEnum)
+                if ((u != null) && u.GetTypeInfo().IsEnum)
                 {
                     _mapper.Add(p.Name.ToLower(), (item, value) =>
                     {

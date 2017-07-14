@@ -9,13 +9,13 @@ namespace CpsDbHelper
 {
     public class NonQueryHelper : DbHelper<NonQueryHelper>
     {
-        public NonQueryHelper(string text, string connectionString)
-            : base(text, connectionString)
+        public NonQueryHelper(string text, string connectionString, IAdoNetProviderFactory provider)
+            : base(text, connectionString, provider)
         {
         }
 
-        public NonQueryHelper(string text, IDbConnection connection, IDbTransaction transaction)
-            : base(text, connection, transaction)
+        public NonQueryHelper(string text, IDbConnection connection, IDbTransaction transaction, IAdoNetProviderFactory provider)
+            : base(text, connection, transaction, provider)
         {
         }
 
@@ -44,9 +44,9 @@ namespace CpsDbHelper
         {
             if (factory.CheckExistingConnection())
             {
-                return new NonQueryHelper(text, factory.DbConnection, factory.DbTransaction);
+                return new NonQueryHelper(text, factory.DbConnection, factory.DbTransaction, factory.Provider);
             }
-            return new NonQueryHelper(text, factory.ConnectionString);
+            return new NonQueryHelper(text, factory.ConnectionString, factory.Provider);
         }
     }
 }

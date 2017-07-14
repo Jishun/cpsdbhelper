@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>CpsDbHelper</id>
-    <version>1.0.1.0</version>
+    <version>1.1.0.0</version>
     <title>Chain-styled Sql DB Helper</title>
     <authors>Jishun Duan</authors>
     <owners>Jishun Duan</owners>
@@ -11,7 +11,7 @@
     <iconUrl>https://github.com/jishun/cpsdbhelper</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A db helper designed to allow code to be chained and simplified, sql call/parameter managing can be much easier with the help of it and it's auto mapping ability</description>
-    <releaseNotes>Add wrapper for async methods</releaseNotes>
+    <releaseNotes>Support Extending Ado.Net Data Providers to enable support for databases other than MSSQL, Implement and pass an instance of IAdoNetProviderFactory to start with</releaseNotes>
     <copyright>Copyright Jishun Duan, 2011-2015</copyright>
     <tags>ADO.NET, DBHelper</tags>
   </metadata>

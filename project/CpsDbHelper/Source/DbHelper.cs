@@ -12,7 +12,7 @@ namespace CpsDbHelper
     public abstract class DbHelper<T> where T : DbHelper<T>
     {
         private readonly string _connectionString;
-        private readonly IDictionary<string, SqlParameter> _outParameters = new Dictionary<string, SqlParameter>();
+        private readonly IDictionary<string, IDbDataParameter> _outParameters = new Dictionary<string, IDbDataParameter>();
 
         private Func<Exception, T, bool> _onException = null;
         private bool _needTransaction = false;
@@ -21,26 +21,30 @@ namespace CpsDbHelper
 
         protected readonly string Text;
         protected readonly bool ExternalConnection;
-        protected readonly IDictionary<string, SqlParameter> Parameters = new Dictionary<string, SqlParameter>();
+        protected readonly IDictionary<string, IDbDataParameter> Parameters = new Dictionary<string, IDbDataParameter>();
 
         protected CommandType CommandType = CommandType.StoredProcedure;
-        protected SqlParameter ReturnValue;
+        protected IDbDataParameter ReturnValue;
 
         public IDbConnection Connection;
         public IDbTransaction Transaction;
 
-        protected DbHelper(string text, string connectionString)
+        public IAdoNetProviderFactory DbProvider; 
+
+        protected DbHelper(string text, string connectionString, IAdoNetProviderFactory provider)
         {
             Text = text;
             _connectionString = connectionString;
+            DbProvider = provider;
         }
 
-        protected DbHelper(string text, IDbConnection connection, IDbTransaction transaction)
+        protected DbHelper(string text, IDbConnection connection, IDbTransaction transaction, IAdoNetProviderFactory provider)
         {
             Text = text;
             Connection = connection;
             Transaction = transaction;
             ExternalConnection = true;
+            DbProvider = provider;
         }
 
         protected abstract void BeginExecute(IDbCommand cmd);
@@ -181,9 +185,13 @@ namespace CpsDbHelper
         /// <returns></returns>
         public virtual T Connect()
         {
+            if (DbProvider == null)
+            {
+                DbProvider = new SqlServerDataProvider();
+            }
             if (Connection == null)
             {
-                Connection = new SqlConnection(_connectionString);
+                Connection = DbProvider.CreateConnection(_connectionString);
             }
             if (Connection.State != ConnectionState.Open)
             {
@@ -330,14 +338,16 @@ namespace CpsDbHelper
             }
             return default(TV);
         }
-        
+
+                
         /// <summary>
         /// Call this when expecting an return value from the stored procedure. and use GetReturnValue() to get value after Execute()
         /// </summary>
         /// <returns></returns>
         public T DefineReturnValue()
         {
-            ReturnValue = new SqlParameter() { Direction = ParameterDirection.ReturnValue };
+            ReturnValue = DbProvider.CreateParameter();
+            ReturnValue.Direction = ParameterDirection.ReturnValue;
             return AddParam(ReturnValue);
         }
 
@@ -365,7 +375,7 @@ namespace CpsDbHelper
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        public virtual T AddParam(SqlParameter param)
+        public virtual T AddParam(IDbDataParameter param)
         {
             if (param.Direction == ParameterDirection.InputOutput || param.Direction == ParameterDirection.Output)
             {
@@ -377,6 +387,23 @@ namespace CpsDbHelper
             }
             Parameters[param.ParameterName.ToLower()] = param;
             return (T)this;
+        }
+
+        public IDbDataParameter CreateParameter(string name, object value = null)
+        {
+            var ret = CreateParameter();
+            ret.ParameterName = name;
+            ret.Value = value;
+            return ret;
+        }
+
+        public IDbDataParameter CreateParameter()
+        {
+            if (DbProvider == null)
+            {
+                DbProvider = new SqlServerDataProvider();
+            }
+            return DbProvider.CreateParameter();
         }
 
         private bool HandleException(Exception exception)

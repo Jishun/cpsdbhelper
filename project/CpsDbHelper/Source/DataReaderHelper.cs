@@ -18,14 +18,14 @@ namespace CpsDbHelper
         private readonly IDictionary<string, Func<IDataReader, DataReaderHelper, object>> _processDelegates = new Dictionary<string, Func<IDataReader, DataReaderHelper, object>>();
         private readonly IDictionary<string, Action<IDataReader>> _preActions = new Dictionary<string, Action<IDataReader>>();
 
-        public DataReaderHelper(string text, string connectionString)
-            : base(text, connectionString)
+        public DataReaderHelper(string text, string connectionString, IAdoNetProviderFactory provider)
+            : base(text, connectionString, provider)
         {
 
         }
 
-        public DataReaderHelper(string text, IDbConnection connection, IDbTransaction transaction)
-            : base(text, connection, transaction)
+        public DataReaderHelper(string text, IDbConnection connection, IDbTransaction transaction, IAdoNetProviderFactory provider)
+            : base(text, connection, transaction, provider)
         {
 
         }
@@ -248,9 +248,9 @@ namespace CpsDbHelper
         {
             if (factory.CheckExistingConnection())
             {
-                return new DataReaderHelper(text, factory.DbConnection, factory.DbTransaction);
+                return new DataReaderHelper(text, factory.DbConnection, factory.DbTransaction, factory.Provider);
             }
-            return new DataReaderHelper(text, factory.ConnectionString);
+            return new DataReaderHelper(text, factory.ConnectionString, factory.Provider);
         }
     }
 }

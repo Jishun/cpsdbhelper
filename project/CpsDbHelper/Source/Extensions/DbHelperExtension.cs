@@ -1,3 +1,5 @@
+using CpsDbHelper.Utils;
+
 namespace CpsDbHelper.Extensions
 {
     public static class DbHelperExtension
@@ -7,7 +9,7 @@ namespace CpsDbHelper.Extensions
         /// </summary>
         public static DataReaderHelper ContinueWithReader<T>(this DbHelper<T> helper, string text) where T : DbHelper<T>
         {
-            return new DataReaderHelper(text, helper.Connection, helper.Transaction);
+            return new DataReaderHelper(text, helper.Connection, helper.Transaction, helper.DbProvider);
         }
 
         /// <summary>
@@ -15,7 +17,7 @@ namespace CpsDbHelper.Extensions
         /// </summary>
         public static XmlReaderHelper ContinueWithXmlReader<T>(this DbHelper<T> helper, string text) where T : DbHelper<T>
         {
-            return new XmlReaderHelper(text, helper.Connection, helper.Transaction);
+            return new XmlReaderHelper(text, helper.Connection, helper.Transaction, helper.DbProvider);
         }
 
         /// <summary>
@@ -23,7 +25,7 @@ namespace CpsDbHelper.Extensions
         /// </summary>
         public static NonQueryHelper ContinueWithNonQuery<T>(this DbHelper<T> helper, string text) where T : DbHelper<T>
         {
-            return new NonQueryHelper(text, helper.Connection, helper.Transaction);
+            return new NonQueryHelper(text, helper.Connection, helper.Transaction, helper.DbProvider);
         }
 
         /// <summary>
@@ -31,7 +33,19 @@ namespace CpsDbHelper.Extensions
         /// </summary>
         public static ScalarHelper<TS> ContinueWithScalar<T, TS>(this DbHelper<T> helper, string text) where T : DbHelper<T>
         {
-            return new ScalarHelper<TS>(text, helper.Connection, helper.Transaction);
+            return new ScalarHelper<TS>(text, helper.Connection, helper.Transaction, helper.DbProvider);
+        }
+
+        public static DbHelper<T> UseSqlServer<T>(this DbHelper<T> helper) where T : DbHelper<T>
+        {
+            helper.DbProvider = new SqlServerDataProvider();
+            return helper;
+        }
+
+        public static DbHelperFactory UseSqlServer(this DbHelperFactory factory)
+        {
+            factory.Provider = new SqlServerDataProvider();
+            return factory;
         }
     }
 }
