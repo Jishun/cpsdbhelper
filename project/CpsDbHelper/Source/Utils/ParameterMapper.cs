@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
@@ -56,7 +55,7 @@ namespace CpsDbHelper.Utils
         /// <returns></returns>
         public ParameterMapper<T, TEntity> MapProperty(string parameterName, object value)
         {
-            var param = new SqlParameter {ParameterName = parameterName};
+            var param = _dbHelper.CreateParameter(parameterName);
             if (value == null)
             {
                 param.Value = DBNull.Value;

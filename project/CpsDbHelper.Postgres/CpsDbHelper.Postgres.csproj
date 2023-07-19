@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.5</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>CpsDbHelper.Postgres</PackageId>
     <PackageVersion>1.0.0.0</PackageVersion>
     <Authors>Jishun Duan</Authors>
@@ -10,9 +10,9 @@
     <PackageReleaseNotes>First release, including basic ProviderFactory and parameter extensions.</PackageReleaseNotes>
     <Copyright>Copyright Jishun Duan, 2011-2017</Copyright>
     <PackageTags>ADO.NET, DBHelper, Postgres, npgsql</PackageTags>
-    <PackageLicenseUrl>https://github.com/jishun/cpsdbhelper/blob/master/LICENSE</PackageLicenseUrl>
+	<License>https://github.com/jishun/cpsdbhelper/blob/master/LICENSE</License>
     <PackageProjectUrl>https://github.com/jishun/cpsdbhelper</PackageProjectUrl>
-    <PackageIconUrl>https://github.com/jishun/cpsdbhelper</PackageIconUrl>
+    <PackageIcon></PackageIcon>
     <RepositoryUrl>https://github.com/jishun/cpsdbhelper</RepositoryUrl>
     <RepositoryType>github</RepositoryType>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>

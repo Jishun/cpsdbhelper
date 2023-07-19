@@ -1,8 +1,8 @@
 using System;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
+using CpsDbHelper.Support;
 using CpsDbHelper.Utils;
 
 namespace CpsDbHelper
@@ -33,6 +33,12 @@ namespace CpsDbHelper
             }
             else
             {
+                var stub = cmd as DbCommandStub;
+                if (stub != null)
+                {
+                    await stub.ExecuteNonQueryAsync();
+                    return;
+                }
                 throw new NotSupportedException("The async operation is not supported by this data provider");
             }
         }

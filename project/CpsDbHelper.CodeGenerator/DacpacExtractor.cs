@@ -117,7 +117,7 @@ namespace CpsDbHelper.CodeGenerator
                 errorMessage = null;
                 return element.FromXElement<DacpacExtractor>();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 errorMessage =
                     "Unable to load config from config file, " + ConfigErrorMessage;

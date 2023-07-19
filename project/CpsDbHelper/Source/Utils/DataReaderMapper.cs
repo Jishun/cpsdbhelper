@@ -74,6 +74,10 @@ namespace CpsDbHelper.Utils
             var properties = typeof(TValue).GetProperties(BindingFlag).Where(p => p.CanWrite && !skips.Contains(p.Name));
             foreach (var p in properties)
             {
+                if (_mapper.ContainsKey(p.Name.ToLower()))
+                {
+                    continue;
+                }
                 var u = Nullable.GetUnderlyingType(p.PropertyType);
                 if ((u != null) && u.GetTypeInfo().IsEnum)
                 {
@@ -94,6 +98,10 @@ namespace CpsDbHelper.Utils
                         else if (value is byte)
                         {
                             p.SetValue(item, Enum.ToObject(u, (byte)value));
+                        }
+                        else if(value is string)
+                        {
+                            p.SetValue(item, Enum.Parse(u, (string)value));
                         }
                     });
                 }
@@ -135,7 +143,6 @@ namespace CpsDbHelper.Utils
                 var item = Activator.CreateInstance<TValue>();
                 foreach (var ordinal in ordinals)
                 {
-
                     ordinal.Value(item, reader.IsDBNull(ordinal.Key) ? null : reader.GetValue(ordinal.Key));
                 }
                 foreach (var action in _customMapper)

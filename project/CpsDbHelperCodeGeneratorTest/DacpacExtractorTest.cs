@@ -18,7 +18,7 @@ namespace CpsDbHelperCodeGeneratorTest
     [TestClass]
     public class DacpacExtractorTest
     {
-        static string _testDbName = null;
+        // static string _testDbName = null;
         static SsdtLocalDbDeployer _server;
         const string ConnectionString = @"Data Source=(localdb)\v11.0; AttachDBFilename='|DataDirectory|\{0}'; Integrated Security=True";
 

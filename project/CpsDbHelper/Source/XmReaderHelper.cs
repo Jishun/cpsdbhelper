@@ -1,10 +1,11 @@
 using System;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using CpsDbHelper.Support;
 using CpsDbHelper.Utils;
+using Microsoft.Data.SqlClient;
 
 namespace CpsDbHelper
 {
@@ -45,6 +46,13 @@ namespace CpsDbHelper
             }
             else
             {
+                var stub = cmd as DbCommandStub;
+                if (stub != null)
+                {
+                    var ret = await stub.ExecuteXmlReaderAsync();
+                    _result = XElement.Load(ret);
+                    return;
+                }
                 throw new NotSupportedException("The xml async operation is not supported by this data provider");
             }
         }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.13
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{702F1F6A-535B-488E-AAFB-1BED01118588}"
 	ProjectSection(SolutionItems) = preProject
@@ -22,9 +22,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CpsDbHelper.Postgres", "Cps
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CpsDbHelper.NetStandard", "CpsDbHelper\CpsDbHelper.NetStandard.csproj", "{5D02EE0F-FC10-4731-846D-9E57CC2ECCA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CpsDbHelper.Postgres.test", "CpsDbHelper.Postgres.test\CpsDbHelper.Postgres.test.csproj", "{64595C57-EA7A-4F63-BC75-3432338C9CB2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CpsDbHelper", "CpsDbHelper\CpsDbHelper.csproj", "{7D4DDA01-EBDE-4001-A10E-4B9C74AAEF48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CpsDbHelper.Postgres.test", "CpsDbHelper.Postgres.test\CpsDbHelper.Postgres.test.csproj", "{64595C57-EA7A-4F63-BC75-3432338C9CB2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,12 +63,11 @@ Global
 		{64595C57-EA7A-4F63-BC75-3432338C9CB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64595C57-EA7A-4F63-BC75-3432338C9CB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64595C57-EA7A-4F63-BC75-3432338C9CB2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7D4DDA01-EBDE-4001-A10E-4B9C74AAEF48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7D4DDA01-EBDE-4001-A10E-4B9C74AAEF48}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7D4DDA01-EBDE-4001-A10E-4B9C74AAEF48}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7D4DDA01-EBDE-4001-A10E-4B9C74AAEF48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E7909880-FAFF-4A14-9ECC-8992553041C2}
 	EndGlobalSection
 EndGlobal

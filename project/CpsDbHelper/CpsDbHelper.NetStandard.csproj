@@ -1,19 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.5</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>CpsDbHelper</PackageId>
-    <PackageVersion>2.0.0.0</PackageVersion>
+    <PackageVersion>3.2.0.0</PackageVersion>
     <Authors>Jishun Duan</Authors>
     <Description>Chain-styled Sql DB Helper</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Major upgrade, Moved to .Net Standard 1.5</PackageReleaseNotes>
+    <PackageReleaseNotes>Added test mocking helpers, upgrade dependencies</PackageReleaseNotes>
     <Copyright>Copyright Jishun Duan, 2011-2017</Copyright>
     <PackageTags>ADO.NET, DBHelper</PackageTags>
-    <Version>2.0.0.0</Version>
-    <PackageLicenseUrl>https://github.com/jishun/cpsdbhelper/blob/master/LICENSE</PackageLicenseUrl>
+    <Version>3.2.0.0</Version>
+    <License>https://github.com/jishun/cpsdbhelper/blob/master/LICENSE</License>
     <PackageProjectUrl>https://github.com/jishun/cpsdbhelper</PackageProjectUrl>
-    <PackageIconUrl>https://github.com/jishun/cpsdbhelper</PackageIconUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/jishun/cpsdbhelper</RepositoryUrl>
     <RepositoryType>github</RepositoryType>
@@ -26,9 +25,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CSharp" Version="4.3.0" />
-    <PackageReference Include="System.Data.Common" Version="4.3.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.3.1" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
     <PackageReference Include="System.Reflection" Version="4.3.0" />
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
   </ItemGroup>
@@ -36,6 +34,4 @@
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
-
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
 </Project>

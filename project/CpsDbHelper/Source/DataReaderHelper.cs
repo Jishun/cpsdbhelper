@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using CpsDbHelper.Extensions;
+using CpsDbHelper.Support;
 using CpsDbHelper.Utils;
 
 namespace CpsDbHelper
@@ -50,6 +50,15 @@ namespace CpsDbHelper
             }
             else
             {
+                var stub = cmd as DbCommandStub;
+                if (stub != null)
+                {
+                    using (var reader = await stub.ExecuteReaderAsync())
+                    {
+                        ProcessReader(reader);
+                        return;
+                    }
+                }
                 throw new NotSupportedException("The async operation is not supported by this data provider");
             }
         }
