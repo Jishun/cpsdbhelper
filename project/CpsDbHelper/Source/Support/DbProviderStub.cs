@@ -140,7 +140,7 @@ namespace CpsDbHelper.Support
         public IDataReader ExecuteReader(CommandBehavior behavior)
         {
             var ps = ToIEnumerable(Parameters.GetEnumerator()).ToArray();
-            Callback($"DbCommandStub::ExecuteReader::CommandBehavior(IDataReader)::CommandText", new ParentContext(CommandText), behavior);
+            Callback($"DbCommandStub::ExecuteReader::CommandBehavior(IDataReader)::CommandText", new ParentContext(CommandText), behavior, ps);
             return new DataReaderStub(Callback, CommandText, ps);
         }
 
