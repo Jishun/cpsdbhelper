@@ -23,7 +23,7 @@ namespace CpsDbHelper.Extensions
         /// </summary>
         public static T AddInParam<T>(this DbHelper<T> helper, string parameterName, object value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddParam(helper.CreateParameter(parameterName, value ?? DBNull.Value));
+            return helper.AddParam(helper.CreateParameter(parameterName, value ?? (useDbNullIfNull ? DBNull.Value : null)));
         }
 
         /// <summary>

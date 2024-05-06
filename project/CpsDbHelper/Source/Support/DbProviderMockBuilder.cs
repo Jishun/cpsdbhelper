@@ -7,9 +7,9 @@ namespace CpsDbHelper.Support
 {
     public class DbProviderMockBuilder
     {
-        public delegate IDictionary<string, object> SqlReaderCallback(int exeCount, int readCount = 0, IDictionary<string, object> paramers = null);
-        public delegate object SqlScalarCallback(int exeCount = 0, IDictionary<string, object> paramers = null);
-        public delegate int SqlNonqueryCallback(int exeCount = 0, IDictionary<string, object> paramers = null);
+        public delegate IDictionary<string, object> SqlReaderCallback(string context, int exeCount, int readCount = 0, IDictionary<string, object> paramers = null);
+        public delegate object SqlScalarCallback(string context, int exeCount = 0, IDictionary<string, object> paramers = null);
+        public delegate int SqlNonqueryCallback(string context, int exeCount = 0, IDictionary<string, object> paramers = null);
 
         public const string Context_ExecuteReader = "DbCommandStub::ExecuteReader(IDataReader)::CommandText";
         public const string Context_ExecuteReaderWithBehaviour = "DbCommandStub::ExecuteReader::CommandBehavior(IDataReader)::CommandText";
@@ -29,6 +29,7 @@ namespace CpsDbHelper.Support
         public IDictionary<string, SqlScalarCallback> scalarMapping = new Dictionary<string, SqlScalarCallback>();
         public IDictionary<string, SqlNonqueryCallback> nonqueryMapping = new Dictionary<string, SqlNonqueryCallback>();
         public IDictionary<string, SqlMockCallback> contextHandlers = new Dictionary<string, SqlMockCallback>();
+        public IDictionary<string, SqlMockCallback> contextSubscribers = new Dictionary<string, SqlMockCallback>();
         public IDictionary<string, int> executionTracker = new Dictionary<string, int>();
         public IDictionary<string, int> readerExecutionTracker = new Dictionary<string, int>();
 
@@ -53,16 +54,17 @@ namespace CpsDbHelper.Support
             contextHandlers.Add(context, callback);
             return this;
         }
+        public DbProviderMockBuilder AddContextSubscriber(string context, SqlMockCallback callback)
+        {
+            contextSubscribers.Add(context, callback);
+            return this;
+        }
 
         public AdoDotNetDataProviderStub Build()
         {
             return new AdoDotNetDataProviderStub((context, defaultRet, parameters) =>
             {
                 var parentContext = defaultRet as ParentContext;
-                if (contextHandlers.ContainsKey(context))
-                {
-                    return contextHandlers[context](context, defaultRet, parameters);
-                }
                 var command = parentContext?.Name;
                 var dbParams = parentContext?.DbParams?.Cast<DbDataParameterStub>().ToDictionary(p => p.ParameterName.ToLower().Replace("@", ""), p => p.Value);
                 switch (context)
@@ -75,6 +77,14 @@ namespace CpsDbHelper.Support
                         executionTracker.TryGetValue(command, out int count);
                         executionTracker[command] = count + 1;
                         break;
+                }
+                if (contextSubscribers.ContainsKey(context))
+                {
+                    contextSubscribers[context](context, defaultRet, parameters);
+                }
+                if (contextHandlers.ContainsKey(context))
+                {
+                    return contextHandlers[context](context, defaultRet, parameters);
                 }
                 switch (context)
                 {
@@ -89,20 +99,20 @@ namespace CpsDbHelper.Support
                     case Context_ExecuteScalar:
                         if (scalarMapping.ContainsKey(command))
                         {
-                            return scalarMapping[command](executionTracker[command], dbParams);
+                            return scalarMapping[command](context, executionTracker[command], dbParams);
                         }
                         return defaultRet;
                     case Context_ExecuteNonQuery:
                         if (nonqueryMapping.ContainsKey(command))
                         {
-                            return nonqueryMapping[command](executionTracker[command], dbParams);
+                            return nonqueryMapping[command](context, executionTracker[command], dbParams);
                         }
                         return defaultRet;
                     case Context_Reader_IsDbNull:
                         {
                             var index = executionTracker[command];
                             var key = $"{command}_{index}";
-                            var dict = dataReaderMapping[command](index, readerExecutionTracker[key], dbParams);
+                            var dict = dataReaderMapping[command](context, index, readerExecutionTracker[key], dbParams);
                             var columnKey = dict.Keys.ToList()[(int)parameters[0]];
                             return dict[columnKey] == null;
                         }
@@ -110,24 +120,24 @@ namespace CpsDbHelper.Support
                         {
                             var index = executionTracker[command];
                             var key = $"{command}_{index}";
-                            var dict = dataReaderMapping[command](index, readerExecutionTracker[key], dbParams);
+                            var dict = dataReaderMapping[command](context, index, readerExecutionTracker[key], dbParams);
                             var columnKey = dict.Keys.ToList()[(int)parameters[0]];
                             return dict[columnKey];
                         }
                     case Context_Reader_GetOrdinal:
-                        return dataReaderMapping[command](executionTracker[command], 0, dbParams).Keys.Select(k => k.ToLowerInvariant()).ToList().IndexOf((string)parameters[0]);
+                        return dataReaderMapping[command](context, executionTracker[command], 0, dbParams).Keys.Select(k => k.ToLowerInvariant()).ToList().IndexOf((string)parameters[0]);
                     case Context_Reader_GetName:
-                        return dataReaderMapping[command](executionTracker[command], 0, dbParams).Keys.ToList()[(int)parameters[0]];
+                        return dataReaderMapping[command](context, executionTracker[command], 0, dbParams).Keys.ToList()[(int)parameters[0]];
                     case Context_Reader_Read:
                         {
                             var index = executionTracker[command];
                             var key = $"{command}_{index}";
                             var readCount = readerExecutionTracker[key];
                             readerExecutionTracker[key] = readCount + 1;
-                            return dataReaderMapping[command](index, readCount + 1, dbParams) != null;
+                            return dataReaderMapping[command](context, index, readCount + 1, dbParams) != null;
                         }
                     case Context_Reader_FieldCount:
-                        return dataReaderMapping[command](executionTracker[command], 0, dbParams).Count;
+                        return dataReaderMapping[command](context, executionTracker[command], 0, dbParams).Count;
                     default:
                         if (contextHandlers.ContainsKey(Context_default))
                         {

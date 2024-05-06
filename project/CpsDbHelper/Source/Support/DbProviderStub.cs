@@ -36,9 +36,9 @@ namespace CpsDbHelper.Support
             return new SqlConnectionStub(Callback);
         }
 
-        public IDbDataParameter CreateParameter()
+        public IDbDataParameter CreateParameter(string dataType = null)
         {
-            return new DbDataParameterStub();
+            return new DbDataParameterStub() {  DataType = dataType};
         }
     }
 
@@ -201,6 +201,7 @@ namespace CpsDbHelper.Support
 
     public class DbDataParameterStub : IDbDataParameter
     {
+        public string DataType { get; set; }
         public byte Precision { get; set; }
         public byte Scale { get; set; }
         public int Size { get; set; }
@@ -213,7 +214,7 @@ namespace CpsDbHelper.Support
         public object Value { get; set; }
         public override string ToString()
         {
-            return $"{DbType} {ParameterName}: {Value}";
+            return $"{DataType ?? DbType.ToString()} {ParameterName}: {Value}";
         }
     }
 

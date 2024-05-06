@@ -11,6 +11,6 @@ namespace CpsDbHelper
     {
         IDbConnection CreateConnection(string connectionString);
 
-        IDbDataParameter CreateParameter();
+        IDbDataParameter CreateParameter(string dataType = null);
     }
 }

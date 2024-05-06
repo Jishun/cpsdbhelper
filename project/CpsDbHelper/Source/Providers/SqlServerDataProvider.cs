@@ -15,9 +15,13 @@ namespace CpsDbHelper
             return new SqlConnection(connectionString);
         }
 
-        public IDbDataParameter CreateParameter()
+        public IDbDataParameter CreateParameter(string dataType = null)
         {
-            return new SqlParameter();
+            var p = new SqlParameter();
+            if(Enum.TryParse<SqlDbType>(dataType, out var dbType)){
+                p.SqlDbType = dbType;
+            }
+            return p;
         }
     }
 }

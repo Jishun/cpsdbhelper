@@ -387,10 +387,13 @@ namespace CpsDbHelper
             Parameters[param.ParameterName.ToLower()] = param;
             return (T)this;
         }
-
-        public IDbDataParameter CreateParameter(string name, object value = null)
+        public IDbDataParameter CreateParameter(string name, object value = null, string dataType = null)
         {
-            var ret = CreateParameter();
+            if (DbProvider == null)
+            {
+                DbProvider = new SqlServerDataProvider();
+            }
+            var ret = DbProvider.CreateParameter(dataType);
             ret.ParameterName = name;
             ret.Value = value;
             return ret;

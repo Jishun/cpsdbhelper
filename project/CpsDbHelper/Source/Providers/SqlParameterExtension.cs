@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Xml.Linq;
 using CpsDbHelper.Utils;
 using Microsoft.Data.SqlClient;
@@ -15,7 +16,9 @@ namespace CpsDbHelper.Extensions
         /// </summary>
         public static T AddInParam<T>(this DbHelper<T> helper, string parameterName, SqlDbType dbType) where T : DbHelper<T>
         {
-            return helper.AddParam(new SqlParameter(parameterName, dbType));
+            var p = helper.CreateParameter(parameterName, null, dbType.ToString());
+            p.Direction = ParameterDirection.Input;
+            return helper.AddParam(p);
         }
 
         /// <summary>
@@ -23,7 +26,10 @@ namespace CpsDbHelper.Extensions
         /// </summary>
         public static T AddInParam<T>(this DbHelper<T> helper, string parameterName, SqlDbType dbType, object value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddParam(new SqlParameter(parameterName, dbType) { Value = useDbNullIfNull ? (value ?? DBNull.Value) : value });
+            var p = helper.CreateParameter(parameterName, null, dbType.ToString());
+            p.Direction = ParameterDirection.Input;
+            p.Value = useDbNullIfNull ? (value ?? DBNull.Value) : value;
+            return helper.AddParam(p);
         }
 
         /// <summary>
@@ -31,7 +37,11 @@ namespace CpsDbHelper.Extensions
         /// </summary>
         public static T AddInParam<T>(this DbHelper<T> helper, string parameterName, SqlDbType dbType, int size, object value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddParam(new SqlParameter(parameterName, dbType, size) { Value = useDbNullIfNull ? (value ?? DBNull.Value) : value });
+            var p = helper.CreateParameter(parameterName, null, dbType.ToString());
+            p.Direction = ParameterDirection.Input;
+            p.Size = size;
+            p.Value = useDbNullIfNull ? (value ?? DBNull.Value) : value;
+            return helper.AddParam(p); 
         }
 
         /// <summary>
@@ -39,7 +49,9 @@ namespace CpsDbHelper.Extensions
         /// </summary>
         public static T AddOutParam<T>(this DbHelper<T> helper, string parameterName, SqlDbType dbType) where T : DbHelper<T>
         {
-            return helper.AddParam(new SqlParameter(parameterName, dbType) { Direction = ParameterDirection.Output });
+            var p = helper.CreateParameter(parameterName, null, dbType.ToString());
+            p.Direction = ParameterDirection.Output;
+            return helper.AddParam(p);
         }
 
         /// <summary>
@@ -47,7 +59,10 @@ namespace CpsDbHelper.Extensions
         /// </summary>
         public static T AddOutParam<T>(this DbHelper<T> helper, string parameterName, SqlDbType dbType, int size) where T : DbHelper<T>
         {
-            return helper.AddParam(new SqlParameter(parameterName, dbType, size) { Direction = ParameterDirection.Output });
+            var p = helper.CreateParameter(parameterName, null, dbType.ToString());
+            p.Direction = ParameterDirection.Output;
+            p.Size = size;
+            return helper.AddParam(p);
         }
 
         /// <summary>
@@ -55,7 +70,9 @@ namespace CpsDbHelper.Extensions
         /// </summary>
         public static T AddInOutParam<T>(this DbHelper<T> helper, string parameterName, SqlDbType dbType) where T : DbHelper<T>
         {
-            return helper.AddParam(new SqlParameter(parameterName, dbType) { Direction = ParameterDirection.InputOutput });
+            var p = helper.CreateParameter(parameterName, null, dbType.ToString());
+            p.Direction = ParameterDirection.InputOutput;
+            return helper.AddParam(p);
         }
 
         /// <summary>
@@ -63,7 +80,10 @@ namespace CpsDbHelper.Extensions
         /// </summary>
         public static T AddInOutParam<T>(this DbHelper<T> helper, string parameterName, SqlDbType dbType, object value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddParam(new SqlParameter(parameterName, dbType) { Value = useDbNullIfNull ? (value ?? DBNull.Value) : value, Direction = ParameterDirection.InputOutput });
+            var p = helper.CreateParameter(parameterName, null, dbType.ToString());
+            p.Direction = ParameterDirection.InputOutput;
+            p.Value = useDbNullIfNull ? (value ?? DBNull.Value) : value;
+            return helper.AddParam(p);
         }
 
         /// <summary>
@@ -71,7 +91,11 @@ namespace CpsDbHelper.Extensions
         /// </summary>
         public static T AddInOutParam<T>(this DbHelper<T> helper, string parameterName, SqlDbType dbType, int size, object value, bool useDbNullIfNull = false) where T : DbHelper<T>
         {
-            return helper.AddParam(new SqlParameter(parameterName, dbType, size) { Value = useDbNullIfNull ? (value ?? DBNull.Value) : value, Direction = ParameterDirection.InputOutput });
+            var p = helper.CreateParameter(parameterName, null, dbType.ToString());
+            p.Direction = ParameterDirection.InputOutput;
+            p.Size = size;
+            p.Value = useDbNullIfNull ? (value ?? DBNull.Value) : value;
+            return helper.AddParam(p);
         }
 
         /// <summary>
