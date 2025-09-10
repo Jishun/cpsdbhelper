@@ -141,13 +141,13 @@ namespace CpsDbHelper.Utils
             while (reader.Read())
             {
                 var item = Activator.CreateInstance<TValue>();
-                foreach (var ordinal in ordinals)
-                {
-                    ordinal.Value(item, reader.IsDBNull(ordinal.Key) ? null : reader.GetValue(ordinal.Key));
-                }
                 foreach (var action in _customMapper)
                 {
                     action(item, reader);
+                }
+                foreach (var ordinal in ordinals)
+                {
+                    ordinal.Value(item, reader.IsDBNull(ordinal.Key) ? null : reader.GetValue(ordinal.Key));
                 }
                 ret.Add(item);
             }

@@ -3,14 +3,14 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>CpsDbHelper</PackageId>
-    <PackageVersion>3.2.2.0</PackageVersion>
+    <PackageVersion>3.2.2.1</PackageVersion>
     <Authors>Jishun Duan</Authors>
     <Description>Chain-styled Sql DB Helper</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Add SqlParameter mock support</PackageReleaseNotes>
+    <PackageReleaseNotes>Let custom datareader map take priority than auto map</PackageReleaseNotes>
     <Copyright>Copyright Jishun Duan, 2011-2017</Copyright>
     <PackageTags>ADO.NET, DBHelper</PackageTags>
-    <Version>3.2.2.0</Version>
+    <Version>3.2.2.1</Version>
     <License>https://github.com/jishun/cpsdbhelper/blob/master/LICENSE</License>
     <PackageProjectUrl>https://github.com/jishun/cpsdbhelper</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
