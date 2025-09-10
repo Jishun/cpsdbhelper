@@ -13,9 +13,12 @@ namespace CpsDbHelper.Postgres
             return new NpgsqlConnection(connectionString);
         }
 
-        public IDbDataParameter CreateParameter()
+        public IDbDataParameter CreateParameter(string dataType = null)
         {
-            return new NpgsqlParameter();
+            return new NpgsqlParameter()
+            {
+                DataTypeName = dataType,
+            };
         }
     }
 }

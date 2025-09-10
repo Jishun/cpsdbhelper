@@ -42,6 +42,7 @@ namespace CpsDbHelper.Examples
             return _db.BeginNonQuery("sp_SavePerson")
                       .AddVarcharInParam("name", person.Name)
                       .AddIntInParam("gender", (int) person.Gender)
+                      .AddReturnValueParam()
                       .Execute()
                       .GetReturnValue<int>();
         }

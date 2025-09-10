@@ -3,14 +3,13 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>CpsDbHelper</PackageId>
-    <PackageVersion>3.2.2.1</PackageVersion>
+    <PackageVersion>3.2.3.0</PackageVersion>
     <Authors>Jishun Duan</Authors>
     <Description>Chain-styled Sql DB Helper</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Let custom datareader map take priority than auto map</PackageReleaseNotes>
+    <PackageReleaseNotes>Fix issue getting return value from stored procedure</PackageReleaseNotes>
     <Copyright>Copyright Jishun Duan, 2011-2017</Copyright>
     <PackageTags>ADO.NET, DBHelper</PackageTags>
-    <Version>3.2.2.1</Version>
     <License>https://github.com/jishun/cpsdbhelper/blob/master/LICENSE</License>
     <PackageProjectUrl>https://github.com/jishun/cpsdbhelper</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -26,7 +25,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.1" />
     <PackageReference Include="System.Reflection" Version="4.3.0" />
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
   </ItemGroup>

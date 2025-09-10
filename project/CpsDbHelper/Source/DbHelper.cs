@@ -313,7 +313,7 @@ namespace CpsDbHelper
         }
 
         /// <summary>
-        /// Get return value and cast to type TV
+        /// Gets return value and cast to type TV
         /// </summary>
         public T GetReturnValue<TV>(out TV value)
         {
@@ -327,7 +327,7 @@ namespace CpsDbHelper
         }
 
         /// <summary>
-        /// Get return value and cast to type TV
+        /// Gets return value and cast to type TV
         /// </summary>
         public TV GetReturnValue<TV>()
         {
@@ -343,9 +343,10 @@ namespace CpsDbHelper
         /// Call this when expecting an return value from the stored procedure. and use GetReturnValue() to get value after Execute()
         /// </summary>
         /// <returns></returns>
-        public T DefineReturnValue()
+        public T AddReturnValueParam(string name = "ReturnValue")
         {
             ReturnValue = DbProvider.CreateParameter();
+            ReturnValue.ParameterName = name;
             ReturnValue.Direction = ParameterDirection.ReturnValue;
             return AddParam(ReturnValue);
         }
@@ -376,7 +377,7 @@ namespace CpsDbHelper
         /// <returns></returns>
         public virtual T AddParam(IDbDataParameter param)
         {
-            if (param.Direction == ParameterDirection.InputOutput || param.Direction == ParameterDirection.Output)
+            if (param.Direction == ParameterDirection.InputOutput || param.Direction == ParameterDirection.Output || param.Direction == ParameterDirection.ReturnValue)
             {
                 _outParameters.Add(param.ParameterName, param);
             }
